@@ -1,0 +1,123 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package project03;
+
+import java.util.*;
+import java.io.*;
+import java.text.ParseException;
+
+/**
+ *
+ * @author nraj39
+ */
+/**
+ *
+ * @author nraj39
+ */
+public class App {
+
+    static HashMap<String, String> tags = new HashMap<String, String>();
+    static GEDCOMData GEDCOMDataObj = new GEDCOMData();
+
+    /**
+     * @param args the command line arguments
+     * @throws java.io.IOException
+     */
+    public static void main(String[] args) throws IOException, FileNotFoundException, ParseException {
+        if (args == null || args.length == 0 || Utility.isNullOrBlank(args[0])) {
+            System.out.println("Missing GED file.");
+            return;
+        }
+        String gedFilePath = args[0];
+
+        File f = new File(gedFilePath);
+        if (!f.exists()) {
+            System.out.println("'" + gedFilePath + "' file not exists.");
+            return;
+        }
+
+        System.out.println("Loading '" + gedFilePath + "' file...");
+
+        initialize();
+
+        //Parse input file
+        parseGEDFile(gedFilePath);
+
+        System.out.println("Performing validation...");
+
+        //Validate entities
+        List<ValidationResult> results = new ArrayList();
+        GEDCOMDataObj.Validate(results);
+
+        //Print results
+        printResults(gedFilePath, results);
+    }
+
+    private static void initialize() {
+        tags.put("INDI", "0");
+        tags.put("NAME", "1");
+        tags.put("SEX", "1");
+        tags.put("BIRT", "1");
+        tags.put("DEAT", "1");
+        tags.put("FAMC", "1");
+        tags.put("FAMS", "1");
+        tags.put("FAM", "0");
+        tags.put("MARR", "1");
+        tags.put("HUSB", "1");
+        tags.put("WIFE", "1");
+        tags.put("CHIL", "1");
+        tags.put("DIV", "1");
+        tags.put("DATE", "2");
+        tags.put("HEAD", "0");
+        tags.put("TSLR", "0");
+        tags.put("NOTE", "0");
+    }
+
+    private static void parseGEDFile(String gedFilePath) throws FileNotFoundException, IOException, ParseException {
+
+        String gedcomFileContent = Utility.readFileAsString(gedFilePath);
+        String[] records = gedcomFileContent.replaceAll("0 @", "\u0646@").split("\u0646");
+
+        for (String record : records) {
+            if (record.startsWith("@") && !record.startsWith("@SUBM@ SUBM")) {
+                String[] elements = record.split("\n");
+
+                String recordType = elements[0].replaceAll(" ", "").split("@")[2];
+
+                if (recordType.equals("FAM")) {
+                    GEDCOMDataObj.Families.add(FamilyEntity.create(elements));
+                } else if (recordType.equals("INDI")) {
+                    GEDCOMDataObj.Individuals.add(PersonEntity.create(elements));
+                } else if (recordType.equals("NOTE")) {
+
+                }
+            }
+        }
+    }
+
+    private static void printResults(String gedFilePath, List<ValidationResult> results) throws IOException {
+        String gedOutFilePath = gedFilePath + ".out";
+        FileWriter outfw = new FileWriter(gedOutFilePath);
+        PrintWriter writer = new PrintWriter(outfw);
+
+        try {
+            if (results != null && !results.isEmpty()) {
+                for (ValidationResult result : results) {
+                    System.out.println(result.toString());
+                    writer.println(result.toString());
+                }
+            } else {
+                String noResultMsg = "No errors found.";
+                System.out.println(noResultMsg);
+                writer.println(noResultMsg);
+            }
+        } finally {
+            //Close the input stream
+            outfw.close();
+        }
+    }
+
+}
