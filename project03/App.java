@@ -13,10 +13,6 @@ import java.text.ParseException;
  *
  * @author nraj39
  */
-/**
- *
- * @author nraj39
- */
 public class App {
 
     static HashMap<String, String> tags = new HashMap<String, String>();
@@ -46,14 +42,8 @@ public class App {
         //Parse input file
         parseGEDFile(gedFilePath);
 
-        System.out.println("Performing validation...");
-
-        //Validate entities
-        List<ValidationResult> results = new ArrayList();
-        GEDCOMDataObj.Validate(results);
-
         //Print results
-        printResults(gedFilePath, results);
+        print(gedFilePath, GEDCOMDataObj);
     }
 
     private static void initialize() {
@@ -98,26 +88,48 @@ public class App {
         }
     }
 
-    private static void printResults(String gedFilePath, List<ValidationResult> results) throws IOException {
+    private static void print(String gedFilePath, GEDCOMData GEDCOMDataObj) throws IOException {
         String gedOutFilePath = gedFilePath + ".out";
         FileWriter outfw = new FileWriter(gedOutFilePath);
         PrintWriter writer = new PrintWriter(outfw);
 
+        //Validate entities
+        List<ValidationResult> results = new ArrayList();
+        GEDCOMDataObj.Validate(results);
+
         try {
-            if (results != null && !results.isEmpty()) {
-                for (ValidationResult result : results) {
-                    System.out.println(result.toString());
-                    writer.println(result.toString());
-                }
-            } else {
-                String noResultMsg = "No errors found.";
-                System.out.println(noResultMsg);
-                writer.println(noResultMsg);
-            }
+            String msg = GEDCOMDataObj.toPersonsText();
+            System.out.println();
+            System.out.println("Individuals:");
+            System.out.println();
+            System.out.println(msg);
+            writer.println(msg);
+            System.out.println();
+
+            msg = GEDCOMDataObj.toFamiliesText();
+            System.out.println("Families:");
+            System.out.println();
+            System.out.println(msg);
+            writer.println(msg);
+            System.out.println();
+
+            printValidationResults(writer, results);
         } finally {
             //Close the input stream
             outfw.close();
         }
     }
 
+    private static void printValidationResults(PrintWriter writer, List<ValidationResult> results) throws IOException {
+        if (results != null && !results.isEmpty()) {
+            for (ValidationResult result : results) {
+                System.out.println(result.toString());
+                writer.println(result.toString());
+            }
+        } else {
+            String noResultMsg = "No errors found.";
+            System.out.println(noResultMsg);
+            writer.println(noResultMsg);
+        }
+    }
 }

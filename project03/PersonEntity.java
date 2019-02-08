@@ -61,6 +61,7 @@ public class PersonEntity implements IEntity {
                     if (bdText.length() > 0) {
                         String[] dateParts = bdText.split(" ");
                         entity.BirthYear = Integer.parseInt(dateParts[dateParts.length - 1]);
+                        entity.Age = Calendar.getInstance().get(Calendar.YEAR) - entity.BirthYear;
                     }
                 }
             } else if (var.contains("1 DEAT")) {
@@ -100,7 +101,10 @@ public class PersonEntity implements IEntity {
     public Date BirthDate;
     public Date DeathDate;
     public int BirthYear;
+    public int Age;
 
+    public List<FamilyEntity> Families;
+    
     @Override
     public String getId() {
         return Id;

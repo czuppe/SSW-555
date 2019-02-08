@@ -24,14 +24,14 @@ public class FamilyEntity implements IEntity {
             if (var.contains("HUSB")) {
                 entity.HusbandId = var.replace("1 HUSB", "").replace("@", "").trim();
             } else if (var.contains("WIFE")) {
-                entity.HusbandId = var.replace("1 WIFE", "").replace("@", "").trim();
+                entity.WifeId = var.replace("1 WIFE", "").replace("@", "").trim();
             } else if (var.contains("CHIL")) {
                 entity.ChildrenId.add(var.replace("1 CHIL ", "").replace("@", "").trim());
             } else if (var.contains("1 MARR")) {
                 if (index + 1 < elements.length) {
                     DateFormat format = new SimpleDateFormat("DD MMM yyyy", Locale.ENGLISH);
                     FactEntity marriageFact = new FactEntity();
-                    marriageFact.Date = format.parse(elements[index + 1].replace("2 DATE", "").trim());
+                    entity.MarriageDate = marriageFact.Date = format.parse(elements[index + 1].replace("2 DATE", "").trim());
                     marriageFact.Location = elements[index + 2].replace("2 PLAC", "").trim();
                     entity.Marriage = marriageFact;
                 }
@@ -39,7 +39,7 @@ public class FamilyEntity implements IEntity {
                 if (index + 1 < elements.length) {
                     DateFormat format = new SimpleDateFormat("DD MMM yyyy", Locale.ENGLISH);
                     FactEntity divorceFact = new FactEntity();
-                    divorceFact.Date = format.parse(elements[index + 1].replace("2 DATE", "").trim());
+                    entity.DivorceDate = divorceFact.Date = format.parse(elements[index + 1].replace("2 DATE", "").trim());
                     divorceFact.Location = elements[index + 2].replace("2 PLAC", "").trim();
                     entity.Divorce = divorceFact;
                 }
@@ -62,6 +62,8 @@ public class FamilyEntity implements IEntity {
     public List<String> ChildrenId;
     public FactEntity Marriage;
     public FactEntity Divorce;
+    public Date MarriageDate;
+    public Date DivorceDate;
 
     public PersonEntity Husband;
     public PersonEntity Wife;
