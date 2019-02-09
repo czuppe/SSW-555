@@ -7,6 +7,9 @@ package project03;
 
 import java.util.*;
 import java.text.*;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 
 /**
  *
@@ -55,13 +58,17 @@ public class PersonEntity implements IEntity {
                 entity.MarriedFamilyIds.add(var.replace("1 FAMS", "").replace("@", "").trim());
             } else if (var.contains("1 BIRT")) {
                 if (index + 1 < elements.length) {
-                    DateFormat format = new SimpleDateFormat("DD MMM yyyy", Locale.ENGLISH);
-                    String bdText = elements[index + 1].replace("2 DATE", "").trim();
-                    entity.BirthDate = format.parse(bdText);
+                    DateFormat formatter = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+                    String bdText = elements[index + 1].replace("2 DATE", "").trim();                                                            
+                    entity.BirthDate = formatter.parse(bdText);     
+                    
                     if (bdText.length() > 0) {
                         String[] dateParts = bdText.split(" ");
                         entity.BirthYear = Integer.parseInt(dateParts[dateParts.length - 1]);
-                        entity.Age = Calendar.getInstance().get(Calendar.YEAR) - entity.BirthYear;
+                        //entity.Age = Calendar.getInstance().get(Calendar.YEAR) - entity.BirthYear;
+                        LocalDate temp = entity.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        LocalDate currentDate = LocalDate.now();
+                        entity.Age = Period.between(temp, currentDate).getYears();
                     }
                 }
             } else if (var.contains("1 DEAT")) {
@@ -100,7 +107,7 @@ public class PersonEntity implements IEntity {
     public List<String> FileIds;
     public Date BirthDate;
     public Date DeathDate;
-    public int BirthYear;
+    public int BirthYear;    
     public int Age;
 
     public List<FamilyEntity> Families;
