@@ -121,7 +121,7 @@ public class GEDCOMData {
         StringBuilder msg = new StringBuilder();
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        msg.append("ID, Name, Gender, BirthDay, Age, Alive, Death, Child, Spouse\n");
+        msg.append("ID, Name, Gender, Birthday, Age, Alive, Death, Child, Spouse\n");
         for (PersonEntity entity : Individuals) {
             StringBuilder childMsg = new StringBuilder();
             entity.Families.forEach(fe -> {
