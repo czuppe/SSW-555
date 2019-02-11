@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  *
- * @author nraj39
+ * @author nraj39 bella458
  */
 public class FamilyEntityValidator {
 
@@ -52,12 +52,23 @@ public class FamilyEntityValidator {
             }
         }
     }
-
-    //US05: Marriage before death
+    
+    
+    //US05: Marriage before death : Marriage should occur before death of either spouse
     public static void marriageBeforeDeathCheck(FamilyEntity entity, List<ValidationResult> results) {
         if (entity.Marriage == null || entity.Marriage.Date == null) {
             return;
         }
+        if (entity.Husband != null && entity.Husband.DeathDate != null) {
+        	if (entity.Marriage.Date.before(entity.Husband.DeathDate)) {
+        		results.add(new ValidationResult("Marriage date must be before Husband's death date.", entity));
+        	}
+        }
+        if (entity.Wife != null && entity.Wife.DeathDate != null) {
+        	if (entity.Marriage.Date.before(entity.Wife.DeathDate)) {
+        		results.add(new ValidationResult("Marriage date must be before Wife's death date.", entity));
+        	}
+        } 
     }
 
     //US06: Divorce before death
