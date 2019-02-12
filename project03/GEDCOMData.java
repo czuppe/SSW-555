@@ -15,7 +15,20 @@ import java.util.stream.Collectors;
  */
 public class GEDCOMData {
 
-    public List<PersonEntity> Individuals;
+    public static List<PersonEntity> getIndividuals(){
+        return GEDCOMData.Individuals;
+    }
+    
+    public static PersonEntity getPerson(String id){
+        for(PersonEntity person : Individuals){
+            if(person.getId().equals(id)){
+                return person;
+            }           
+        }
+        return null;
+    }
+
+    public static List<PersonEntity> Individuals;
     public List<FamilyEntity> Families;
 
     public GEDCOMData() {
@@ -86,7 +99,7 @@ public class GEDCOMData {
 
     public String toString() {
         return null;
-    }
+    }   
 
     public String toFamiliesText() {
         StringBuilder msg = new StringBuilder();
@@ -153,8 +166,8 @@ public class GEDCOMData {
                         }
                     }
                 }
-            });
-
+            });                  
+            
             msg.append(entity.getId() + ", " + entity.FullName + ", " + entity.Gender + ", "
                     + format.format(entity.BirthDate) + ", " + entity.Age + ", " + (entity.DeathDate == null ? true : false) + ", "
                     + (entity.DeathDate != null ? format.format(entity.DeathDate) : "NA") + ", "

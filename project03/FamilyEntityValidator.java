@@ -5,12 +5,15 @@
  */
 package project03;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
 /**
  *
- * @author nraj39 bella458
+ * @author nraj39
  */
 public class FamilyEntityValidator {
 
@@ -52,36 +55,42 @@ public class FamilyEntityValidator {
             }
         }
     }
-    
-    
-    //US05: Marriage before death : Marriage should occur before death of either spouse
+
+    //US05: Marriage before death
     public static void marriageBeforeDeathCheck(FamilyEntity entity, List<ValidationResult> results) {
         if (entity.Marriage == null || entity.Marriage.Date == null) {
             return;
         }
-        if (entity.Husband != null && entity.Husband.DeathDate != null) {
-        	if (entity.Marriage.Date.before(entity.Husband.DeathDate)) {
-        		results.add(new ValidationResult("Marriage date must be before Husband's death date.", entity));
-        	}
-        }
-        if (entity.Wife != null && entity.Wife.DeathDate != null) {
-        	if (entity.Marriage.Date.before(entity.Wife.DeathDate)) {
-        		results.add(new ValidationResult("Marriage date must be before Wife's death date.", entity));
-        	}
-        } 
     }
 
     //US06: Divorce before death
     public static void divorceBeforeDeathCheck(FamilyEntity entity, List<ValidationResult> results) {
-        if (entity.Divorce == null || entity.Divorce.Date == null) {
-            return;
+        if (entity.Divorce != null && entity.Divorce.Date != null) {       
+            //check divorce before death of either spouse (husband/wife)
+            
+            if((entity.Husband != null && entity.Husband.DeathDate != null && entity.Husband.DeathDate.before(entity.Divorce.Date)) ||
+               (entity.Wife != null && entity.Wife.DeathDate != null && entity.Wife.DeathDate.before(entity.Divorce.Date))){
+                results.add(new ValidationResult("Divorce can only occur before death of both spouses.", entity));                
+            }
         }
     }
 
     //US12: Parents not too old
+    // Mother should be less than 60 years older than her children and father should be less than 80 years older than his children
     public static void parentsNotTooOldCheck(FamilyEntity entity, List<ValidationResult> results) {
-        if (entity.Children == null) {
-            return;
+        if (entity.ChildrenId != null) {
+            System.out.println("children id list not null");
+            LocalDate husbandBirthdate = entity.Husband.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate wifeBirthdate = entity.Wife.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();                          
+            
+            for(String childId : entity.ChildrenId){                
+                PersonEntity child = GEDCOMData.getPerson(childId);                       
+                LocalDate childBirthdate = child.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if((Period.between(husbandBirthdate, childBirthdate).getYears() > 80) || 
+                      (Period.between(wifeBirthdate, childBirthdate).getYears() > 60) ){                    
+                    results.add(new ValidationResult("Mother should be less than 60 years older than her children and father should be less than 80 years older than his children.", entity));                    
+                }                
+            }
         }
     }
 }
