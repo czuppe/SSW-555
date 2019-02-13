@@ -78,8 +78,7 @@ public class FamilyEntityValidator {
     //US12: Parents not too old
     // Mother should be less than 60 years older than her children and father should be less than 80 years older than his children
     public static void parentsNotTooOldCheck(FamilyEntity entity, List<ValidationResult> results) {
-        if (entity.ChildrenId != null) {
-            System.out.println("children id list not null");
+        if (entity.ChildrenId != null) {            
             LocalDate husbandBirthdate = entity.Husband.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate wifeBirthdate = entity.Wife.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();                          
             
