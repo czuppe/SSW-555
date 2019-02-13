@@ -23,6 +23,9 @@ public class PersonEntityValidator {
             return;
         
         Date todaysDate = Utility.getTodaysDate();
+        if (entity.BirthDate == null) {
+            results.add(new ValidationResult("Missing Birth date.", entity));
+        }
         if (entity.BirthDate != null && entity.BirthDate.after(todaysDate)) {
             results.add(new ValidationResult("Birth date must be before today's date.", entity));
         }
