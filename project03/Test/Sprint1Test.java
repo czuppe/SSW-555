@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 public class Sprint1Test {
 
     GEDCOMData GEDCOMDataObj;
-    
+
     public Sprint1Test() {
     }
 
@@ -82,7 +82,6 @@ public class Sprint1Test {
         });
     }
 
-
     @Test
     public void testDivorceDatesBeforeTodaysDate() throws Exception {
         Date todaysDate = Utility.getTodaysDate();
@@ -93,5 +92,17 @@ public class Sprint1Test {
             }
         });
     }
-    
+
+    @Test //(Bella US03)
+    public void testBirthDatesBeforeDeathDate() throws Exception {
+
+        GEDCOMDataObj.Families.forEach((entity) -> {
+            if (entity.Husband != null && entity.Husband.DeathDate != null && entity.Husband.BirthDate != null) {
+                assertTrue(entity.Husband.BirthDate.before(entity.Husband.DeathDate));
+            }
+            if (entity.Wife != null && entity.Wife.DeathDate != null && entity.Wife.BirthDate != null) {
+                assertTrue(entity.Wife.BirthDate.before(entity.Wife.DeathDate));
+            }
+        });
+    }
 }
