@@ -60,12 +60,12 @@ public class FamilyEntityValidator {
             return;
         }
         if (entity.Husband != null && entity.Husband.DeathDate != null) {
-        	if (entity.Marriage.Date.before(entity.Husband.DeathDate)) {
+        	if (entity.Marriage.Date.after(entity.Husband.DeathDate)) {
         		results.add(new ValidationResult("Marriage date must be before Husband's death date.", entity));
         	}
         }
         if (entity.Wife != null && entity.Wife.DeathDate != null) {
-        	if (entity.Marriage.Date.before(entity.Wife.DeathDate)) {
+        	if (entity.Marriage.Date.after(entity.Wife.DeathDate)) {
         		results.add(new ValidationResult("Marriage date must be before Wife's death date.", entity));
         	}
         } 
