@@ -80,7 +80,7 @@ public class App {
                 if (recordType.equals("FAM")) {
                     GEDCOMDataObj.Families.add(FamilyEntity.create(elements));
                 } else if (recordType.equals("INDI")) {
-                    GEDCOMDataObj.Individuals.add(PersonEntity.create(elements));
+                    GEDCOMDataObj.Individuals.put(elements[0].replace("0 @", "").replace("@ INDI", "").replace("@", "").trim(), PersonEntity.create(elements));
                 } else if (recordType.equals("NOTE")) {
 
                 }

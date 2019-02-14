@@ -83,7 +83,7 @@ public class FamilyEntityValidator {
             LocalDate wifeBirthdate = entity.Wife.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();                          
             
             for(String childId : entity.ChildrenId){                
-                PersonEntity child = GEDCOMData.getPerson(childId);                       
+                PersonEntity child = GEDCOMData.getIndividuals().get(childId);                       
                 LocalDate childBirthdate = child.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 if((Period.between(husbandBirthdate, childBirthdate).getYears() > 80) || 
                       (Period.between(wifeBirthdate, childBirthdate).getYears() > 60) ){                    

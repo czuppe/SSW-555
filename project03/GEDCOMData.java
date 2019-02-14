@@ -15,24 +15,17 @@ import java.util.stream.Collectors;
  */
 public class GEDCOMData {
 
-    public static List<PersonEntity> getIndividuals(){
+    public static Map<String, PersonEntity> getIndividuals(){
         return GEDCOMData.Individuals;
     }
     
-    public static PersonEntity getPerson(String id){
-        for(PersonEntity person : Individuals){
-            if(person.getId().equals(id)){
-                return person;
-            }           
-        }
-        return null;
-    }
-
-    public static List<PersonEntity> Individuals;
+    public static Map<String, PersonEntity> Individuals;
+    //public static List<PersonEntity> Individuals;
     public List<FamilyEntity> Families;
 
     public GEDCOMData() {
-        Individuals = new ArrayList<PersonEntity>();
+        Individuals = new HashMap<String, PersonEntity>();
+        //Individuals = new ArrayList<PersonEntity>();
         Families = new ArrayList<FamilyEntity>();
     }
 
@@ -45,10 +38,12 @@ public class GEDCOMData {
 
         GEDCOMDataValidator.uniqueIDsCheck(this, results);
         GEDCOMDataValidator.uniqueNameAndBirthDateCheck(this, results);
-
-        Individuals.forEach((entity) -> {
-            entity.validate(results);
-        });
+        
+        Iterator iterator = Individuals.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, PersonEntity> individual = (Map.Entry)iterator.next();            
+            individual.getValue().validate(results);            
+        }
 
         Families.forEach((entity) -> {
             entity.validate(results);
@@ -56,43 +51,37 @@ public class GEDCOMData {
     }
 
     private void loadReferenceEntitiesToFamily() {
-        Families.forEach((fe) -> {
-            fe.Husband = Individuals.stream().filter(pe -> pe.getId().equals(fe.HusbandId)).findFirst().orElse(null);
-            fe.Wife = Individuals.stream().filter(pe -> pe.getId().equals(fe.WifeId)).findFirst().orElse(null);
+        Families.forEach((family) -> {
+            family.Husband = Individuals.get(family.HusbandId);
+            family.Wife = Individuals.get(family.WifeId);
 
-            for (String childId : fe.ChildrenId) {
-                PersonEntity ce = Individuals.stream().filter(pe -> pe.getId().equals(childId)).findFirst().orElse(null);
-                if (ce != null) {
-                    fe.Children.add(ce);
+            for (String childId : family.ChildrenId) {
+                PersonEntity child = Individuals.get(childId);
+                if (child != null) {
+                    family.Children.add(child);
                 }
             }
         });
-        Individuals.forEach((pe) -> {
+        
+        Iterator iterator = Individuals.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, PersonEntity> individual = (Map.Entry)iterator.next();            
             Map<String, IEntity> map = new HashMap<String, IEntity>();
-            Object[] x = Families.stream().filter(fe -> fe.Husband != null && fe.Husband.getId().equals(pe.getId())).toArray();
+            Object[] x = Families.stream().filter(fe -> fe.Husband != null && fe.Husband.getId().equals(individual.getKey())).toArray();
             for (Object entity : x) {
                 map.put(IEntity.class.cast(entity).getId(), IEntity.class.cast(entity));
             }
 
-            if (pe.Families == null) {
-                Object[] y = Families.stream().filter(fe -> fe.Wife != null && fe.Wife.getId().equals(pe.getId())).toArray();
+            if (individual.getValue().Families == null) {
+                Object[] y = Families.stream().filter(fe -> fe.Wife != null && fe.Wife.getId().equals(individual.getKey())).toArray();
                 for (Object entity : y) {
                     if (!map.containsKey(IEntity.class.cast(entity).getId())) {
                         map.put(IEntity.class.cast(entity).getId(), IEntity.class.cast(entity));
                     }
                 }
             }
-            pe.Families = new ArrayList(map.values());
-            /*
-            if (pe.Family == null) {
-                pe.Family = Families.stream().filter(fe -> {
-                    if (fe.ChildrenId != null) {
-                        return fe.ChildrenId.stream().filter(ce -> ce.equals(pe.getId())).count() > 0;
-                    }
-                    return true;
-                }).findFirst().orElse(null);
-            }*/
-        });
+            individual.getValue().Families = new ArrayList(map.values());            
+        }        
     }
 
     @Override
@@ -135,7 +124,11 @@ public class GEDCOMData {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         msg.append("ID, Name, Gender, Birthday, Age, Alive, Death, Child, Spouse\n");
-        for (PersonEntity entity : Individuals) {
+        
+        Iterator iterator = Individuals.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, PersonEntity> individual = (Map.Entry)iterator.next();
+            PersonEntity entity = individual.getValue();
             StringBuilder childMsg = new StringBuilder();
             entity.Families.forEach(fe -> {
                 if (fe != null && fe.Children != null && !fe.Children.isEmpty()) {
@@ -172,8 +165,9 @@ public class GEDCOMData {
                     + format.format(entity.BirthDate) + ", " + entity.Age + ", " + (entity.DeathDate == null ? true : false) + ", "
                     + (entity.DeathDate != null ? format.format(entity.DeathDate) : "NA") + ", "
                     + (childMsg.length() == 0 ? "NA" : "{" + childMsg.toString() + "}") + ", "
-                    + (spouseMsg.length() == 0 ? "NA" : "{" + spouseMsg.toString() + "}") + "\n");
+                    + (spouseMsg.length() == 0 ? "NA" : "{" + spouseMsg.toString() + "}") + "\n");         
         }
+               
         return msg.toString();
     }
 }
