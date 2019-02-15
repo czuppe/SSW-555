@@ -126,4 +126,15 @@ public class PersonEntity implements IEntity {
         PersonEntityValidator.datesBeforeCurrentDateCheck(this, results);
         PersonEntityValidator.birthBeforeDeathDateCheck(this, results);
     }
+
+    private GEDCOMData GEDCOMDataObj;
+    @Override
+    public GEDCOMData getGEDCOMData() {
+        return GEDCOMDataObj;
+    }
+
+    @Override
+    public void setGEDCOMData(GEDCOMData value) {
+        GEDCOMDataObj = value;
+    }
 }

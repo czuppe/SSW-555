@@ -39,7 +39,8 @@ public class Sprint1Test {
 
     @Before
     public void setUp() throws Exception {
-        GEDCOMDataObj = App.parseGEDFile("/Users/Bella/eclipse-workspace/project03/src/project03/BellaManoim.ged");
+        //GEDCOMDataObj = App.parseGEDFile("/Users/Bella/eclipse-workspace/project03/src/project03/BellaManoim.ged");
+        GEDCOMDataObj = App.parseGEDFile("C:\\Temp\\MS\\SSW -555-WS\\My-Family-7-Feb-2019-240.ged");
     }
 
     @After
@@ -48,7 +49,7 @@ public class Sprint1Test {
 
     @Test
     public void testBirthDatesMustExists() throws Exception {
-        GEDCOMDataObj.Individuals.forEach((k, entity) -> {
+        GEDCOMDataObj.getIndividuals().forEach((k, entity) -> {
             assertNotNull(entity.BirthDate);
         });
     }
@@ -57,7 +58,7 @@ public class Sprint1Test {
     public void testBirthDatesBeforeTodaysDate() throws Exception {
         Date todaysDate = Utility.getTodaysDate();
 
-        GEDCOMDataObj.Individuals.forEach((k, entity) -> {
+        GEDCOMDataObj.getIndividuals().forEach((k, entity) -> {
             assertTrue(entity.BirthDate != null && entity.BirthDate.before(todaysDate));
         });
     }
@@ -66,7 +67,7 @@ public class Sprint1Test {
     public void testDeathDatesBeforeTodaysDate() throws Exception {
         Date todaysDate = Utility.getTodaysDate();
 
-        GEDCOMDataObj.Individuals.forEach((k, entity) -> {
+        GEDCOMDataObj.getIndividuals().forEach((k, entity) -> {
             if (entity.DeathDate != null) {
                 assertTrue(entity.DeathDate.before(todaysDate));
             }
@@ -77,7 +78,7 @@ public class Sprint1Test {
     public void testMarriageDatesBeforeTodaysDate() throws Exception {
         Date todaysDate = Utility.getTodaysDate();
 
-        GEDCOMDataObj.Families.forEach((entity) -> {
+        GEDCOMDataObj.getFamilies().forEach((k, entity) -> {
             if (entity.MarriageDate != null) {
                 assertTrue(entity.MarriageDate.before(todaysDate));
             }
@@ -88,7 +89,7 @@ public class Sprint1Test {
     public void testDivorceDatesBeforeTodaysDate() throws Exception {
         Date todaysDate = Utility.getTodaysDate();
 
-        GEDCOMDataObj.Families.forEach((entity) -> {
+        GEDCOMDataObj.getFamilies().forEach((k, entity) -> {
             if (entity.DivorceDate != null) {
                 assertTrue(entity.DivorceDate.before(todaysDate));
             }
@@ -97,7 +98,7 @@ public class Sprint1Test {
 
     @Test //(Bella US03)
     public void testBirthDatesBeforeDeathDate() throws Exception {
-        GEDCOMDataObj.Families.forEach((entity) -> {
+        GEDCOMDataObj.getFamilies().forEach((k, entity) -> {
             if (entity.Husband != null && entity.Husband.DeathDate != null && entity.Husband.BirthDate != null) {
                 assertTrue(entity.Husband.BirthDate.before(entity.Husband.DeathDate));
             }
@@ -120,7 +121,7 @@ public class Sprint1Test {
     
     @Test //(Bella US05)
     public void testMarriageBeforeDeathDate() throws Exception {
-    	GEDCOMDataObj.Families.forEach((entity) -> {
+    	GEDCOMDataObj.getFamilies().forEach((k, entity) -> {
             if (entity.Husband != null && entity.MarriageDate != null && entity.Husband.DeathDate != null) {
                 assertTrue(entity.MarriageDate.before(entity.Husband.DeathDate));
             }
@@ -131,4 +132,3 @@ public class Sprint1Test {
     }
     
 }
-  

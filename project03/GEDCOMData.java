@@ -14,19 +14,38 @@ import java.util.stream.Collectors;
  * @author nraj39
  */
 public class GEDCOMData {
-
-    public static Map<String, PersonEntity> getIndividuals(){
-        return GEDCOMData.Individuals;
-    }
     
-    public static Map<String, PersonEntity> Individuals;
-    public static Map<String, FamilyEntity> Families;
+    private Map<String, PersonEntity> Individuals;
+    private Map<String, FamilyEntity> Families;
+
+    public Map<String, PersonEntity> getIndividuals(){
+        return Individuals;
+    }
+    public Map<String, FamilyEntity> getFamilies(){
+        return Families;
+    }
 
     public GEDCOMData() {
         Individuals = new HashMap<String, PersonEntity>();
         Families = new HashMap<String, FamilyEntity>();
     }
 
+    public void addFamily(FamilyEntity entity) {
+        if (entity == null)
+            return;
+        
+        entity.setGEDCOMData(this);
+        Families.put(entity.getId(), entity);
+    }
+    
+    public void addIndividual(PersonEntity entity) {
+        if (entity == null)
+            return;
+        
+        entity.setGEDCOMData(this);
+        Individuals.put(entity.getId(), entity);
+    }
+	
     public void Validate(List<ValidationResult> results) {
         if (results == null) {
             return;
@@ -37,40 +56,31 @@ public class GEDCOMData {
         GEDCOMDataValidator.uniqueIDsCheck(this, results);
         GEDCOMDataValidator.uniqueNameAndBirthDateCheck(this, results);
         
-        Iterator individualsIterator = Individuals.entrySet().iterator();
-        while (individualsIterator.hasNext()) {
-            Map.Entry<String, PersonEntity> individual = (Map.Entry)individualsIterator.next();            
-            individual.getValue().validate(results);            
-        }
-        
-        Iterator familiesIterator = Families.entrySet().iterator();
-        while (familiesIterator.hasNext()) {
-            Map.Entry<String, FamilyEntity> family = (Map.Entry)familiesIterator.next();            
-            family.getValue().validate(results);            
-        }
+        Individuals.forEach((k, entity) -> {
+            entity.validate(results);
+        });
+
+        Families.forEach((k, entity) -> {
+            entity.validate(results);
+        });
     }
 
     private void loadReferenceEntitiesToFamily() {
-        Iterator familiesIterator = Families.entrySet().iterator();
-        while (familiesIterator.hasNext()) {
-            Map.Entry<String, FamilyEntity> familyEntry = (Map.Entry)familiesIterator.next();
-            FamilyEntity family = familyEntry.getValue();
+        Families.forEach((k, family) -> {
             family.Husband = Individuals.get(family.HusbandId);
             family.Wife = Individuals.get(family.WifeId);
-            
+
             for (String childId : family.ChildrenId) {
                 PersonEntity child = Individuals.get(childId);
                 if (child != null) {
                     family.Children.add(child);
                 }
-            }            
-        }        
+            }
+        });
         
-        Iterator iterator = Individuals.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, PersonEntity> individual = (Map.Entry)iterator.next();            
+        Individuals.forEach((k, individual) -> {
             Map<String, IEntity> map = new HashMap<String, IEntity>();
-            Map<String, FamilyEntity> x = Families.entrySet().stream().filter(fe -> fe.getValue().Husband != null && fe.getValue().Husband.getId().equals(individual.getKey())).collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
+            Map<String, FamilyEntity> x = Families.entrySet().stream().filter(fe -> fe.getValue().Husband != null && fe.getValue().Husband.getId().equals(k)).collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
             
             Iterator i = x.entrySet().iterator();
             while (i.hasNext()) {
@@ -78,9 +88,8 @@ public class GEDCOMData {
                 map.put(entry.getKey(), IEntity.class.cast(entry.getValue()));                
             }
 
-            if (individual.getValue().Families == null) {
-                //Object[] y = Families.entrySet().stream().filter(fe -> fe.getValue().Wife != null && fe.getValue().Wife.getId().equals(individual.getKey())).toArray();
-                Map<String, FamilyEntity> y = Families.entrySet().stream().filter(fe -> fe.getValue().Wife != null && fe.getValue().Wife.getId().equals(individual.getKey())).collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
+            if (individual.Families == null) {
+                Map<String, FamilyEntity> y = Families.entrySet().stream().filter(fe -> fe.getValue().Wife != null && fe.getValue().Wife.getId().equals(k)).collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
                 
                 Iterator j = y.entrySet().iterator();
                 while (j.hasNext()) {
@@ -88,8 +97,8 @@ public class GEDCOMData {
                     map.put(entry.getKey(), IEntity.class.cast(entry.getValue()));                
                 }                
             }
-            individual.getValue().Families = new ArrayList(map.values());            
-        }        
+            individual.Families = new ArrayList(map.values());            
+        });        
     }
 
     @Override
@@ -103,14 +112,10 @@ public class GEDCOMData {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         msg.append("ID, Married, Divorced, Husband ID, Husband Name, Wife ID, Wife Name, Children\n");
-        
-        Iterator familiesIterator = Families.entrySet().iterator();
-        while (familiesIterator.hasNext()) {
-            Map.Entry<String, FamilyEntity> familyEntry = (Map.Entry)familiesIterator.next();
-            FamilyEntity family = familyEntry.getValue();
+        Families.forEach((k, entity) -> {
             StringBuilder childMsg = new StringBuilder();
-            if (family.Children != null) {
-                for (PersonEntity ce : family.Children) {
+            if (entity.Children != null) {
+                for (PersonEntity ce : entity.Children) {
                     if (childMsg.length() == 0) {
                         childMsg.append(ce.getId());
                     } else {
@@ -118,16 +123,16 @@ public class GEDCOMData {
                     }
                 }
             }
-            msg.append(family.getId() + ", "
-                    + (family.MarriageDate != null ? format.format(family.MarriageDate) : "NA") + ", "
-                    + (family.DivorceDate != null ? format.format(family.DivorceDate) : "NA") + ", "
-                    + (family.HusbandId != null ? family.HusbandId : "NA") + ", "
-                    + (family.Husband != null ? family.Husband.FullName : "NA") + ", "
-                    + (family.WifeId != null ? family.WifeId : "NA") + ", "
-                    + (family.Wife != null ? family.Wife.FullName : "NA") + ", "
+            msg.append(entity.getId() + ", "
+                    + (entity.MarriageDate != null ? format.format(entity.MarriageDate) : "NA") + ", "
+                    + (entity.DivorceDate != null ? format.format(entity.DivorceDate) : "NA") + ", "
+                    + (entity.HusbandId != null ? entity.HusbandId : "NA") + ", "
+                    + (entity.Husband != null ? entity.Husband.FullName : "NA") + ", "
+                    + (entity.WifeId != null ? entity.WifeId : "NA") + ", "
+                    + (entity.Wife != null ? entity.Wife.FullName : "NA") + ", "
                     + (childMsg.length() == 0 ? "NA" : "{" + childMsg.toString() + "}") + "\n"
             );
-        }        
+        });
         return msg.toString();
     }
 
@@ -137,10 +142,7 @@ public class GEDCOMData {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         msg.append("ID, Name, Gender, Birthday, Age, Alive, Death, Child, Spouse\n");
         
-        Iterator iterator = Individuals.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, PersonEntity> individual = (Map.Entry)iterator.next();
-            PersonEntity entity = individual.getValue();
+        Individuals.forEach((k, entity) -> {
             StringBuilder childMsg = new StringBuilder();
             entity.Families.forEach(fe -> {
                 if (fe != null && fe.Children != null && !fe.Children.isEmpty()) {
@@ -178,7 +180,7 @@ public class GEDCOMData {
                     + (entity.DeathDate != null ? format.format(entity.DeathDate) : "NA") + ", "
                     + (childMsg.length() == 0 ? "NA" : "{" + childMsg.toString() + "}") + ", "
                     + (spouseMsg.length() == 0 ? "NA" : "{" + spouseMsg.toString() + "}") + "\n");         
-        }
+        });
                
         return msg.toString();
     }

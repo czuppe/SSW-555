@@ -16,7 +16,6 @@ import java.text.ParseException;
 public class App {
 
     static HashMap<String, String> tags = new HashMap<String, String>();
-    static GEDCOMData GEDCOMDataObj = new GEDCOMData();
 
     /**
      * @param args the command line arguments
@@ -40,7 +39,7 @@ public class App {
         initialize();
 
         //Parse input file
-        parseGEDFile(gedFilePath);
+        GEDCOMData GEDCOMDataObj = parseGEDFile(gedFilePath);
 
         //Print results
         print(gedFilePath, GEDCOMDataObj);
@@ -66,8 +65,9 @@ public class App {
         tags.put("NOTE", "0");
     }
 
-    private static void parseGEDFile(String gedFilePath) throws FileNotFoundException, IOException, ParseException {
+    public static GEDCOMData parseGEDFile(String gedFilePath) throws FileNotFoundException, IOException, ParseException {
 
+        GEDCOMData GEDCOMDataObj = new GEDCOMData();
         String gedcomFileContent = Utility.readFileAsString(gedFilePath);
         String[] records = gedcomFileContent.replaceAll("0 @", "\u0646@").split("\u0646");
 
@@ -78,14 +78,15 @@ public class App {
                 String recordType = elements[0].replaceAll(" ", "").split("@")[2];
 
                 if (recordType.equals("FAM")) {
-                    GEDCOMDataObj.Families.put(elements[0].replace("0 @", "").replace("@ FAM", "").replace("@", "").trim(), FamilyEntity.create(elements));
+                    GEDCOMDataObj.addFamily(FamilyEntity.create(elements));
                 } else if (recordType.equals("INDI")) {
-                    GEDCOMDataObj.Individuals.put(elements[0].replace("0 @", "").replace("@ INDI", "").replace("@", "").trim(), PersonEntity.create(elements));
+                    GEDCOMDataObj.addIndividual(PersonEntity.create(elements));
                 } else if (recordType.equals("NOTE")) {
 
                 }
             }
         }
+        return GEDCOMDataObj;
     }
 
     private static void print(String gedFilePath, GEDCOMData GEDCOMDataObj) throws IOException {
