@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  *
- * @author nraj39
+ * @author nraj39 bella458
  */
 public class PersonEntityValidator {
     private PersonEntityValidator() {
@@ -23,6 +23,9 @@ public class PersonEntityValidator {
             return;
         
         Date todaysDate = Utility.getTodaysDate();
+        if (entity.BirthDate == null) {
+            results.add(new ValidationResult("Missing Birth date.", entity));
+        }
         if (entity.BirthDate != null && entity.BirthDate.after(todaysDate)) {
             results.add(new ValidationResult("Birth date must be before today's date.", entity));
         }
@@ -31,9 +34,20 @@ public class PersonEntityValidator {
         }
     }    
     
-    //US03: Birth before death
+
+    //US03: Birth before death- Birth should occur before death of an individual
     public static void birthBeforeDeathDateCheck(PersonEntity entity, List<ValidationResult> results) {
         if (entity == null || results == null)
+        	return;
+        
+    	if (entity.DeathDate == null) {
             return;
-    }    
+        }
+        if (entity.DeathDate != null && entity.BirthDate != null) {
+        	if (entity.DeathDate.before(entity.BirthDate)) {
+        		results.add(new ValidationResult("Birth date must be before death date.", entity));
+        	}
+        }
+       
+    }
 }

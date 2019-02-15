@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  *
- * @author nraj39
+ * @author nraj39 bella458
  */
 public class FamilyEntityValidator {
 
@@ -55,12 +55,23 @@ public class FamilyEntityValidator {
             }
         }
     }
-
-    //US05: Marriage before death
+    
+    
+    //US05: Marriage before death : Marriage should occur before death of either spouse
     public static void marriageBeforeDeathCheck(FamilyEntity entity, List<ValidationResult> results) {
         if (entity.Marriage == null || entity.Marriage.Date == null) {
             return;
         }
+        if (entity.Husband != null && entity.Husband.DeathDate != null) {
+        	if (entity.Marriage.Date.after(entity.Husband.DeathDate)) {
+        		results.add(new ValidationResult("Marriage date must be before Husband's death date.", entity));
+        	}
+        }
+        if (entity.Wife != null && entity.Wife.DeathDate != null) {
+        	if (entity.Marriage.Date.after(entity.Wife.DeathDate)) {
+        		results.add(new ValidationResult("Marriage date must be before Wife's death date.", entity));
+        	}
+        } 
     }
 
     //US06: Divorce before death
@@ -79,14 +90,14 @@ public class FamilyEntityValidator {
     // Mother should be less than 60 years older than her children and father should be less than 80 years older than his children
     public static void parentsNotTooOldCheck(FamilyEntity entity, List<ValidationResult> results) {
         if (entity.ChildrenId != null) {            
-            LocalDate husbandBirthdate = entity.Husband.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate wifeBirthdate = entity.Wife.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();                          
+            LocalDate husbandBirthdate = entity.Husband != null ? entity.Husband.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+            LocalDate wifeBirthdate = entity.Wife != null ? entity.Wife.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;                          
             
             for(String childId : entity.ChildrenId){                
-                PersonEntity child = GEDCOMData.getIndividuals().get(childId);                       
+                PersonEntity child = entity.getGEDCOMData().getIndividuals().get(childId);                       
                 LocalDate childBirthdate = child.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                if((Period.between(husbandBirthdate, childBirthdate).getYears() > 80) || 
-                      (Period.between(wifeBirthdate, childBirthdate).getYears() > 60) ){                    
+                if((husbandBirthdate != null && Period.between(husbandBirthdate, childBirthdate).getYears() > 80) || 
+                      (wifeBirthdate != null && Period.between(wifeBirthdate, childBirthdate).getYears() > 60) ){                    
                     results.add(new ValidationResult("Mother should be less than 60 years older than her children and father should be less than 80 years older than his children.", entity));                    
                 }                
             }

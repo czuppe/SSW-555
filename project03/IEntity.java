@@ -13,5 +13,7 @@ import java.util.*;
  */
 public interface IEntity {
     String getId();
+    GEDCOMData getGEDCOMData();
+    void setGEDCOMData(GEDCOMData value);
     void validate(List<ValidationResult> results);
 }

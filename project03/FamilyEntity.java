@@ -74,6 +74,17 @@ public class FamilyEntity implements IEntity {
         return Id;
     }
 
+    private GEDCOMData GEDCOMDataObj;
+    @Override
+    public GEDCOMData getGEDCOMData() {
+        return GEDCOMDataObj;
+    }
+
+    @Override
+    public void setGEDCOMData(GEDCOMData value) {
+        GEDCOMDataObj = value;
+    }
+
     @Override
     public void validate(List<ValidationResult> results) {
         if (results == null) {
@@ -83,5 +94,6 @@ public class FamilyEntity implements IEntity {
         FamilyEntityValidator.birthBeforeMarriageCheck(this, results);
         FamilyEntityValidator.divorceBeforeDeathCheck(this, results);
         FamilyEntityValidator.parentsNotTooOldCheck(this, results);
+        FamilyEntityValidator.marriageBeforeDeathCheck(this, results);
     }
 }

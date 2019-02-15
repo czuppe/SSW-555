@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
  */
 public class GEDCOMData {
 
-    public static Map<String, PersonEntity> getIndividuals(){
-        return GEDCOMData.Individuals;
+    public Map<String, PersonEntity> getIndividuals(){
+        return Individuals;
     }
     
-    public static Map<String, PersonEntity> Individuals;
+    public Map<String, PersonEntity> Individuals;
     //public static List<PersonEntity> Individuals;
     public List<FamilyEntity> Families;
 
@@ -29,6 +29,22 @@ public class GEDCOMData {
         Families = new ArrayList<FamilyEntity>();
     }
 
+    public void addFamily(FamilyEntity entity) {
+        if (entity == null)
+            return;
+        
+        entity.setGEDCOMData(this);
+        Families.add(entity);
+    }
+    
+    public void addIndividual(PersonEntity entity) {
+        if (entity == null)
+            return;
+        
+        entity.setGEDCOMData(this);
+        Individuals.put(entity.getId(), entity);
+    }
+	
     public void Validate(List<ValidationResult> results) {
         if (results == null) {
             return;
