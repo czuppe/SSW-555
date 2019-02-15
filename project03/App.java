@@ -78,7 +78,7 @@ public class App {
                 String recordType = elements[0].replaceAll(" ", "").split("@")[2];
 
                 if (recordType.equals("FAM")) {
-                    GEDCOMDataObj.Families.add(FamilyEntity.create(elements));
+                    GEDCOMDataObj.Families.put(elements[0].replace("0 @", "").replace("@ FAM", "").replace("@", "").trim(), FamilyEntity.create(elements));
                 } else if (recordType.equals("INDI")) {
                     GEDCOMDataObj.Individuals.put(elements[0].replace("0 @", "").replace("@ INDI", "").replace("@", "").trim(), PersonEntity.create(elements));
                 } else if (recordType.equals("NOTE")) {

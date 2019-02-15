@@ -19,13 +19,13 @@ I9, Michael /Freeman/, M, 1983-03-07, 35, true, NA, NA, NA
 I18, Drew /Drown/, M, 1958-03-01, 60, false, 2000-01-19, NA, {I7}
 
 ID, Married, Divorced, Husband ID, Husband Name, Wife ID, Wife Name, Children
+F6, 2015-01-01, NA, I15, Kevin /Bacon/, I12, JoAnne /Johnson/, {I16, I17}
+F7, 2011-01-06, NA, I14, Dwayne /Dickson/, I12, JoAnne /Johnson/, {I13}
 F1, NA, NA, I1, Charles /Zuppe/, I2, Melissa /Freeman/, NA
 F2, NA, NA, I4, Craig /Freeman/, I3, Claudia /Flaherty/, {I2, I9, I10}
 F3, NA, NA, I5, Joseph /Flaherty/, I6, Dolores /Lindenfelser/, {I3, I7, I8}
 F4, 2001-01-02, 2002-01-03, I18, Drew /Drown/, I7, Susan /Flaherty/, NA
 F5, NA, NA, I11, Richard /Johnson/, I8, Joan /Flaherty/, {I12}
-F6, 2015-01-01, NA, I15, Kevin /Bacon/, I12, JoAnne /Johnson/, {I16, I17}
-F7, 2011-01-06, NA, I14, Dwayne /Dickson/, I12, JoAnne /Johnson/, {I13}
 
 [ID: F3]: Mother should be less than 60 years older than her children and father should be less than 80 years older than his children.
 [ID: F3]: Mother should be less than 60 years older than her children and father should be less than 80 years older than his children.
