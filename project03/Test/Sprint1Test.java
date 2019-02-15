@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -37,7 +39,7 @@ public class Sprint1Test {
 
     @Before
     public void setUp() throws Exception {
-        GEDCOMDataObj = App.parseGEDFile("C:\\Temp\\MS\\SSW -555-WS\\My-Family-7-Feb-2019-240.ged");
+        GEDCOMDataObj = App.parseGEDFile("/Users/Bella/eclipse-workspace/project03/src/project03/BellaManoim.ged");
     }
 
     @After
@@ -104,4 +106,29 @@ public class Sprint1Test {
             }
         });
     }
+    
+    /* COMMENTING THIS OUT, can someone review? I am trying to ensure the individuals (not just husband and wife) birth dates are before death date.
+    @Test //(Bella US03)
+    public void testChildrenBirthDatesBeforeDeathDate() throws Exception {
+
+        GEDCOMDataObj.Individuals.forEach((k, entity) -> {
+        	if (entity.BirthDate != null && entity.DeathDate != null) {
+        		assertTrue(entity.BirthDate.before(entity.DeathDate));   
+        	}
+        });       
+    } */
+    
+    @Test //(Bella US05)
+    public void testMarriageBeforeDeathDate() throws Exception {
+    	GEDCOMDataObj.Families.forEach((entity) -> {
+            if (entity.Husband != null && entity.MarriageDate != null && entity.Husband.DeathDate != null) {
+                assertTrue(entity.MarriageDate.before(entity.Husband.DeathDate));
+            }
+            if (entity.Wife != null && entity.MarriageDate != null && entity.Wife.DeathDate != null) {
+                assertTrue(entity.MarriageDate.before(entity.Wife.DeathDate));
+            }
+        });
+    }
+    
 }
+  
