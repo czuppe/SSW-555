@@ -76,7 +76,6 @@ public class AppTest {
 
         while(gedOutput.hasNext()) {
             String nextLine = gedOutput.nextLine();
-            System.out.println("Line = " + nextLine);
             if(nextLine.contains("Divorce can only occur before death of both spouses.")){
                 foundExpected = true;
                 break;
