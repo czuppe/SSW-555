@@ -14,38 +14,61 @@ import java.util.stream.Collectors;
  * @author nraj39
  */
 public class GEDCOMData {
-    
+
     private Map<String, PersonEntity> Individuals;
     private Map<String, FamilyEntity> Families;
 
-    public Map<String, PersonEntity> getIndividuals(){
+    private List<String> IndividualsDuplicates;
+    private List<String> FamiliesDuplicates;
+
+    public List<String> getIndividualsDuplicates() {
+        return IndividualsDuplicates;
+    }
+
+    public List<String> getFamiliesDuplicates() {
+        return FamiliesDuplicates;
+    }
+
+    public Map<String, PersonEntity> getIndividuals() {
         return Individuals;
     }
-    public Map<String, FamilyEntity> getFamilies(){
+
+    public Map<String, FamilyEntity> getFamilies() {
         return Families;
     }
 
     public GEDCOMData() {
         Individuals = new HashMap<String, PersonEntity>();
         Families = new HashMap<String, FamilyEntity>();
+
+        IndividualsDuplicates = new ArrayList();
+        FamiliesDuplicates = new ArrayList();
     }
 
     public void addFamily(FamilyEntity entity) {
-        if (entity == null)
+        if (entity == null) {
             return;
-        
+        }
+
         entity.setGEDCOMData(this);
+        if (Families.containsKey(entity.getId())) {
+            FamiliesDuplicates.add(entity.getId());
+        }
         Families.put(entity.getId(), entity);
     }
-    
+
     public void addIndividual(PersonEntity entity) {
-        if (entity == null)
+        if (entity == null) {
             return;
-        
+        }
+
         entity.setGEDCOMData(this);
+        if (Individuals.containsKey(entity.getId())) {
+            IndividualsDuplicates.add(entity.getId());
+        }
         Individuals.put(entity.getId(), entity);
     }
-	
+
     public void Validate(List<ValidationResult> results) {
         if (results == null) {
             return;
@@ -55,7 +78,7 @@ public class GEDCOMData {
 
         GEDCOMDataValidator.uniqueIDsCheck(this, results);
         GEDCOMDataValidator.uniqueNameAndBirthDateCheck(this, results);
-        
+
         Individuals.forEach((k, entity) -> {
             entity.validate(results);
         });
@@ -77,35 +100,35 @@ public class GEDCOMData {
                 }
             }
         });
-        
+
         Individuals.forEach((k, individual) -> {
             Map<String, IEntity> map = new HashMap<String, IEntity>();
             Map<String, FamilyEntity> x = Families.entrySet().stream().filter(fe -> fe.getValue().Husband != null && fe.getValue().Husband.getId().equals(k)).collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
-            
+
             Iterator i = x.entrySet().iterator();
             while (i.hasNext()) {
-                Map.Entry<String, FamilyEntity> entry = (Map.Entry)i.next();  
-                map.put(entry.getKey(), IEntity.class.cast(entry.getValue()));                
+                Map.Entry<String, FamilyEntity> entry = (Map.Entry) i.next();
+                map.put(entry.getKey(), IEntity.class.cast(entry.getValue()));
             }
 
             if (individual.Families == null) {
                 Map<String, FamilyEntity> y = Families.entrySet().stream().filter(fe -> fe.getValue().Wife != null && fe.getValue().Wife.getId().equals(k)).collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
-                
+
                 Iterator j = y.entrySet().iterator();
                 while (j.hasNext()) {
-                    Map.Entry<String, FamilyEntity> entry = (Map.Entry)j.next();  
-                    map.put(entry.getKey(), IEntity.class.cast(entry.getValue()));                
-                }                
+                    Map.Entry<String, FamilyEntity> entry = (Map.Entry) j.next();
+                    map.put(entry.getKey(), IEntity.class.cast(entry.getValue()));
+                }
             }
-            individual.Families = new ArrayList(map.values());            
-        });        
+            individual.Families = new ArrayList(map.values());
+        });
     }
 
     @Override
 
     public String toString() {
         return null;
-    }   
+    }
 
     public String toFamiliesText() {
         StringBuilder msg = new StringBuilder();
@@ -141,7 +164,7 @@ public class GEDCOMData {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         msg.append("ID, Name, Gender, Birthday, Age, Alive, Death, Child, Spouse\n");
-        
+
         Individuals.forEach((k, entity) -> {
             StringBuilder childMsg = new StringBuilder();
             entity.Families.forEach(fe -> {
@@ -173,15 +196,15 @@ public class GEDCOMData {
                         }
                     }
                 }
-            });                  
-            
+            });
+
             msg.append(entity.getId() + ", " + entity.FullName + ", " + entity.Gender + ", "
                     + format.format(entity.BirthDate) + ", " + entity.Age + ", " + (entity.DeathDate == null ? true : false) + ", "
                     + (entity.DeathDate != null ? format.format(entity.DeathDate) : "NA") + ", "
                     + (childMsg.length() == 0 ? "NA" : "{" + childMsg.toString() + "}") + ", "
-                    + (spouseMsg.length() == 0 ? "NA" : "{" + spouseMsg.toString() + "}") + "\n");         
+                    + (spouseMsg.length() == 0 ? "NA" : "{" + spouseMsg.toString() + "}") + "\n");
         });
-               
+
         return msg.toString();
     }
 }
