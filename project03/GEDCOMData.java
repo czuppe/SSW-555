@@ -21,6 +21,11 @@ public class GEDCOMData {
     public Map<String, PersonEntity> getIndividuals(){
         return Individuals;
     }
+    
+    public void setIndividuals(Map<String, PersonEntity> individuals){
+        this.Individuals = individuals;
+    }
+    
     public Map<String, FamilyEntity> getFamilies(){
         return Families;
     }
