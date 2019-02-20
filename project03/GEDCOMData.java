@@ -32,17 +32,12 @@ public class GEDCOMData {
     public Map<String, PersonEntity> getIndividuals() {
         return Individuals;
     }
-<<<<<<< HEAD
-
-    public Map<String, FamilyEntity> getFamilies() {
-=======
-    
+	
     public void setIndividuals(Map<String, PersonEntity> individuals){
         this.Individuals = individuals;
     }
-    
-    public Map<String, FamilyEntity> getFamilies(){
->>>>>>> 5642030e59c955ab378f9893940c222979dbc5e6
+
+    public Map<String, FamilyEntity> getFamilies() {
         return Families;
     }
 
@@ -85,13 +80,17 @@ public class GEDCOMData {
 
         loadReferenceEntitiesToFamily();
 
+        //GEDCOM Validations
+        GEDCOMDataValidator.maleLastNameCheck(this, results);
         GEDCOMDataValidator.uniqueIDsCheck(this, results);
         GEDCOMDataValidator.uniqueNameAndBirthDateCheck(this, results);
 
+        //Individual validations
         Individuals.forEach((k, entity) -> {
             entity.validate(results);
         });
 
+        //Familty validations
         Families.forEach((k, entity) -> {
             entity.validate(results);
         });

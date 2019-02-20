@@ -39,7 +39,7 @@ public class App {
         initialize();
 
         //Parse input file
-        GEDCOMData GEDCOMDataObj = parseGEDFile(gedFilePath);
+        GEDCOMData GEDCOMDataObj = parseGEDFromFile(gedFilePath);
 
         //Print results
         print(gedFilePath, GEDCOMDataObj);
@@ -65,10 +65,14 @@ public class App {
         tags.put("NOTE", "0");
     }
 
-    public static GEDCOMData parseGEDFile(String gedFilePath) throws FileNotFoundException, IOException, ParseException {
+    public static GEDCOMData parseGEDFromFile(String gedFilePath) throws FileNotFoundException, IOException, ParseException {
+        String gedcomFileContent = Utility.readFileAsString(gedFilePath);
+        return parseGEDFromText(gedcomFileContent);
+    }
+
+    public static GEDCOMData parseGEDFromText(String gedcomFileContent) throws ParseException {
 
         GEDCOMData GEDCOMDataObj = new GEDCOMData();
-        String gedcomFileContent = Utility.readFileAsString(gedFilePath);
         String[] records = gedcomFileContent.replaceAll("0 @", "\u0646@").split("\u0646");
 
         for (String record : records) {
