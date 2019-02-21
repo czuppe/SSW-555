@@ -48,7 +48,7 @@ public class PersonEntityValidator {
         }
         if (entity.DeathDate != null && entity.BirthDate != null) {
             if (entity.DeathDate.before(entity.BirthDate)) {
-                results.add(new ValidationResult("Birth date must be before death date.", entity, "US03"));
+                results.add(new ValidationResult("Birth should occur before death.", entity, "US03"));
             }
         }
 
