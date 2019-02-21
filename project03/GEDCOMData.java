@@ -18,14 +18,14 @@ public class GEDCOMData {
     private Map<String, PersonEntity> Individuals;
     private Map<String, FamilyEntity> Families;
 
-    private List<String> IndividualsDuplicates;
-    private List<String> FamiliesDuplicates;
+    private Map<String, PersonEntity> IndividualsDuplicates;
+    private Map<String, FamilyEntity> FamiliesDuplicates;
 
-    public List<String> getIndividualsDuplicates() {
+    public Map<String, PersonEntity> getIndividualsDuplicates() {
         return IndividualsDuplicates;
     }
 
-    public List<String> getFamiliesDuplicates() {
+    public Map<String, FamilyEntity> getFamiliesDuplicates() {
         return FamiliesDuplicates;
     }
 
@@ -45,8 +45,8 @@ public class GEDCOMData {
         Individuals = new HashMap<String, PersonEntity>();
         Families = new HashMap<String, FamilyEntity>();
 
-        IndividualsDuplicates = new ArrayList();
-        FamiliesDuplicates = new ArrayList();
+        IndividualsDuplicates = new HashMap<String, PersonEntity>();
+        FamiliesDuplicates = new HashMap<String, FamilyEntity>();
     }
 
     public void addFamily(FamilyEntity entity) {
@@ -56,7 +56,7 @@ public class GEDCOMData {
 
         entity.setGEDCOMData(this);
         if (Families.containsKey(entity.getId())) {
-            FamiliesDuplicates.add(entity.getId());
+            FamiliesDuplicates.put(entity.getId(), entity);
         }
         Families.put(entity.getId(), entity);
     }
@@ -68,7 +68,7 @@ public class GEDCOMData {
 
         entity.setGEDCOMData(this);
         if (Individuals.containsKey(entity.getId())) {
-            IndividualsDuplicates.add(entity.getId());
+            IndividualsDuplicates.put(entity.getId(), entity);
         }
         Individuals.put(entity.getId(), entity);
     }
