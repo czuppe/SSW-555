@@ -126,6 +126,7 @@ public class App {
     }
 
     private static void printValidationResults(PrintWriter writer, List<ValidationResult> results) throws IOException {
+        System.out.println("*** TEST RESULTS ***");
         if (results != null && !results.isEmpty()) {
             for (ValidationResult result : results) {
                 System.out.println(result.toString());
