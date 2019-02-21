@@ -27,13 +27,13 @@ public class PersonEntityValidator {
 
         Date todaysDate = Utility.getTodaysDate();
         if (entity.BirthDate == null) {
-            results.add(new ValidationResult("Missing Birth date.", entity));
+            results.add(new ValidationResult("Missing Birth date.", entity, "US01"));
         }
         if (entity.BirthDate != null && entity.BirthDate.after(todaysDate)) {
-            results.add(new ValidationResult("Birth date should not be after the current date.", entity));
+            results.add(new ValidationResult("Birth date should not be after the current date.", entity, "US01"));
         }
         if (entity.DeathDate != null && entity.DeathDate.after(todaysDate)) {
-            results.add(new ValidationResult("Death date should not be after the current date.", entity));
+            results.add(new ValidationResult("Death date should not be after the current date.", entity, "US01"));
         }
     }
 
@@ -48,7 +48,7 @@ public class PersonEntityValidator {
         }
         if (entity.DeathDate != null && entity.BirthDate != null) {
             if (entity.DeathDate.before(entity.BirthDate)) {
-                results.add(new ValidationResult("Birth date must be before death date.", entity));
+                results.add(new ValidationResult("Birth date must be before death date.", entity, "US03"));
             }
         }
 

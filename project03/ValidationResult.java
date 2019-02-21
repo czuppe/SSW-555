@@ -20,10 +20,18 @@ public class ValidationResult {
         Entity = entity;
     }
 
+    public ValidationResult(String message, IEntity entity, String userStoryID) {
+        Message = message;
+        Entity = entity;
+        UserStoryID = userStoryID;
+    }
+
     @Override
     public String toString() {
         if (Entity == null) {
             return Message;
+        } else if (UserStoryID != null) {
+            return String.format("[" + UserStoryID + ", ID: " + Entity.getId() + "]: " + Message);
         } else {
             return String.format("[ID: " + Entity.getId() + "]: " + Message);
         }
@@ -31,4 +39,5 @@ public class ValidationResult {
 
     public String Message;
     public IEntity Entity;
+    public String UserStoryID;
 }

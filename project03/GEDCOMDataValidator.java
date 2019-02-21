@@ -29,7 +29,7 @@ public class GEDCOMDataValidator {
                 v.Children.forEach((PersonEntity child) -> {
                     if (child != null && "M".equals(child.Gender)) {
                         if (!v.Husband.SurName.equals(child.SurName)) {
-                            results.add(new ValidationResult("All male members of a family should have the same last name.", child));
+                            results.add(new ValidationResult("All male members of a family should have the same last name.", child, "US16"));
                         }
                     }
                 });
