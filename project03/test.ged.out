@@ -27,8 +27,11 @@ F3, NA, NA, I5, Joseph /Flaherty/, I6, Dolores /Lindenfelser/, {I3, I7, I8}
 F4, 2001-01-02, 2002-01-03, I18, Drew /Drown/, I7, Susan /Flaherty/, NA
 F5, NA, NA, I11, Richard /Johnson/, I8, Joan /Flaherty/, {I12}
 
-[ID: F3]: Mother should be less than 60 years older than her children and father should be less than 80 years older than his children.
-[ID: F3]: Mother should be less than 60 years older than her children and father should be less than 80 years older than his children.
-[ID: F3]: Mother should be less than 60 years older than her children and father should be less than 80 years older than his children.
-[ID: F4]: Divorce can only occur before death of both spouses.
-[ID: F4]: Marriage date must be before Husband's death date.
+ERROR: FAMILY: US12: ID: F3: US12: Father I5 is 102 years older than his child I3
+ERROR: FAMILY: US12: ID: F3: US12: Mother I6 is 101 years older than his child I3
+ERROR: FAMILY: US12: ID: F3: US12: Father I5 is 95 years older than his child I7
+ERROR: FAMILY: US12: ID: F3: US12: Mother I6 is 94 years older than his child I7
+ERROR: FAMILY: US12: ID: F3: US12: Father I5 is 97 years older than his child I8
+ERROR: FAMILY: US12: ID: F3: US12: Mother I6 is 96 years older than his child I8
+ERROR: FAMILY: US06: ID: F4: US06: Divorce date 2002-01-03 occurs after 2000-01-19 (death of spouse I18).
+ERROR: FAMILY: US05: ID: F4: Marriage date must be before Husband's death date.

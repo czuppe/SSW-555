@@ -87,12 +87,25 @@ public class FamilyEntityValidator {
             return;
 
         if (entity.Divorce != null && entity.Divorce.Date != null) {
-            //check divorce before death of either spouse (husband/wife)
-
-            if ((entity.Husband != null && entity.Husband.DeathDate != null && entity.Husband.DeathDate.before(entity.Divorce.Date))
-                    || (entity.Wife != null && entity.Wife.DeathDate != null && entity.Wife.DeathDate.before(entity.Divorce.Date))) {
-                results.add(new ValidationResult("Divorce can only occur before death of both spouses.", entity, "US06"));
+            //check divorce before death of either spouse (husband/wife)            
+            if (entity.Husband != null && entity.Husband.DeathDate != null && entity.Husband.DeathDate.before(entity.Divorce.Date)) {
+                results.add(new ValidationResult("US06: Divorce date " 
+                        + Utility.DateToString(entity.Divorce.Date)
+                        + " occurs after "
+                        + Utility.DateToString(entity.Husband.DeathDate) 
+                        + " (death of spouse " 
+                        + entity.Husband.getId() 
+                        + ")." , entity, "US06"));
             }
+            if (entity.Wife != null && entity.Wife.DeathDate != null && entity.Wife.DeathDate.before(entity.Divorce.Date)) {
+                results.add(new ValidationResult("US06: Divorce date " 
+                        + Utility.DateToString(entity.Divorce.Date) 
+                        + " occurs after "
+                        + Utility.DateToString(entity.Wife.DeathDate) 
+                        + " (death of spouse " 
+                        + entity.Wife.getId() 
+                        + ")." , entity, "US06"));
+            }            
         }
     }
 
@@ -109,10 +122,14 @@ public class FamilyEntityValidator {
             for (String childId : entity.ChildrenId) {
                 PersonEntity child = entity.getGEDCOMData().getIndividuals().get(childId);
                 LocalDate childBirthdate = child.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                if ((husbandBirthdate != null && Period.between(husbandBirthdate, childBirthdate).getYears() > 80)
-                        || (wifeBirthdate != null && Period.between(wifeBirthdate, childBirthdate).getYears() > 60)) {
-                    results.add(new ValidationResult("Mother should be less than 60 years older than her children and father should be less than 80 years older than his children.", entity, "US12"));
+                if (husbandBirthdate != null && Period.between(husbandBirthdate, childBirthdate).getYears() > 80) {
+                    results.add(new ValidationResult("US12: Father " + entity.HusbandId + " is " + Period.between(husbandBirthdate, childBirthdate).getYears() 
+                            + " years older than his child " + child.getId(), entity, "US12"));
                 }
+                if (wifeBirthdate != null && Period.between(wifeBirthdate, childBirthdate).getYears() > 60) {
+                    results.add(new ValidationResult("US12: Mother " + entity.WifeId + " is " + Period.between(wifeBirthdate, childBirthdate).getYears() 
+                            + " years older than his child " + child.getId(), entity, "US12"));
+                }                
             }
         }
     }
