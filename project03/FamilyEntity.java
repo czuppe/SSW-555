@@ -97,4 +97,9 @@ public class FamilyEntity implements IEntity {
         FamilyEntityValidator.marriageBeforeDeathCheck(this, results);
         FamilyEntityValidator.fewerThan15SiblingsCheck(this, results);
     }
+
+    @Override
+    public String getEntityName() {
+        return "FAMILY";
+    }
 }

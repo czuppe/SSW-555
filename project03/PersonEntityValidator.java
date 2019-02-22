@@ -30,10 +30,10 @@ public class PersonEntityValidator {
             results.add(new ValidationResult("Missing Birth date.", entity, "US01"));
         }
         if (entity.BirthDate != null && entity.BirthDate.after(todaysDate)) {
-            results.add(new ValidationResult("Birth date should not be after the current date.", entity, "US01"));
+            results.add(new ValidationResult("Birthday " + Utility.DateToString(entity.BirthDate) + " occurs in the future.", entity, "US01"));
         }
         if (entity.DeathDate != null && entity.DeathDate.after(todaysDate)) {
-            results.add(new ValidationResult("Death date should not be after the current date.", entity, "US01"));
+            results.add(new ValidationResult("Death " + Utility.DateToString(entity.DeathDate) + " occurs in the future.", entity, "US01"));
         }
     }
 
@@ -48,7 +48,7 @@ public class PersonEntityValidator {
         }
         if (entity.DeathDate != null && entity.BirthDate != null) {
             if (entity.DeathDate.before(entity.BirthDate)) {
-                results.add(new ValidationResult("Birth should occur before death.", entity, "US03"));
+                results.add(new ValidationResult("Birth " + Utility.DateToString(entity.BirthDate) + " should occur before death " + Utility.DateToString(entity.DeathDate) + ".", entity, "US03"));
             }
         }
 

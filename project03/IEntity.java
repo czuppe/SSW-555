@@ -16,4 +16,5 @@ public interface IEntity {
     GEDCOMData getGEDCOMData();
     void setGEDCOMData(GEDCOMData value);
     void validate(List<ValidationResult> results);
+    String getEntityName();
 }

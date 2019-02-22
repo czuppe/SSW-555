@@ -30,11 +30,11 @@ public class FamilyEntityValidator {
 
         Date todaysDate = Utility.getTodaysDate();
         if (entity.Marriage != null && entity.Marriage.Date != null && entity.Marriage.Date.after(todaysDate)) {
-            results.add(new ValidationResult("Marriage date should not be after the current date.", entity, "US01"));
+            results.add(new ValidationResult("Marriage " + Utility.DateToString(entity.Marriage.Date) + " occurs in the future.", entity, "US01"));
         }
 
         if (entity.Divorce != null && entity.Divorce.Date != null && entity.Divorce.Date.after(todaysDate)) {
-            results.add(new ValidationResult("Divorce date should not be after the current date.", entity, "US01"));
+            results.add(new ValidationResult("Divorce " + Utility.DateToString(entity.Divorce.Date) + " occurs in the future.", entity, "US01"));
         }
     }
 
@@ -50,13 +50,13 @@ public class FamilyEntityValidator {
 
         if (entity.Husband != null && entity.Husband.BirthDate != null) {
             if (entity.Marriage.Date.before(entity.Husband.BirthDate)) {
-                results.add(new ValidationResult("Birth should occur before marriage of an individual.", entity, "US02"));
+                results.add(new ValidationResult("Birthday " + Utility.DateToString(entity.Husband.BirthDate) + " should occur before marriage " + Utility.DateToString(entity.Marriage.Date) + ".", entity, "US02"));
             }
         }
 
         if (entity.Wife != null && entity.Wife.BirthDate != null) {
             if (entity.Marriage.Date.before(entity.Wife.BirthDate)) {
-                results.add(new ValidationResult("Birth should occur before marriage of an individual.", entity, "US02"));
+                results.add(new ValidationResult("Birthday " + Utility.DateToString(entity.Wife.BirthDate) + " should occur before marriage " + Utility.DateToString(entity.Marriage.Date) + ".", entity, "US02"));
             }
         }
     }
