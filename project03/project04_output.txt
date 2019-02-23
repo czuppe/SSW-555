@@ -1,0 +1,34 @@
+Loading 'test_duplicate_ID.ged' file...
+
+Individuals:
+
+ID, Name, Gender, Birthday, Age, Alive, Death, Child, Spouse
+I1, Joseph /Flaherty/, M, 1925-12-18, 93, false, 1984-01-04, NA, {I2}
+I11, Richard /Johnson/, M, 1948-02-05, 71, false, 2010-01-25, {I12}, {I8}
+I2, Claudia /Flaherty/, F, 1955-06-17, 63, true, NA, NA, {I1}
+I10, Margaret /Freeman/, F, 1984-07-25, 34, true, NA, NA, NA
+I13, Dylan /Johnson/, M, 2013-10-05, 5, true, NA, NA, NA
+I4, Craig /Freeman/, M, 1952-11-15, 66, true, NA, {I2, I9, I10}, NA
+I12, JoAnne /Johnson/, F, 1980-11-08, 38, true, NA, {I13, I16, I17}, {I14, I15}
+I15, Kevin /Bacon/, M, 1969-07-04, 49, true, NA, {I16, I17}, {I12}
+I6, Dolores /Lindenfelser/, F, 1928-04-04, 90, false, 2002-01-13, {I7, I8}, NA
+I14, Dwayne /Dickson/, M, 1980-04-01, 38, false, 2014-01-04, {I13}, {I12}
+I7, Susan /Flaherty/, F, 1948-06-17, 70, true, NA, NA, NA
+I17, Patricia /Bacon/, F, 2017-12-04, 1, true, NA, NA, NA
+I8, Joan /Flaherty/, F, 1950-08-14, 68, true, NA, {I12}, {I11}
+I16, Chris /Bacon/, M, 2016-06-07, 2, true, NA, NA, NA
+I9, Michael /Freeman/, M, 1983-03-07, 35, true, NA, NA, NA
+
+
+Families:
+
+ID, Married, Divorced, Husband ID, Husband Name, Wife ID, Wife Name, Children
+F6, 2011-01-06, NA, I14, Dwayne /Dickson/, I12, JoAnne /Johnson/, {I13}
+F1, NA, NA, I1, Joseph /Flaherty/, I2, Claudia /Flaherty/, NA
+F2, NA, NA, I4, Craig /Freeman/, I3, NA, {I2, I9, I10}
+F3, NA, NA, I5, NA, I6, Dolores /Lindenfelser/, {I7, I8}
+F4, NA, NA, I11, Richard /Johnson/, I8, Joan /Flaherty/, {I12}
+F5, 2015-01-01, NA, I15, Kevin /Bacon/, I12, JoAnne /Johnson/, {I16, I17}
+
+
+ERROR: INDIVIDUAL: ID: I2: Error US22: This is a duplicate ID. Please check entry.
