@@ -44,11 +44,11 @@ public class GEDCOMDataValidator {
         }
 
         entity.getFamiliesDuplicates().forEach((k, v) -> {
-            results.add(new ValidationResult("This is a duplicate ID. Please check entry.", v));
+            results.add(new ValidationResult("Error US22: This is a duplicate ID. Please check entry.", v));
         });
 
         entity.getIndividualsDuplicates().forEach((k, v) -> {
-            results.add(new ValidationResult("This is a duplicate ID. Please check entry.", v));
+            results.add(new ValidationResult("Error US22: This is a duplicate ID. Please check entry.", v));
 
         });
 
@@ -65,7 +65,7 @@ public class GEDCOMDataValidator {
             if (v.BirthDate != null) {
                 String key = v.FullName + v.BirthDate.toString();
                 if (set.contains(key)) {
-                    results.add(new ValidationResult("Person has same name with birth date.", v));
+                    results.add(new ValidationResult("Error US23: Person has same name with birth date.", v));
                 } else {
                     set.add(key);
                 }
