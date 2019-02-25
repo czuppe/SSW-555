@@ -65,6 +65,7 @@ public class App {
         tags.put("NOTE", "0");
     }
 
+
     public static GEDCOMData parseGEDFromFile(String gedFilePath) throws FileNotFoundException, IOException, ParseException {
         String gedcomFileContent = Utility.readFileAsString(gedFilePath);
         return parseGEDFromText(gedcomFileContent);
