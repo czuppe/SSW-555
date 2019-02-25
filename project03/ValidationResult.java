@@ -9,26 +9,51 @@ package project03;
  *
  * @author nraj39
  */
+enum ErrorType {
+    ERROR, ANOMALY;
+}
+
 public class ValidationResult {
 
     public ValidationResult(String message) {
         Message = message;
+        ErrorType = ErrorType.ERROR;
     }
 
     public ValidationResult(String message, IEntity entity) {
         Message = message;
         Entity = entity;
+        ErrorType = ErrorType.ERROR;
+    }
+
+    public ValidationResult(String message, IEntity entity, String userStoryID) {
+        Message = message;
+        Entity = entity;
+        UserStoryID = userStoryID;
+        ErrorType = ErrorType.ERROR;
+    }
+
+    public ValidationResult(String message, IEntity entity, String userStoryID, ErrorType errorType) {
+        Message = message;
+        Entity = entity;
+        UserStoryID = userStoryID;
+        ErrorType = errorType == null ? ErrorType.ERROR : errorType;
     }
 
     @Override
     public String toString() {
+
         if (Entity == null) {
             return Message;
+        } else if (UserStoryID != null) {
+            return String.format(ErrorType + ": " + Entity.getEntityName() + ": " + UserStoryID + ": ID: " + Entity.getId() + ": " + Message);
         } else {
-            return String.format("[ID: " + Entity.getId() + "]: " + Message);
+            return String.format(ErrorType + ": " + Entity.getEntityName() + ": ID: " + Entity.getId() + ": " + Message);
         }
     }
 
     public String Message;
     public IEntity Entity;
+    public String UserStoryID;
+    public ErrorType ErrorType;
 }
