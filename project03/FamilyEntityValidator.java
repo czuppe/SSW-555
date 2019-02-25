@@ -125,6 +125,7 @@ public class FamilyEntityValidator {
 
             for (String childId : entity.ChildrenId) {
                 PersonEntity child = entity.getGEDCOMData().getIndividuals().get(childId);
+                if (child != null) {
                 LocalDate childBirthdate = child.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 if (husbandBirthdate != null && Period.between(husbandBirthdate, childBirthdate).getYears() > 80) {
                     results.add(new ValidationResult("US12: Father " + entity.HusbandId + " is " + Period.between(husbandBirthdate, childBirthdate).getYears() 
@@ -133,12 +134,13 @@ public class FamilyEntityValidator {
                 if (wifeBirthdate != null && Period.between(wifeBirthdate, childBirthdate).getYears() > 60) {
                     results.add(new ValidationResult("US12: Mother " + entity.WifeId + " is " + Period.between(wifeBirthdate, childBirthdate).getYears() 
                             + " years older than his child " + child.getId(), entity, "US12"));
+                }
                 }                
             }
         }
     }
 
-    //US15: Fewer than 15 siblings
+    /* SPRINT 2 - DO NOT USE - US15: Fewer than 15 siblings
     //There should be fewer than 15 siblings in a family
     public static void fewerThan15SiblingsCheck(FamilyEntity entity, List<ValidationResult> results) {
         if (entity == null || results == null)
@@ -147,5 +149,5 @@ public class FamilyEntityValidator {
         if (entity.Children.size() > 15) {
             results.add(new ValidationResult("There should be fewer than 15 siblings in a family.", entity, "US15"));
         }
-    }
+    }*/
 }

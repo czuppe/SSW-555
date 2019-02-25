@@ -95,7 +95,7 @@ public class FamilyEntity implements IEntity {
         FamilyEntityValidator.divorceBeforeDeathCheck(this, results);
         FamilyEntityValidator.parentsNotTooOldCheck(this, results);
         FamilyEntityValidator.marriageBeforeDeathCheck(this, results);
-        FamilyEntityValidator.fewerThan15SiblingsCheck(this, results);
+        // SPRINT 2 - DO NOT USE - FamilyEntityValidator.fewerThan15SiblingsCheck(this, results);
     }
 
     @Override
