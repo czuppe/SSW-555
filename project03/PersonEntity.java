@@ -138,6 +138,11 @@ public class PersonEntity implements IEntity {
     public void setGEDCOMData(GEDCOMData value) {
         GEDCOMDataObj = value;
     }
-}
 
-       
+    @Override
+    public String getEntityName() {
+        return "INDIVIDUAL";
+    }
+}
+        
+

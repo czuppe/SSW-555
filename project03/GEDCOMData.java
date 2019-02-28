@@ -81,7 +81,7 @@ public class GEDCOMData {
         loadReferenceEntitiesToFamily();
 
         //GEDCOM Validations
-        GEDCOMDataValidator.maleLastNameCheck(this, results);
+        //GEDCOMDataValidator.maleLastNameCheck(this, results);
         GEDCOMDataValidator.uniqueIDsCheck(this, results);
         GEDCOMDataValidator.uniqueNameAndBirthDateCheck(this, results);
 

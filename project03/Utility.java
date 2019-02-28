@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -50,4 +51,21 @@ public class Utility {
         return sb.toString();
     }
 
+    public static String DateToString(Date date) {
+        if (date == null)
+            return "";
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
+    }
+
+    public static String DateToString(Date date, String format) {
+        if (date == null)
+            return "";
+        if (format == null)
+            return date.toString();
+        
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.format(date);
+    }
 }

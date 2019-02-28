@@ -29,13 +29,15 @@ public class PersonEntityValidator {
 
         Date todaysDate = Utility.getTodaysDate();
         if (entity.BirthDate == null) {
+
             results.add(new ValidationResult("Missing Birth date.", entity, "US01"));
+
         }
         if (entity.BirthDate != null && entity.BirthDate.after(todaysDate)) {
-            results.add(new ValidationResult("Birth date should not be after the current date.", entity, "US01"));
+            results.add(new ValidationResult("Birthday " + Utility.DateToString(entity.BirthDate) + " occurs in the future.", entity, "US01"));
         }
         if (entity.DeathDate != null && entity.DeathDate.after(todaysDate)) {
-            results.add(new ValidationResult("Death date should not be after the current date.", entity, "US01"));
+            results.add(new ValidationResult("Death " + Utility.DateToString(entity.DeathDate) + " occurs in the future.", entity, "US01"));
         }
     }
 
@@ -50,12 +52,13 @@ public class PersonEntityValidator {
         }
         if (entity.DeathDate != null && entity.BirthDate != null) {
             if (entity.DeathDate.before(entity.BirthDate)) {
-                results.add(new ValidationResult("Birth date " + Utility.DateToString(entity.BirthDate) + " should occur before death date " + Utility.DateToString(entity.DeathDate) + ".", entity, "US03"));
+                results.add(new ValidationResult("Birth " + Utility.DateToString(entity.BirthDate) + " should occur before death " + Utility.DateToString(entity.DeathDate) + ".", entity, "US03"));
             }
         }
+
     }
   
-    //US07:	@BELLA Less then 150 years old 
+    //US07: Less then 150 years old 
     public static void lessthan150YearsOldCheck(PersonEntity entity, List<ValidationResult> results) {
         if (entity == null || results == null)
         	return;
@@ -71,7 +74,7 @@ public class PersonEntityValidator {
         if (entity.BirthDate != null && entity.DeathDate != null) {
         	if (entity.BirthDate.before(todaysDate)) {
         		if (Period.between(birthdate, deathdate).getYears() > 150){
-        			results.add(new ValidationResult("Age cannot be over 150.",entity, "US07"));
+        			results.add(new ValidationResult("Age " + entity.Age + " cannot be over 150.",entity, "US07"));
         			}
         	}
         }
@@ -79,28 +82,10 @@ public class PersonEntityValidator {
         if (entity.BirthDate != null && entity.DeathDate == null) {
         	if (entity.BirthDate.before(todaysDate)) {
         		if (Period.between(birthdate, todaysDateLocal).getYears() > 150){
-        			results.add(new ValidationResult("Age cannot be over 150.",entity, "US07"));
+        			results.add(new ValidationResult("Age " + entity.Age + " cannot be over 150.",entity, "US07"));
         			}
         	}
         }
      }
-    // 
-    
-    //US12: Parents not too old
-    // Mother should be less than 60 years older than her children and father should be less than 80 years older than his children
-    public static void parentsNotTooOldCheck(FamilyEntity entity, List<ValidationResult> results) {
-    	if (entity.ChildrenId != null) {            
-    		LocalDate husbandBirthdate = entity.Husband != null ? entity.Husband.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
-    		LocalDate wifeBirthdate = entity.Wife != null ? entity.Wife.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;                          
-        
-        for(String childId : entity.ChildrenId){                
-            PersonEntity child = entity.getGEDCOMData().getIndividuals().get(childId);                       
-            LocalDate childBirthdate = child.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            if((husbandBirthdate != null && Period.between(husbandBirthdate, childBirthdate).getYears() > 80) || 
-                  (wifeBirthdate != null && Period.between(wifeBirthdate, childBirthdate).getYears() > 60) ){                    
-                results.add(new ValidationResult("Mother should be less than 60 years older than her children and father should be less than 80 years older than his children.", entity, "US12"));                    
-            }                
-        }
-    }
-}
+   
 }

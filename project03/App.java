@@ -65,6 +65,7 @@ public class App {
         tags.put("NOTE", "0");
     }
 
+
     public static GEDCOMData parseGEDFromFile(String gedFilePath) throws FileNotFoundException, IOException, ParseException {
         String gedcomFileContent = Utility.readFileAsString(gedFilePath);
         return parseGEDFromText(gedcomFileContent);
@@ -126,7 +127,6 @@ public class App {
     }
 
     private static void printValidationResults(PrintWriter writer, List<ValidationResult> results) throws IOException {
-        System.out.println("*** TEST RESULTS ***");
         if (results != null && !results.isEmpty()) {
             for (ValidationResult result : results) {
                 System.out.println(result.toString());

@@ -37,17 +37,39 @@ public class GEDCOMDataValidator {
         });
     }
 
-    //US22: Unique IDs
+    // US22: Unique IDs
     public static void uniqueIDsCheck(GEDCOMData entity, List<ValidationResult> results) {
         if (entity == null || results == null) {
             return;
         }
+
+        entity.getFamiliesDuplicates().forEach((k, v) -> {
+            results.add(new ValidationResult("Error US22: This is a duplicate ID. Please check entry.", v));
+        });
+
+        entity.getIndividualsDuplicates().forEach((k, v) -> {
+            results.add(new ValidationResult("Error US22: This is a duplicate ID. Please check entry.", v));
+
+        });
+
     }
 
-    //US23: Unique name and birth date
+    // US23: Unique name and birth date
     public static void uniqueNameAndBirthDateCheck(GEDCOMData entity, List<ValidationResult> results) {
         if (entity == null || results == null) {
             return;
         }
+
+        Set<String> set = new HashSet<String>();//Hold non-duplicate items
+        entity.getIndividuals().forEach((k, v) -> {
+            if (v.BirthDate != null) {
+                String key = v.FullName + v.BirthDate.toString();
+                if (set.contains(key)) {
+                    results.add(new ValidationResult("Error US23: Person has same name with birth date.", v));
+                } else {
+                    set.add(key);
+                }
+            }
+        });
     }
 }
