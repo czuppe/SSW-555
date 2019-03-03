@@ -10,6 +10,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -67,5 +70,13 @@ public class Utility {
         
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(date);
+    }
+    
+    public static int YearsBetween(LocalDate beginDate, LocalDate endDate){
+        return Period.between(beginDate, endDate).getYears();
+    }
+    
+    public static LocalDate ToLocalDate(Date date){
+        return date != null ? date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
     }
 }
