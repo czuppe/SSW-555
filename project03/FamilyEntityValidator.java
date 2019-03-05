@@ -60,6 +60,29 @@ public class FamilyEntityValidator {
             }
         }
     }
+   
+    //US04:	Marriage before divorce 
+    public static void marriageBeforeDivorceCheck(FamilyEntity entity, List<ValidationResult> results) {
+        if (entity == null || results == null) {
+            return;
+        }
+        if (entity.Marriage == null || entity.Marriage.Date == null) {
+            return;
+        }
+        if (entity.Divorce == null || entity.Divorce.Date == null) {
+            return;
+        }
+        if (entity.Husband != null && entity.Divorce.Date != null) {
+            if (entity.Marriage.Date.after(entity.Divorce.Date)) {
+                results.add(new ValidationResult("Marriage date " + Utility.DateToString(entity.Marriage.Date) + " must be before Divorce date " + Utility.DateToString(entity.Divorce.Date) + " .", entity, "US04"));
+            }
+        }
+        if (entity.Wife != null && entity.Divorce.Date != null) {
+            if (entity.Marriage.Date.after(entity.Divorce.Date)) {
+                results.add(new ValidationResult("Marriage date " + Utility.DateToString(entity.Marriage.Date) + " must be before Divorce date " + Utility.DateToString(entity.Divorce.Date) + " .", entity, "US04"));
+            }
+        }
+    }
 
     //US05: Marriage before death : Marriage should occur before death of either spouse
     public static void marriageBeforeDeathCheck(FamilyEntity entity, List<ValidationResult> results) {
@@ -77,6 +100,7 @@ public class FamilyEntityValidator {
         }
         if (entity.Wife != null && entity.Wife.DeathDate != null) {
         	if (entity.Marriage.Date.after(entity.Wife.DeathDate)) {
+
         		results.add(new ValidationResult("Marriage date " + Utility.DateToString(entity.Marriage.Date) + " must be before Wife's death date " + Utility.DateToString(entity.Wife.DeathDate) + ".", entity, "US05"));
         	}
         } 
@@ -125,7 +149,7 @@ public class FamilyEntityValidator {
                 PersonEntity child = entity.getGEDCOMData().getIndividuals().get(childId);
                 if (child != null) {
                 LocalDate childBirthdate = child.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                
+ 
                 if (husbandBirthdate != null && Utility.YearsBetween(husbandBirthdate, childBirthdate) > 80) {
                     results.add(new ValidationResult("US12: Father " + entity.HusbandId + " is " + Utility.YearsBetween(husbandBirthdate, childBirthdate) 
                             + " years older than his child " + child.getId(), entity, "US12"));
@@ -138,16 +162,17 @@ public class FamilyEntityValidator {
                 }                
             }
         }
-    }
 
-    /* SPRINT 2 - DO NOT USE - US15: Fewer than 15 siblings
-    //There should be fewer than 15 siblings in a family
+    //US15: There should be fewer than 15 siblings in a family
     public static void fewerThan15SiblingsCheck(FamilyEntity entity, List<ValidationResult> results) {
         if (entity == null || results == null)
             return;
-
         if (entity.Children.size() > 15) {
             results.add(new ValidationResult("There should be fewer than 15 siblings in a family.", entity, "US15"));
         }
-    }*/
+    }
 }
+   
+
+    
+

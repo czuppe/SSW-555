@@ -71,7 +71,7 @@ public class Utility {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(date);
     }
-    
+
     public static int YearsBetween(LocalDate beginDate, LocalDate endDate){
         return Period.between(beginDate, endDate).getYears();
     }
@@ -80,3 +80,4 @@ public class Utility {
         return date != null ? date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
     }
 }
+

@@ -125,6 +125,23 @@ public class PersonEntity implements IEntity {
 
         PersonEntityValidator.datesBeforeCurrentDateCheck(this, results);
         PersonEntityValidator.birthBeforeDeathDateCheck(this, results);
+        PersonEntityValidator.lessthan150YearsOldCheck(this, results);
+    }
+
+    private GEDCOMData GEDCOMDataObj;
+    @Override
+    public GEDCOMData getGEDCOMData() {
+        return GEDCOMDataObj;
+    }
+
+    @Override
+    public void setGEDCOMData(GEDCOMData value) {
+        GEDCOMDataObj = value;
+    }
+
+    @Override
+    public String getEntityName() {
+        return "INDIVIDUAL";
     }
 
     private GEDCOMData GEDCOMDataObj;
@@ -143,3 +160,5 @@ public class PersonEntity implements IEntity {
         return "INDIVIDUAL";
     }
 }
+        
+

@@ -5,6 +5,9 @@
  */
 package project03;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -55,4 +58,36 @@ public class PersonEntityValidator {
         }
 
     }
+  
+    //US07: Less then 150 years old 
+    public static void lessthan150YearsOldCheck(PersonEntity entity, List<ValidationResult> results) {
+        if (entity == null || results == null)
+        	return;
+        
+        Date todaysDate = Utility.getTodaysDate();
+        
+        LocalDate birthdate = entity.BirthDate != null ? entity.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+        LocalDate deathdate = entity.DeathDate != null ? entity.DeathDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;                          
+        
+        LocalDate todaysDateLocal = Utility.getTodaysDate() != null ? Utility.getTodaysDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null; 
+        
+        //if birthdate and deathdate exist, must not be over 150 years
+        if (entity.BirthDate != null && entity.DeathDate != null) {
+        	if (entity.BirthDate.before(todaysDate)) {
+        		if (Period.between(birthdate, deathdate).getYears() > 150){
+        			results.add(new ValidationResult("Age " + entity.Age + " cannot be over 150.",entity, "US07"));
+        			}
+        	}
+        }
+        //if birthday exists and deathdate doesn't exist, use today's date to calculate
+        if (entity.BirthDate != null && entity.DeathDate == null) {
+        	if (entity.BirthDate.before(todaysDate)) {
+        		if (Period.between(birthdate, todaysDateLocal).getYears() > 150){
+        			results.add(new ValidationResult("Age " + entity.Age + " cannot be over 150.",entity, "US07"));
+        			}
+        	}
+        }
+     }
+   
 }
+
