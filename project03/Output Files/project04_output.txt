@@ -1,0 +1,52 @@
+Loading 'TestGED_Project04.ged' file...
+
+Individuals:
+
+ID, Name, Gender, Birthday, Age, Alive, Death, Child, Spouse
+I1, Ilya /Sakashvili/, M, 1960-02-01, 59, true, NA, {I11, I8, I9}, {I10, I7}
+I11, Rita /Jones/, F, 2019-01-01, 0, true, NA, NA, NA
+I10, Dave /Jones/, M, 1983-01-01, 36, true, NA, {I11}, {I1}
+I3, Lilla /Aire/, F, 1965-12-23, 53, false, 1999-01-01, {I1, I12}, {I4}
+I13, John /Shwartz/, M, 2030-01-03, -10, true, NA, {I14}, {I12}
+I4, Rajeev /Ram/, M, 1975-08-01, 43, true, NA, {I12}, {I3}
+I12, Rita /Jones/, F, 2019-01-01, 0, true, NA, {I14}, {I13}
+I5, Ketevan /Gogidze/, F, 1965-01-01, 54, true, NA, {I6}, NA
+I15, Jakov /Gogidze/, M, 1830-01-06, 189, true, NA, {I5, I17}, {I16}
+I6, Nikoloz /Gogidze/, M, 1995-01-01, 24, true, NA, NA, NA
+I14, Robby /Ram/, M, 2000-04-03, 18, true, NA, NA, NA
+I7, Nate /Johnson/, M, 1986-07-30, 32, false, 2018-01-01, {I8, I9}, {I1}
+I17, Kura /Gogidze/, F, 1960-02-02, 59, false, 1920-01-02, NA, NA
+I8, Paula /Johnson/, F, 2014-01-03, 5, true, NA, NA, NA
+I16, Rula /Gogidze/, F, 1930-01-06, 89, true, NA, {I5, I17}, {I15}
+I9, Lucy /Marie/, F, 2014-08-22, 4, true, NA, NA, NA
+
+
+Families:
+
+ID, Married, Divorced, Husband ID, Husband Name, Wife ID, Wife Name, Children
+F6, 2010-01-01, NA, I2, NA, I5, Ketevan /Gogidze/, NA
+F7, 2000-01-04, NA, I15, Jakov /Gogidze/, I16, Rula /Gogidze/, {I5, I17}
+F8, NA, NA, NA, NA, I5, Ketevan /Gogidze/, {I6}
+F9, 2019-01-02, 2050-01-01, I13, John /Shwartz/, I12, Rita /Jones/, {I14}
+F1, 2024-01-20, NA, I10, Dave /Jones/, I1, Ilya /Sakashvili/, {I11}
+F2, 2019-01-30, NA, I7, Nate /Johnson/, I1, Ilya /Sakashvili/, {I8, I9}
+F3, 2015-01-01, 2000-01-01, I2, NA, I3, Lilla /Aire/, {I1}
+F4, NA, NA, NA, NA, NA, NA, NA
+F5, 2008-01-17, 2039-01-03, I4, Rajeev /Ram/, I3, Lilla /Aire/, {I12}
+
+
+ERROR: INDIVIDUAL: ID: I1: Error US22: This is a duplicate ID. Please check entry.
+ERROR: INDIVIDUAL: ID: I12: Error US23: Person has same name with birth date.
+ERROR: INDIVIDUAL: US01: ID: I13: Birthday 2030-01-03 occurs in the future.
+ERROR: INDIVIDUAL: US03: ID: I17: Birth 1960-02-02 should occur before death 1920-01-02.
+ERROR: FAMILY: US12: ID: F7: US12: Father I15 is 134 years older than his child I5
+ERROR: FAMILY: US12: ID: F7: US12: Father I15 is 130 years older than his child I17
+ERROR: FAMILY: US01: ID: F9: Divorce 2050-01-01 occurs in the future.
+ERROR: FAMILY: US02: ID: F9: Birthday 2030-01-03 should occur before marriage 2019-01-02.
+ERROR: FAMILY: US01: ID: F1: Marriage 2024-01-20 occurs in the future.
+ERROR: FAMILY: US05: ID: F2: Marriage date 2019-01-30 must be before Husband's death date 2018-01-01.
+ERROR: FAMILY: US06: ID: F3: US06: Divorce date 2000-01-01 occurs after 1999-01-01 (death of spouse I3).
+ERROR: FAMILY: US05: ID: F3: Marriage date 2015-01-01 must be before Wife's death date 1999-01-01.
+ERROR: FAMILY: US01: ID: F5: Divorce 2039-01-03 occurs in the future.
+ERROR: FAMILY: US06: ID: F5: US06: Divorce date 2039-01-03 occurs after 1999-01-01 (death of spouse I3).
+ERROR: FAMILY: US05: ID: F5: Marriage date 2008-01-17 must be before Wife's death date 1999-01-01.

@@ -143,6 +143,22 @@ public class PersonEntity implements IEntity {
     public String getEntityName() {
         return "INDIVIDUAL";
     }
+
+    private GEDCOMData GEDCOMDataObj;
+    @Override
+    public GEDCOMData getGEDCOMData() {
+        return GEDCOMDataObj;
+    }
+
+    @Override
+    public void setGEDCOMData(GEDCOMData value) {
+        GEDCOMDataObj = value;
+    }
+
+    @Override
+    public String getEntityName() {
+        return "INDIVIDUAL";
+    }
 }
         
 

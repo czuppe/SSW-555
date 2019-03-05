@@ -16,10 +16,11 @@ import java.util.List;
  * @author nraj39 bella458
  */
 public class PersonEntityValidator {
+
     private PersonEntityValidator() {
-        
+
     }
-    
+
     //US01: Dates before current date
     //Dates (birth, marriage, divorce, death) should not be after the current date
     public static void datesBeforeCurrentDateCheck(PersonEntity entity, List<ValidationResult> results) {
@@ -89,3 +90,4 @@ public class PersonEntityValidator {
      }
    
 }
+
