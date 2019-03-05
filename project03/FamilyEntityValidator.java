@@ -72,15 +72,12 @@ public class FamilyEntityValidator {
         
         if (entity.Husband != null && entity.Husband.DeathDate != null) {
         	if (entity.Marriage.Date.after(entity.Husband.DeathDate)) {
-
         		results.add(new ValidationResult("Marriage date " + Utility.DateToString(entity.Marriage.Date) + " must be before Husband's death date " + Utility.DateToString(entity.Husband.DeathDate) + ".", entity, "US05"));
         	}
         }
         if (entity.Wife != null && entity.Wife.DeathDate != null) {
         	if (entity.Marriage.Date.after(entity.Wife.DeathDate)) {
-
         		results.add(new ValidationResult("Marriage date " + Utility.DateToString(entity.Marriage.Date) + " must be before Wife's death date " + Utility.DateToString(entity.Wife.DeathDate) + ".", entity, "US05"));
-
         	}
         } 
     }
@@ -120,19 +117,22 @@ public class FamilyEntityValidator {
             return;
 
         if (entity.ChildrenId != null) {
-            LocalDate husbandBirthdate = entity.Husband != null ? entity.Husband.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
-            LocalDate wifeBirthdate = entity.Wife != null ? entity.Wife.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+            //LocalDate husbandBirthdate = entity.Husband != null ? entity.Husband.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+            LocalDate husbandBirthdate = entity.Husband != null ? Utility.ToLocalDate(entity.Husband.BirthDate) : null;            
+            LocalDate wifeBirthdate = entity.Wife != null ?Utility.ToLocalDate(entity.Wife.BirthDate) : null;
 
             for (String childId : entity.ChildrenId) {
                 PersonEntity child = entity.getGEDCOMData().getIndividuals().get(childId);
                 if (child != null) {
                 LocalDate childBirthdate = child.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                if (husbandBirthdate != null && Period.between(husbandBirthdate, childBirthdate).getYears() > 80) {
-                    results.add(new ValidationResult("US12: Father " + entity.HusbandId + " is " + Period.between(husbandBirthdate, childBirthdate).getYears() 
+                
+                if (husbandBirthdate != null && Utility.YearsBetween(husbandBirthdate, childBirthdate) > 80) {
+                    results.add(new ValidationResult("US12: Father " + entity.HusbandId + " is " + Utility.YearsBetween(husbandBirthdate, childBirthdate) 
                             + " years older than his child " + child.getId(), entity, "US12"));
                 }
-                if (wifeBirthdate != null && Period.between(wifeBirthdate, childBirthdate).getYears() > 60) {
-                    results.add(new ValidationResult("US12: Mother " + entity.WifeId + " is " + Period.between(wifeBirthdate, childBirthdate).getYears() 
+                
+                if (wifeBirthdate != null && Utility.YearsBetween(wifeBirthdate, childBirthdate) > 60) {
+                    results.add(new ValidationResult("US12: Mother " + entity.WifeId + " is " + Utility.YearsBetween(wifeBirthdate, childBirthdate) 
                             + " years older than his child " + child.getId(), entity, "US12"));
                 }
                 }                
