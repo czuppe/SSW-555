@@ -189,7 +189,7 @@ public class FamilyEntityValidator {
 		}
 	}
 
-	// US08: Birth before marriage of parents
+		// US08: Birth before marriage of parents
 	public static void birthBeforeMarriageParents(FamilyEntity entity, List<ValidationResult> results) {
 		if (entity == null || results == null) {
 			return;
@@ -202,9 +202,8 @@ public class FamilyEntityValidator {
 		if (entity.Marriage != null && entity.Marriage.Date != null) {
 			LocalDate marriageDate = entity.MarriageDate != null ? Utility.ToLocalDate(entity.MarriageDate) : null;
 			LocalDate divorceDate = entity.DivorceDate != null ? Utility.ToLocalDate(entity.DivorceDate) : null;
-			PersonEntity childFamID = new PersonEntity();
-
-			for (String childId : childFamID.ChildhoodFamilyIds) {
+			
+			for (String childId : entity.ChildrenId) {
 				PersonEntity child = entity.getGEDCOMData().getIndividuals().get(childId);
 				if (child != null) {
 					LocalDate childBirthdate = child.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -221,7 +220,6 @@ public class FamilyEntityValidator {
 	
 	// US09: Birth before death of parents
 		public static void birthBeforeDeathParents(FamilyEntity entity, List<ValidationResult> results) {
-			PersonEntity person = new PersonEntity();
 			
 			if (entity == null || results == null) {
 				return;
@@ -236,7 +234,7 @@ public class FamilyEntityValidator {
 				LocalDate husbandDeathdate = entity.Husband != null ? Utility.ToLocalDate(entity.Husband.BirthDate) : null;
 				
 
-				for (String childId : person.ChildhoodFamilyIds) {
+				for (String childId : entity.ChildrenId) {
 					PersonEntity child = entity.getGEDCOMData().getIndividuals().get(childId);
 					if (child != null) {
 						LocalDate childBirthdate = child.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
