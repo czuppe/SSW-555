@@ -189,7 +189,7 @@ public class FamilyEntityValidator {
 		}
 	}
 
-		// US08: Birth before marriage of parents
+	// US08: Birth before marriage of parents
 	public static void birthBeforeMarriageParents(FamilyEntity entity, List<ValidationResult> results) {
 		if (entity == null || results == null) {
 			return;
@@ -207,16 +207,16 @@ public class FamilyEntityValidator {
 				PersonEntity child = entity.getGEDCOMData().getIndividuals().get(childId);
 				if (child != null) {
 					LocalDate childBirthdate = child.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
+					
 					if (childBirthdate.isBefore(marriageDate) || childBirthdate.isAfter(divorceDate.plusMonths(9))) {
 						results.add(new ValidationResult("US08: The child's birthday " + childBirthdate
 								+ " should occur after marriage or not after divorce" + ".", entity, "US08"));
 
 					}
-				}
-			}
-		}
-	}
+					}
+					}
+					}
+					}
 	
 	// US09: Birth before death of parents
 		public static void birthBeforeDeathParents(FamilyEntity entity, List<ValidationResult> results) {
@@ -230,8 +230,8 @@ public class FamilyEntityValidator {
 			}
 
 			if (entity.Marriage != null && entity.Marriage.Date != null) {
-				LocalDate wifeDeathdate = entity.Wife != null ? Utility.ToLocalDate(entity.Wife.DeathDate) : null;
-				LocalDate husbandDeathdate = entity.Husband != null ? Utility.ToLocalDate(entity.Husband.BirthDate) : null;
+				LocalDate wifeDeathdate = entity.Wife.DeathDate != null ? Utility.ToLocalDate(entity.Wife.DeathDate) : null;
+				LocalDate husbandDeathdate = entity.Husband.DeathDate != null ? Utility.ToLocalDate(entity.Husband.DeathDate) : null;
 				
 
 				for (String childId : entity.ChildrenId) {
@@ -239,13 +239,21 @@ public class FamilyEntityValidator {
 					if (child != null) {
 						LocalDate childBirthdate = child.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
+						if (childBirthdate == null || wifeDeathdate == null || husbandDeathdate == null) {
+							return;
+						}
+						
 						if (childBirthdate.isBefore(wifeDeathdate) || childBirthdate.isBefore(husbandDeathdate.plusMonths(9))) {
 							results.add(new ValidationResult("US09: The child's birthday " + childBirthdate
 									+ " should occur before the mother's death or before 9 months after father's death" + ".", entity, "US09"));
+						} 
 
 						}
 					}
 				}
 			}
+		
+		
+		
 		}
-}
+
