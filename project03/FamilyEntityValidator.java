@@ -150,13 +150,13 @@ public class FamilyEntityValidator {
         LocalDate wifeBirthdate = family.Wife != null ? Utility.ToLocalDate(family.Wife.BirthDate) : null;
         
         //check wife was at least 14 at time of marriage
-        if (Utility.YearsBetween(wifeBirthdate, marriageDate) < 14) {
+        if (wifeBirthdate != null && Utility.YearsBetween(wifeBirthdate, marriageDate) < 14) {
                     results.add(new ValidationResult("Wife " + family.WifeId + " " + family.Wife.FullName + " was only " + Utility.YearsBetween(wifeBirthdate, marriageDate)
                             + " years old at time of marriage.", family, "US10"));
         }
         
         //check husband was at least 14 at time of marriage
-        if (Utility.YearsBetween(husbandBirthdate, marriageDate) < 14) {
+        if (husbandBirthdate != null && Utility.YearsBetween(husbandBirthdate, marriageDate) < 14) {
             results.add(new ValidationResult("Husband " + family.HusbandId + " " + family.Husband.FullName + " was only " + Utility.YearsBetween(husbandBirthdate, marriageDate)
                     + " years old at time of marriage.", family, "US10"));
         }
