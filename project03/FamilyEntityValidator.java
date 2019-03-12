@@ -161,6 +161,7 @@ public class FamilyEntityValidator {
                 }                
             }
         }
+    }
 
     //US15: There should be fewer than 15 siblings in a family
     public static void fewerThan15SiblingsCheck(FamilyEntity entity, List<ValidationResult> results) {
