@@ -100,7 +100,6 @@ public class FamilyEntityValidator {
         }
         if (entity.Wife != null && entity.Wife.DeathDate != null) {
         	if (entity.Marriage.Date.after(entity.Wife.DeathDate)) {
-
         		results.add(new ValidationResult("Marriage date " + Utility.DateToString(entity.Marriage.Date) + " must be before Wife's death date " + Utility.DateToString(entity.Wife.DeathDate) + ".", entity, "US05"));
         	}
         } 
@@ -167,12 +166,9 @@ public class FamilyEntityValidator {
     public static void fewerThan15SiblingsCheck(FamilyEntity entity, List<ValidationResult> results) {
         if (entity == null || results == null)
             return;
+
         if (entity.Children.size() > 15) {
             results.add(new ValidationResult("There should be fewer than 15 siblings in a family.", entity, "US15"));
         }
     }
 }
-   
-
-    
-

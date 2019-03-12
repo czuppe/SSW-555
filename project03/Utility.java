@@ -80,4 +80,3 @@ public class Utility {
         return date != null ? date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
     }
 }
-
