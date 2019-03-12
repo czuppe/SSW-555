@@ -176,7 +176,10 @@ public class FamilyEntityValidator {
 
             for (String childId : entity.ChildrenId) {
                 PersonEntity child = entity.getGEDCOMData().getIndividuals().get(childId);
-                LocalDate childBirthdate = child.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate childBirthdate = null;
+                
+                if(child != null)
+                    childBirthdate = child.BirthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 
                 if (husbandBirthdate != null && Utility.YearsBetween(husbandBirthdate, childBirthdate) > 80) {
                     results.add(new ValidationResult("Father " + entity.HusbandId + " is " + Utility.YearsBetween(husbandBirthdate, childBirthdate) 
@@ -198,9 +201,13 @@ public class FamilyEntityValidator {
         
         Map<Date, ArrayList<String>> birthdatesMap = new HashMap<>();
         
+        
         //loop over children id list in family entity
         family.ChildrenId.forEach((String childId) -> {
-            Date childBirthdate = family.getGEDCOMData().getIndividuals().get(childId).BirthDate;
+            Date childBirthdate = null;
+            if(family.getGEDCOMData().getIndividuals().get(childId) != null){
+                childBirthdate = family.getGEDCOMData().getIndividuals().get(childId).BirthDate;
+            }                            
             
             //if an entry does exist, create an entry in birthday hashmap with Date as key and childId as value
             if(birthdatesMap.get(childBirthdate) == null){
