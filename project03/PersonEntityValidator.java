@@ -29,7 +29,6 @@ public class PersonEntityValidator {
         }
 
         Date todaysDate = Utility.getTodaysDate();
-
         if (entity.BirthDate == null) {
             results.add(new ValidationResult("Missing Birth date.", entity, "US01"));
         }

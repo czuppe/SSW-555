@@ -116,6 +116,10 @@ public class PersonEntity implements IEntity {
     public String getId() {
         return Id;
     }
+    
+    public void setId(String id){
+        this.Id = id;
+    }
 
     @Override
     public void validate(List<ValidationResult> results) {
@@ -144,3 +148,5 @@ public class PersonEntity implements IEntity {
         return "INDIVIDUAL";
     }
 }
+        
+
