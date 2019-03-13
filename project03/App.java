@@ -91,6 +91,9 @@ public class App {
                 }
             }
         }
+        
+        GEDCOMDataObj.loadReferenceEntitiesToFamily();
+
         return GEDCOMDataObj;
     }
 

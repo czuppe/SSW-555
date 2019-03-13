@@ -40,12 +40,6 @@ public class ValidationResult {
         ErrorType = errorType == null ? ErrorType.ERROR : errorType;
     }
 
-    public ValidationResult(String message, IEntity entity, String userStoryID) {
-        Message = message;
-        Entity = entity;
-        UserStoryID = userStoryID;
-    }
-
     @Override
     public String toString() {
 
