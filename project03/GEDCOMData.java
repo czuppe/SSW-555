@@ -78,10 +78,8 @@ public class GEDCOMData {
             return;
         }
 
-        loadReferenceEntitiesToFamily();
-
         //GEDCOM Validations
-        //GEDCOMDataValidator.maleLastNameCheck(this, results);
+        GEDCOMDataValidator.maleLastNameCheck(this, results);
         GEDCOMDataValidator.uniqueIDsCheck(this, results);
         GEDCOMDataValidator.uniqueNameAndBirthDateCheck(this, results);
 
@@ -96,7 +94,7 @@ public class GEDCOMData {
         });
     }
 
-    private void loadReferenceEntitiesToFamily() {
+    public void loadReferenceEntitiesToFamily() {
         Families.forEach((k, family) -> {
             family.Husband = Individuals.get(family.HusbandId);
             family.Wife = Individuals.get(family.WifeId);

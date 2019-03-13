@@ -7,8 +7,12 @@ package project03;
 
 import java.io.File;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -43,8 +47,9 @@ public class AppTest {
     @After
     public void tearDown() {
     }
-        
-        public void testParentsNotTooOldCaseFather80YearsOlder() throws Exception {
+    
+    @Test //US12  
+    public void testParentsNotTooOldCaseFather80YearsOlder() throws Exception {
         GEDCOMData gcd = new GEDCOMData(); 
         
         String[] familyElements = {"1 FAMS @F1@"};
@@ -73,7 +78,7 @@ public class AppTest {
         
     }
       
-    @Test        
+    @Test //US12  
     public void testParentsNotTooOldCaseFather30YearsOlder() throws Exception {
         GEDCOMData gcd = new GEDCOMData(); 
         
@@ -104,7 +109,7 @@ public class AppTest {
     }        
     
     
-    @Test // edge case: Mother is exactly 20 years older than child
+    @Test //US12 edge case: Mother is exactly 20 years older than child
     public void testParentsNotTooOldCaseMother20YearsOlder() throws Exception {
         GEDCOMData gcd = new GEDCOMData(); 
         
@@ -134,7 +139,7 @@ public class AppTest {
         
     }
     
-    @Test // edge case: Mother is exactly 60 years older than child
+    @Test //US12 edge case: Mother is exactly 60 years older than child
     public void testParentsNotTooOldCaseMother60YearsOlder() throws Exception {
         GEDCOMData gcd = new GEDCOMData(); 
         
@@ -158,13 +163,77 @@ public class AppTest {
         gcd.addFamily(family);     
         
         List<ValidationResult> results = new ArrayList<ValidationResult>();        
-        FamilyEntityValidator.parentsNotTooOldCheck(family, results);
+        FamilyEntityValidator.parentsNotTooOldCheck(family, results);        
         
-        assertFalse(results.isEmpty());  
+        assertTrue(results.isEmpty());  
         
     }
     
-    @Test // edge case: Mother is exactly 61 years older than child
+    @Test //US06
+    public void testDivorceBeforeDeath() throws Exception {
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        
+        FamilyEntity family = new FamilyEntity();
+        family.Husband = new PersonEntity();
+        family.Husband.DeathDate = simpleDateFormat.parse("2014-09-09");
+        family.Wife = new PersonEntity();
+        family.Wife.DeathDate = simpleDateFormat.parse("2018-09-09");
+        family.Divorce = new FactEntity();
+        family.Divorce.Date = simpleDateFormat.parse("2018-09-09");
+                
+        List<ValidationResult> results = new ArrayList<ValidationResult>(); 
+        FamilyEntityValidator.divorceBeforeDeathCheck(family, results);
+
+        assertFalse(results.isEmpty());
+    }
+    
+    @Test //US10
+    public void testMarriageAfterFourteen() throws Exception {
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        
+        FamilyEntity family = new FamilyEntity();
+        
+        family.Husband = new PersonEntity();
+        family.Husband.BirthDate = simpleDateFormat.parse("2000-01-01");
+        
+        family.Wife = new PersonEntity();
+        family.Wife.BirthDate = simpleDateFormat.parse("2000-02-01");
+        
+        family.Marriage = new FactEntity();
+        family.MarriageDate = simpleDateFormat.parse("2014-01-02");
+                
+        List<ValidationResult> results = new ArrayList<ValidationResult>(); 
+        FamilyEntityValidator.marriageAfterFourteen(family, results);
+
+        assertFalse(results.isEmpty());
+    }
+    
+    @Test //US14
+    public void testMultipleBirthsLessThanOrEqualToFive() throws Exception {
+        GEDCOMData gedcomData = new GEDCOMData(); 
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        
+        for(int i=1; i<=6; i++){
+            PersonEntity child = new PersonEntity();
+            child.setId(Integer.toString(i));
+            child.BirthDate = simpleDateFormat.parse("2014-01-02");
+            gedcomData.addIndividual(child);
+        }                
+        
+        FamilyEntity family = new FamilyEntity();
+        family.ChildrenId = Arrays.asList("1","2","3","4","5","6");
+        gedcomData.addFamily(family);
+        
+        List<ValidationResult> results = new ArrayList<ValidationResult>(); 
+        FamilyEntityValidator.multipleBirthsLessThanOrEqualToFive(family, results);
+
+        assertFalse(results.isEmpty());
+    }    
+    
+    @Test //US12 edge case: Mother is exactly 61 years older than child
     public void testParentsNotTooOldCaseMother61YearsOlder() throws Exception {
         GEDCOMData gcd = new GEDCOMData(); 
         
@@ -194,7 +263,7 @@ public class AppTest {
         
     }   
     
-    @Test // edge case: Father is exactly 81 years older than child
+    @Test //US12 edge case: Father is exactly 81 years older than child
     public void testParentsNotTooOldCaseFather81YearsOlder() throws Exception {
         GEDCOMData gcd = new GEDCOMData(); 
         
@@ -223,7 +292,7 @@ public class AppTest {
         assertFalse(results.isEmpty());        
     } 
 
-    @Test
+    @Test //US12 
     public void testParentsNotTooOldCaseInGEDFile() throws Exception {
         URL testGed = getClass().getResource("test.ged");
         URL testGedOut = getClass().getResource("test.ged.out");
@@ -236,7 +305,7 @@ public class AppTest {
 
         while(gedOutput.hasNext()) {
             String nextLine = gedOutput.nextLine();            
-            if(nextLine.contains("Mother should be less than 60 years older than her children and father should be less than 80 years older than his children.")){
+            if(nextLine.contains("US12")){
                 foundExpected = true;
                 break;
             }            
@@ -245,8 +314,8 @@ public class AppTest {
         gedOutput.close();        
     } 
     
-    @Test
-    public void testDivorceBeforeDeath() throws Exception {
+    @Test //US06
+    public void testDivorceBeforeDeathInGEDFile() throws Exception {
         URL testGed = getClass().getResource("test.ged");
         URL testGedOut = getClass().getResource("test.ged.out");
         
@@ -258,7 +327,7 @@ public class AppTest {
 
         while(gedOutput.hasNext()) {
             String nextLine = gedOutput.nextLine();
-            if(nextLine.contains("Divorce can only occur before death of both spouses.")){
+            if(nextLine.contains("US06")){
                 foundExpected = true;
                 break;
             }            

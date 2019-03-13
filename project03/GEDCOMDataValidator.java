@@ -29,7 +29,7 @@ public class GEDCOMDataValidator {
                 v.Children.forEach((PersonEntity child) -> {
                     if (child != null && "M".equals(child.Gender)) {
                         if (!v.Husband.SurName.equals(child.SurName)) {
-                            results.add(new ValidationResult("All male members of a family should have the same last name.", child, "US16"));
+                            results.add(new ValidationResult("Male child `" + child.FullName + "` surname should have the same family `" + v.Husband.SurName + "` last name.", child, "US16"));
                         }
                     }
                 });
@@ -44,11 +44,11 @@ public class GEDCOMDataValidator {
         }
 
         entity.getFamiliesDuplicates().forEach((k, v) -> {
-            results.add(new ValidationResult("Error US22: This is a duplicate ID. Please check entry.", v));
+            results.add(new ValidationResult("This is a duplicate ID. Please check entry.", v, "US22"));
         });
 
         entity.getIndividualsDuplicates().forEach((k, v) -> {
-            results.add(new ValidationResult("Error US22: This is a duplicate ID. Please check entry.", v));
+            results.add(new ValidationResult("This is a duplicate ID. Please check entry.", v, "US22"));
 
         });
 
@@ -65,7 +65,7 @@ public class GEDCOMDataValidator {
             if (v.BirthDate != null) {
                 String key = v.FullName + v.BirthDate.toString();
                 if (set.contains(key)) {
-                    results.add(new ValidationResult("Error US23: Person has same name with birth date.", v));
+                    results.add(new ValidationResult("Person has same name with birth date.", v, "US23"));
                 } else {
                     set.add(key);
                 }
@@ -73,4 +73,3 @@ public class GEDCOMDataValidator {
         });
     }
 }
-
