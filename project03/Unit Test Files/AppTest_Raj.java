@@ -29,19 +29,31 @@ public class AppTest_Raj {
 
     @Before
     public void setUp() throws Exception {
-        GEDCOMDataObj = App.parseGEDFromFile("C:\\Temp\\MS\\SSW -555-WS\\My-Family-7-Feb-2019-240.ged");
+        GEDCOMDataObj = App.parseGEDFromFile("C:\\Temp\\MS\\SSW -555-WS\\Raj.ged");
     }
 
     @After
     public void tearDown() {
     }
 
+    @Test // (Raj US01) Dates before current date
+    public void testDatesBeforeCurrentDate() throws Exception {
+        List<ValidationResult> results = new ArrayList<>();
+        GEDCOMDataValidator.datesBeforeCurrentDateCheck(GEDCOMDataObj, results);
+        assertTrue(results.isEmpty());
+    }
+
+    @Test // (Raj US02) Birth before marriage
+    public void testBirthBeforeMarriage() throws Exception {
+        List<ValidationResult> results = new ArrayList<>();
+        GEDCOMDataValidator.birthBeforeMarriageCheck(GEDCOMDataObj, results);
+        assertTrue(results.isEmpty());
+    }
+
     @Test //(Raj US15) There should be fewer than 15 siblings in a family
     public void testFewerThan15Siblings() throws Exception {
         List<ValidationResult> results = new ArrayList<>();
-        GEDCOMDataObj.getFamilies().forEach((k, v) -> {
-            FamilyEntityValidator.fewerThan15SiblingsCheck(v, results);
-        });
+        GEDCOMDataValidator.fewerThan15SiblingsCheck(GEDCOMDataObj, results);
         assertTrue(results.isEmpty());
     }
 
