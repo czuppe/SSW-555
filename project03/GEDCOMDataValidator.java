@@ -17,6 +17,41 @@ public class GEDCOMDataValidator {
 
     }
 
+    //US01: Dates before current date
+    //Dates (birth, marriage, divorce, death) should not be after the current date
+    public static void datesBeforeCurrentDateCheck(GEDCOMData entity, List<ValidationResult> results) {
+        if (entity == null || results == null) {
+            return;
+        }
+        entity.getIndividuals().forEach((k, v) -> {
+            PersonEntityValidator.datesBeforeCurrentDateCheck(v, results);
+        });
+        entity.getFamilies().forEach((k, v) -> {
+            FamilyEntityValidator.datesBeforeCurrentDateCheck(v, results);
+        });
+    }
+
+    //US02: Birth before marriage
+    //Birth should occur before marriage of an individual
+    public static void birthBeforeMarriageCheck(GEDCOMData entity, List<ValidationResult> results) {
+        if (entity == null || results == null) {
+            return;
+        }
+        entity.getFamilies().forEach((k, v) -> {
+            FamilyEntityValidator.birthBeforeMarriageCheck(v, results);
+        });
+    }
+
+    //US15: There should be fewer than 15 siblings in a family
+    public static void fewerThan15SiblingsCheck(GEDCOMData entity, List<ValidationResult> results) {
+        if (entity == null || results == null) {
+            return;
+        }
+        entity.getFamilies().forEach((k, v) -> {
+            FamilyEntityValidator.fewerThan15SiblingsCheck(v, results);
+        });
+    }
+
     //US16: Male last names
     //All male members of a family should have the same last name
     public static void maleLastNameCheck(GEDCOMData entity, List<ValidationResult> results) {
