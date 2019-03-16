@@ -2,6 +2,7 @@ package project03;
 
 import java.io.*;
 import java.net.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -70,7 +71,96 @@ public class GEDCOMUnitTest {
     }
     
     //END: *** Raj Test Cases ***
+    
+    //-------------------------------------------------------
+    //Begin Charles' Unit Tests
+    
+    @Test //(Charles US06) Divorce Before Death (with GED file)
+    public void testDivorceBeforeDeathInGEDFile() throws Exception {
+        URL testGed = getClass().getResource("./Input Files/US06.ged");
+        URL testGedOut = getClass().getResource("./Output Files/US06.ged.out");
+        
+        String[] args = {testGed.getPath()};
+        App.main(args);
+        File gedOutputFile = new File(testGedOut.getPath());
+        Scanner gedOutput = new Scanner(gedOutputFile);        
+        boolean foundExpected = false;
 
+        while(gedOutput.hasNext()) {
+            String nextLine = gedOutput.nextLine();
+            if(nextLine.contains("US06")){
+                foundExpected = true;
+                break;
+            }            
+        }
+        assertTrue(foundExpected);
+        gedOutput.close();        
+    }
+    
+    @Test //(Charles US06) Divorce Before Death
+    public void testDivorceBeforeDeath() throws Exception {
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        
+        FamilyEntity family = new FamilyEntity();
+        family.Husband = new PersonEntity();
+        family.Husband.DeathDate = simpleDateFormat.parse("2014-09-09");
+        family.Wife = new PersonEntity();
+        family.Wife.DeathDate = simpleDateFormat.parse("2018-09-09");
+        family.Divorce = new FactEntity();
+        family.Divorce.Date = simpleDateFormat.parse("2018-09-09");
+                
+        List<ValidationResult> results = new ArrayList<ValidationResult>(); 
+        FamilyEntityValidator.divorceBeforeDeathCheck(family, results);
+
+        assertFalse(results.isEmpty());
+    }    
+            
+    @Test //(Charles US10) Marriage After 14
+    public void testMarriageAfterFourteen() throws Exception {
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        
+        FamilyEntity family = new FamilyEntity();
+        
+        family.Husband = new PersonEntity();
+        family.Husband.BirthDate = simpleDateFormat.parse("2000-01-01");
+        
+        family.Wife = new PersonEntity();
+        family.Wife.BirthDate = simpleDateFormat.parse("2000-02-01");
+        
+        family.Marriage = new FactEntity();
+        family.MarriageDate = simpleDateFormat.parse("2014-01-02");
+                
+        List<ValidationResult> results = new ArrayList<ValidationResult>(); 
+        FamilyEntityValidator.marriageAfterFourteen(family, results);
+
+        assertFalse(results.isEmpty());
+    }
+    
+    @Test //(Charles US10) Marriage After 14 (with GED file)
+    public void testMarriageAfterFourteenGEDFile() throws Exception {
+        URL testGed = getClass().getResource("./Input Files/US10.ged");
+        URL testGedOut = getClass().getResource("./Output Files/US10.ged.out");
+        
+        String[] args = {testGed.getPath()};
+        App.main(args);
+        File gedOutputFile = new File(testGedOut.getPath());
+        Scanner gedOutput = new Scanner(gedOutputFile);        
+        boolean foundExpected = false;
+
+        while(gedOutput.hasNext()) {
+            String nextLine = gedOutput.nextLine();
+            if(nextLine.contains("US10")){
+                foundExpected = true;
+                break;
+            }            
+        }
+        assertTrue(foundExpected);
+        gedOutput.close();        
+    }
+    
+    @Test //(Charles US12) Parents not too old
     public void testParentsNotTooOldCaseFather80YearsOlder() throws Exception {
         GEDCOMData gcd = new GEDCOMData();
 
@@ -249,11 +339,11 @@ public class GEDCOMUnitTest {
         assertFalse(results.isEmpty());
     }
 
-    @Test //(Charles US12) Parents not too old.
+    @Test //(Charles US12) Parents not too old (with GED file)
     public void testParentsNotTooOldCaseInGEDFile() throws Exception {
         
-    	URL testGed = getClass().getResource("C:\\Users\\Craig\\eclipse-workspace\\project03\\src\\project03\\test.ged");
-        URL testGedOut = getClass().getResource("C:\\Users\\Craig\\eclipse-workspace\\project03\\src\\project03\\test.ged.out");
+        URL testGed = getClass().getResource("./Input Files/US12.ged");
+        URL testGedOut = getClass().getResource("./Output Files/US12.ged.out");
         
         String[] args = {testGed.getPath()};
         App.main(args);
@@ -262,15 +352,64 @@ public class GEDCOMUnitTest {
         boolean foundExpected = false;
 
         while(gedOutput.hasNext()) {
-            String nextLine = gedOutput.nextLine();            
-            if(nextLine.contains("Mother should be less than 60 years older than her children and father should be less than 80 years older than his children.")){
+            String nextLine = gedOutput.nextLine();
+            if(nextLine.contains("US12")){
                 foundExpected = true;
                 break;
             }            
         }
         assertTrue(foundExpected);
-        gedOutput.close();        
-    } 
+        gedOutput.close();  
+    }
+
+    @Test //Charles US14 Multiple Births less than or equal to Five
+    public void testMultipleBirthsLessThanOrEqualToFive() throws Exception {
+        GEDCOMData gedcomData = new GEDCOMData(); 
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        
+        for(int i=1; i<=6; i++){
+            PersonEntity child = new PersonEntity();
+            child.setId(Integer.toString(i));
+            child.BirthDate = simpleDateFormat.parse("2014-01-02");
+            gedcomData.addIndividual(child);
+        }                
+        
+        FamilyEntity family = new FamilyEntity();
+        family.ChildrenId = Arrays.asList("1","2","3","4","5","6");
+        gedcomData.addFamily(family);
+        
+        List<ValidationResult> results = new ArrayList<ValidationResult>(); 
+        FamilyEntityValidator.multipleBirthsLessThanOrEqualToFive(family, results);
+
+        assertFalse(results.isEmpty());
+    }       
+    
+    @Test //(Charles US14) Multiple Births less than or equal to Five (with GED file)
+    public void testMultipleBirthsLessThanOrEqualToFiveInGEDFile() throws Exception {
+        
+        URL testGed = getClass().getResource("./Input Files/US14.ged");
+        URL testGedOut = getClass().getResource("./Output Files/US14.ged.out");
+        
+        String[] args = {testGed.getPath()};
+        App.main(args);
+        File gedOutputFile = new File(testGedOut.getPath());
+        Scanner gedOutput = new Scanner(gedOutputFile);        
+        boolean foundExpected = false;
+
+        while(gedOutput.hasNext()) {
+            String nextLine = gedOutput.nextLine();
+            if(nextLine.contains("US14")){
+                foundExpected = true;
+                break;
+            }            
+        }
+        assertTrue(foundExpected);
+        gedOutput.close();  
+    }
+    
+    //End Charles' Unit Tests
+    //-------------------------------------------------------
 
     @Test //(Bella US03) test valid birth date is before valid death date
     public void testValidDatesBeforeDeathDate() throws Exception {
