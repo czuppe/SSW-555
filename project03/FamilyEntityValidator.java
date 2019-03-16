@@ -64,29 +64,16 @@ public class FamilyEntityValidator {
         }
     }
    
-    //US04:	Marriage before divorce 
+      //US04:	Marriage before divorce @Bella Refactored
     public static void marriageBeforeDivorceCheck(FamilyEntity entity, List<ValidationResult> results) {
-        if (entity == null || results == null) {
+        if (entity== null || results == null || entity.Wife == null || entity.Husband == null || entity.Marriage == null || entity.Marriage.Date == null || entity.Divorce == null || entity.Divorce.Date == null) {
             return;
         }
-        if (entity.Marriage == null || entity.Marriage.Date == null) {
-            return;
-        }
-        if (entity.Divorce == null || entity.Divorce.Date == null) {
-            return;
-        }
-        if (entity.Husband != null && entity.Divorce.Date != null) {
             if (entity.Marriage.Date.after(entity.Divorce.Date)) {
                 results.add(new ValidationResult("Marriage date " + Utility.DateToString(entity.Marriage.Date) + " must be before Divorce date " + Utility.DateToString(entity.Divorce.Date) + " .", entity, "US04"));
             }
-        }
-        if (entity.Wife != null && entity.Divorce.Date != null) {
-            if (entity.Marriage.Date.after(entity.Divorce.Date)) {
-                results.add(new ValidationResult("Marriage date " + Utility.DateToString(entity.Marriage.Date) + " must be before Divorce date " + Utility.DateToString(entity.Divorce.Date) + " .", entity, "US04"));
-            }
-        }
     }
-
+	
     //US05: Marriage before death : Marriage should occur before death of either spouse
     public static void marriageBeforeDeathCheck(FamilyEntity entity, List<ValidationResult> results) {
         if (entity == null || results == null)
