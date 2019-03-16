@@ -30,8 +30,7 @@ public class GEDCOMUnitTest {
     @Before
     public void setUp() throws Exception {
         GEDCOMDataObj_Raj = App.parseGEDFromURI(getClass().getResource("./Input Files/Raj.ged").toURI());
-        //GEDCOMDataObj = App.parseGEDFile("/Users/Bella/eclipse-workspace/project03/src/project03/BellaManoim.ged");
-        //GEDCOMDataObj = App.parseGEDFile("C\\:\\\\Users\\Charles\\\\Documents\\\\NetBeansProjects\\\\project03\\\\src\\\\project03\\\\test.ged");
+        //GEDCOMDataObj = App.parseGEDFile("/Users/Bella/eclipse-workspace/project03/src/project03/BellaManoim.ged");        
         GEDCOMDataObj = App.parseGEDFromURI(getClass().getResource("./Input Files/test.ged").toURI());
     }
 
