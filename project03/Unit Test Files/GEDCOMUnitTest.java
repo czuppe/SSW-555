@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotSame;
  *
  * @author Cinchoo, czuppe, Bella458, cjarret1
  */
-public class Sprint1Test {
+public class GEDCOMUnitTest {
 
     GEDCOMData GEDCOMDataObj;
 
