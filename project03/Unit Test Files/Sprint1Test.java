@@ -2,12 +2,12 @@ package project03;
 
 import java.io.File;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Map;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -15,8 +15,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
 
 /**
  *
@@ -47,7 +45,8 @@ public class Sprint1Test {
     @After //(Charles US12) Parents not too old
     public void tearDown() {
     }
-
+    
+    @Test //(Charles US12) Parents not too old     
     public void testParentsNotTooOldCaseFather80YearsOlder() throws Exception {
         GEDCOMData gcd = new GEDCOMData(); 
         
@@ -106,8 +105,7 @@ public class Sprint1Test {
         assertTrue(results.isEmpty());  
         
     }        
-    
-    
+        
     @Test //(Charles US12) Parents not too old. Edge case: Mother is exactly 20 years older than child
     public void testParentsNotTooOldCaseMother20YearsOlder() throws Exception {
         GEDCOMData gcd = new GEDCOMData(); 
@@ -225,29 +223,6 @@ public class Sprint1Test {
         FamilyEntityValidator.parentsNotTooOldCheck(family, results);
         
         assertFalse(results.isEmpty());        
-    } 
-
-    @Test //(Charles US12) Parents not too old.
-    public void testParentsNotTooOldCaseInGEDFile() throws Exception {
-        
-    	URL testGed = getClass().getResource("C:\\Users\\Craig\\eclipse-workspace\\project03\\src\\project03\\test.ged");
-        URL testGedOut = getClass().getResource("C:\\Users\\Craig\\eclipse-workspace\\project03\\src\\project03\\test.ged.out");
-        
-        String[] args = {testGed.getPath()};
-        App.main(args);
-        File gedOutputFile = new File(testGedOut.getPath());
-        Scanner gedOutput = new Scanner(gedOutputFile);        
-        boolean foundExpected = false;
-
-        while(gedOutput.hasNext()) {
-            String nextLine = gedOutput.nextLine();            
-            if(nextLine.contains("Mother should be less than 60 years older than her children and father should be less than 80 years older than his children.")){
-                foundExpected = true;
-                break;
-            }            
-        }
-        assertTrue(foundExpected);
-        gedOutput.close();        
     } 
     
     @Test //(Raj US01) Dates before current date
@@ -409,5 +384,93 @@ public class Sprint1Test {
 		
 		
 	}
-    
+        
+        @Test //(Charles US06)
+        public void testDivorceBeforeDeathInGEDFile() throws Exception {
+            URL testGed = getClass().getResource("test.ged");
+            URL testGedOut = getClass().getResource("test.ged.out");
+
+            String[] args = {testGed.getPath()};
+            App.main(args);
+            File gedOutputFile = new File(testGedOut.getPath());
+            Scanner gedOutput = new Scanner(gedOutputFile);        
+            boolean foundExpected = false;
+
+            while(gedOutput.hasNext()) {
+                String nextLine = gedOutput.nextLine();
+                if(nextLine.contains("US06")){
+                    foundExpected = true;
+                    break;
+                }            
+            }
+            assertTrue(foundExpected);
+            gedOutput.close();        
+        }
+        
+        @Test //(Charles US12)
+        public void testParentsNotTooOldCaseInGEDFile() throws Exception {
+            URL testGed = getClass().getResource("US12.ged");
+            URL testGedOut = getClass().getResource("US12.ged.out");
+
+            String[] args = {testGed.getPath()};
+            App.main(args);
+            File gedOutputFile = new File(testGedOut.getPath());
+            Scanner gedOutput = new Scanner(gedOutputFile);        
+            boolean foundExpected = false;
+
+            while(gedOutput.hasNext()) {
+                String nextLine = gedOutput.nextLine();            
+                if(nextLine.contains("US12")){
+                    foundExpected = true;
+                    break;
+                }            
+            }
+            assertTrue(foundExpected);
+            gedOutput.close();        
+        }
+
+        @Test //(Charles US10)
+        public void testMarriageAfterFourteen() throws Exception {
+            String pattern = "yyyy-MM-dd";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+            FamilyEntity family = new FamilyEntity();
+
+            family.Husband = new PersonEntity();
+            family.Husband.BirthDate = simpleDateFormat.parse("2000-01-01");
+
+            family.Wife = new PersonEntity();
+            family.Wife.BirthDate = simpleDateFormat.parse("2000-02-01");
+
+            family.Marriage = new FactEntity();
+            family.MarriageDate = simpleDateFormat.parse("2014-01-02");
+
+            List<ValidationResult> results = new ArrayList<ValidationResult>(); 
+            FamilyEntityValidator.marriageAfterFourteen(family, results);
+
+            assertFalse(results.isEmpty());
+        }        
+        
+        @Test //(Charles US14)
+        public void testMultipleBirthsLessThanOrEqualToFive() throws Exception {
+            GEDCOMData gedcomData = new GEDCOMData(); 
+            String pattern = "yyyy-MM-dd";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+            for(int i=1; i<=6; i++){
+                PersonEntity child = new PersonEntity();
+                child.setId(Integer.toString(i));
+                child.BirthDate = simpleDateFormat.parse("2014-01-02");
+                gedcomData.addIndividual(child);
+            }                
+
+            FamilyEntity family = new FamilyEntity();
+            family.ChildrenId = Arrays.asList("1","2","3","4","5","6");
+            gedcomData.addFamily(family);
+
+            List<ValidationResult> results = new ArrayList<ValidationResult>(); 
+            FamilyEntityValidator.multipleBirthsLessThanOrEqualToFive(family, results);
+
+            assertFalse(results.isEmpty());
+        }      
 }
