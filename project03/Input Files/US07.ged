@@ -1,0 +1,99 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf600
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 0 HEAD\
+1 SOUR Family Echo\
+2 WWW http://www.familyecho.com/\
+1 FILE My Family\
+1 DATE 16 MAR 2019\
+1 DEST ANSTFILE\
+1 GEDC\
+2 VERS 5.5.1\
+2 FORM LINEAGE-LINKED\
+1 SUBM @I1@\
+2 NAME B M\
+1 SUBN\
+1 CHAR UTF-8\
+0 @I1@ INDI\
+1 NAME Bula /Macentyre/\
+2 GIVN Bula\
+2 SURN Macentyre\
+2 _MARNM Macentyre\
+1 SEX F\
+1 BIRT\
+2 DATE 30 MAR 1989\
+1 FAMS @F1@\
+1 FAMC @F2@\
+0 @I2@ INDI\
+1 NAME Ilya /Sakashvili/\
+2 GIVN Ilya\
+2 SURN Sakashvili\
+2 _MARNM Sakashvili\
+1 SEX M\
+1 BIRT\
+2 DATE 1 FEB 1960\
+1 FAMS @F2@\
+1 FAMS @F5@\
+1 FAMC @F3@\
+0 @I3@ INDI\
+1 NAME Lilla /Aire/\
+2 GIVN Lilla\
+2 SURN Aire\
+2 _MARNM Aire\
+1 SEX F\
+1 BIRT\
+2 DATE 23 DEC 1850\
+1 FAMS @F2@\
+1 FAMS @F4@\
+0 @I4@ INDI\
+1 NAME Rajeev /Ram/\
+2 GIVN Rajeev\
+2 SURN Ram\
+2 _MARNM Ram\
+1 SEX M\
+1 BIRT\
+2 DATE 1 AUG 1975\
+1 FAMS @F4@\
+0 @I5@ INDI\
+1 NAME Ketevan /Gogidze/\
+2 GIVN Ketevan\
+2 SURN Gogidze\
+2 _MARNM Gogidze\
+1 SEX F\
+1 BIRT\
+2 DATE 1 JAN 1965\
+1 FAMS @F5@\
+1 FAMC @F6@\
+0 @F1@ FAM\
+1 WIFE @I1@\
+1 _CURRENT N\
+0 @F2@ FAM\
+1 MARR\
+2 DATE 3 APR 2000\
+1 HUSB @I2@\
+1 WIFE @I3@\
+1 CHIL @I1@\
+1 _CURRENT N\
+0 @F5@ FAM\
+1 HUSB @I2@\
+1 WIFE @I5@\
+1 _CURRENT N\
+0 @F3@ FAM\
+1 CHIL @I2@\
+1 _CURRENT N\
+0 @F4@ FAM\
+1 MARR\
+2 DATE 3 APR 2000\
+1 DIV\
+2 DATE 2 MAY 2010\
+1 HUSB @I4@\
+1 WIFE @I3@\
+1 _CURRENT Y\
+0 @F6@ FAM\
+1 CHIL @I5@\
+1 _CURRENT N\
+0 TRLR}
