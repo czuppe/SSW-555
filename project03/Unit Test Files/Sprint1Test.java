@@ -385,10 +385,10 @@ public class Sprint1Test {
 		
 	}
         
-        @Test //(Charles US06)
+        //@Test //(Charles US06)
         public void testDivorceBeforeDeathInGEDFile() throws Exception {
-            URL testGed = getClass().getResource("test.ged");
-            URL testGedOut = getClass().getResource("test.ged.out");
+            URL testGed = getClass().getResource("US06.ged");
+            URL testGedOut = getClass().getResource("US06.ged.out");
 
             String[] args = {testGed.getPath()};
             App.main(args);
@@ -407,7 +407,7 @@ public class Sprint1Test {
             gedOutput.close();        
         }
         
-        @Test //(Charles US12)
+        //@Test //(Charles US12)
         public void testParentsNotTooOldCaseInGEDFile() throws Exception {
             URL testGed = getClass().getResource("US12.ged");
             URL testGedOut = getClass().getResource("US12.ged.out");
