@@ -7,6 +7,7 @@ package project03;
 
 import java.util.*;
 import java.io.*;
+import java.net.*;
 import java.text.ParseException;
 
 /**
@@ -65,6 +66,10 @@ public class App {
         tags.put("NOTE", "0");
     }
 
+
+    public static GEDCOMData parseGEDFromURI(URI gedFileURI) throws FileNotFoundException, IOException, ParseException {
+        return parseGEDFromFile(new File(gedFileURI).getPath());
+    }
 
     public static GEDCOMData parseGEDFromFile(String gedFilePath) throws FileNotFoundException, IOException, ParseException {
         String gedcomFileContent = Utility.readFileAsString(gedFilePath);
