@@ -43,6 +43,8 @@ public class GEDCOMUnitTest {
     
     @Test // (Raj US01) Dates before current date
     public void testDatesBeforeCurrentDate() throws Exception {
+        assertTrue(null != GEDCOMDataObj_Raj);
+
         List<ValidationResult> results = new ArrayList<>();
         GEDCOMDataValidator.datesBeforeCurrentDateCheck(GEDCOMDataObj_Raj, results);
         assertTrue(results.isEmpty());
@@ -50,6 +52,8 @@ public class GEDCOMUnitTest {
 
     @Test // (Raj US02) Birth before marriage
     public void testBirthBeforeMarriage() throws Exception {
+        assertTrue(null != GEDCOMDataObj_Raj);
+
         List<ValidationResult> results = new ArrayList<>();
         GEDCOMDataValidator.birthBeforeMarriageCheck(GEDCOMDataObj_Raj, results);
         assertTrue(results.isEmpty());
@@ -57,6 +61,8 @@ public class GEDCOMUnitTest {
 
     @Test //(Raj US15) There should be fewer than 15 siblings in a family
     public void testFewerThan15Siblings() throws Exception {
+        assertTrue(null != GEDCOMDataObj_Raj);
+
         List<ValidationResult> results = new ArrayList<>();
         GEDCOMDataValidator.fewerThan15SiblingsCheck(GEDCOMDataObj_Raj, results);
         assertTrue(results.isEmpty());
@@ -64,6 +70,8 @@ public class GEDCOMUnitTest {
 
     @Test //(Raj US16) All male members of a family should have the same last name
     public void testAllMaleMembersShouldHaveSameLastName() throws Exception {
+        assertTrue(null != GEDCOMDataObj_Raj);
+
         List<ValidationResult> results = new ArrayList<>();
         GEDCOMDataValidator.maleLastNameCheck(GEDCOMDataObj_Raj, results);
         assertTrue(results.isEmpty());
