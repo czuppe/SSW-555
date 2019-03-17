@@ -600,5 +600,38 @@ public class GEDCOMUnitTest {
         });
 
     }
+@Test //Craig - US08 Birth before marriage of parents
+    public void testUS08() throws Exception {
+
+    	FamilyEntity entity = new FamilyEntity();
+    	PersonEntity child = new PersonEntity();
+    	List<ValidationResult> results = new ArrayList<>();
+    	
+    	SimpleDateFormat dateformat = new SimpleDateFormat("MM-dd-yyyy");
+    	entity.MarriageDate = dateformat.parse("01-01-2000");
+    	entity.DivorceDate = dateformat.parse("04-01-1998");
+    	child.BirthDate = dateformat.parse("01-01-1999");
+    	
+    	FamilyEntityValidator.birthBeforeMarriageParents(entity, results);
+        assertTrue(results.isEmpty());
+        }
+    
+    @Test //Craig - US09 Birth before death of parents
+    public void testUS09() throws Exception {
+
+    	FamilyEntity entity = new FamilyEntity();
+    	entity.Wife = new PersonEntity();
+    	entity.Husband = new PersonEntity();
+    	PersonEntity child = new PersonEntity();
+    	List<ValidationResult> results = new ArrayList<>();
+    	
+    	SimpleDateFormat dateformat = new SimpleDateFormat("MM-dd-yyyy");
+    	entity.Wife.DeathDate = dateformat.parse("01-01-2000");
+    	entity.Husband.DeathDate = dateformat.parse("04-01-1998");
+    	child.BirthDate = dateformat.parse("01-01-1999");
+    	
+    	FamilyEntityValidator.birthBeforeDeathParents(entity, results);
+        assertTrue(results.isEmpty());
+        }
 
 }
