@@ -72,29 +72,7 @@ public class GEDCOMUnitTest {
     //END: *** Raj Test Cases ***
     
     //-------------------------------------------------------
-    //Begin Charles' Unit Tests
-    
-    @Test //(Charles US06) Divorce Before Death (with GED file)
-    public void testDivorceBeforeDeathInGEDFile() throws Exception {
-        URL testGed = getClass().getResource("./Input Files/US06.ged");
-        URL testGedOut = getClass().getResource("./Output Files/US06.ged.out");
-        
-        String[] args = {testGed.getPath()};
-        App.main(args);
-        File gedOutputFile = new File(testGedOut.getPath());
-        Scanner gedOutput = new Scanner(gedOutputFile);        
-        boolean foundExpected = false;
-
-        while(gedOutput.hasNext()) {
-            String nextLine = gedOutput.nextLine();
-            if(nextLine.contains("US06")){
-                foundExpected = true;
-                break;
-            }            
-        }
-        assertTrue(foundExpected);
-        gedOutput.close();        
-    }
+    //Begin Charles' Unit Test   
     
     @Test //(Charles US06) Divorce Before Death
     public void testDivorceBeforeDeath() throws Exception {
@@ -135,29 +113,7 @@ public class GEDCOMUnitTest {
         FamilyEntityValidator.marriageAfterFourteen(family, results);
 
         assertFalse(results.isEmpty());
-    }
-    
-    @Test //(Charles US10) Marriage After 14 (with GED file)
-    public void testMarriageAfterFourteenGEDFile() throws Exception {
-        URL testGed = getClass().getResource("./Input Files/US10.ged");
-        URL testGedOut = getClass().getResource("./Output Files/US10.ged.out");
-        
-        String[] args = {testGed.getPath()};
-        App.main(args);
-        File gedOutputFile = new File(testGedOut.getPath());
-        Scanner gedOutput = new Scanner(gedOutputFile);        
-        boolean foundExpected = false;
-
-        while(gedOutput.hasNext()) {
-            String nextLine = gedOutput.nextLine();
-            if(nextLine.contains("US10")){
-                foundExpected = true;
-                break;
-            }            
-        }
-        assertTrue(foundExpected);
-        gedOutput.close();        
-    }
+    }    
     
     @Test //(Charles US12) Parents not too old
     public void testParentsNotTooOldCaseFather80YearsOlder() throws Exception {
@@ -338,29 +294,6 @@ public class GEDCOMUnitTest {
         assertFalse(results.isEmpty());
     }
 
-    @Test //(Charles US12) Parents not too old (with GED file)
-    public void testParentsNotTooOldCaseInGEDFile() throws Exception {
-        
-        URL testGed = getClass().getResource("./Input Files/US12.ged");
-        URL testGedOut = getClass().getResource("./Output Files/US12.ged.out");
-        
-        String[] args = {testGed.getPath()};
-        App.main(args);
-        File gedOutputFile = new File(testGedOut.getPath());
-        Scanner gedOutput = new Scanner(gedOutputFile);        
-        boolean foundExpected = false;
-
-        while(gedOutput.hasNext()) {
-            String nextLine = gedOutput.nextLine();
-            if(nextLine.contains("US12")){
-                foundExpected = true;
-                break;
-            }            
-        }
-        assertTrue(foundExpected);
-        gedOutput.close();  
-    }
-
     @Test //Charles US14 Multiple Births less than or equal to Five
     public void testMultipleBirthsLessThanOrEqualToFive() throws Exception {
         GEDCOMData gedcomData = new GEDCOMData(); 
@@ -382,30 +315,7 @@ public class GEDCOMUnitTest {
         FamilyEntityValidator.multipleBirthsLessThanOrEqualToFive(family, results);
 
         assertFalse(results.isEmpty());
-    }       
-    
-    @Test //(Charles US14) Multiple Births less than or equal to Five (with GED file)
-    public void testMultipleBirthsLessThanOrEqualToFiveInGEDFile() throws Exception {
-        
-        URL testGed = getClass().getResource("./Input Files/US14.ged");
-        URL testGedOut = getClass().getResource("./Output Files/US14.ged.out");
-        
-        String[] args = {testGed.getPath()};
-        App.main(args);
-        File gedOutputFile = new File(testGedOut.getPath());
-        Scanner gedOutput = new Scanner(gedOutputFile);        
-        boolean foundExpected = false;
-
-        while(gedOutput.hasNext()) {
-            String nextLine = gedOutput.nextLine();
-            if(nextLine.contains("US14")){
-                foundExpected = true;
-                break;
-            }            
-        }
-        assertTrue(foundExpected);
-        gedOutput.close();  
-    }
+    }           
     
     //End Charles' Unit Tests
     //-------------------------------------------------------
@@ -600,38 +510,5 @@ public class GEDCOMUnitTest {
         });
 
     }
-@Test //Craig - US08 Birth before marriage of parents
-    public void testUS08() throws Exception {
-
-    	FamilyEntity entity = new FamilyEntity();
-    	PersonEntity child = new PersonEntity();
-    	List<ValidationResult> results = new ArrayList<>();
-    	
-    	SimpleDateFormat dateformat = new SimpleDateFormat("MM-dd-yyyy");
-    	entity.MarriageDate = dateformat.parse("01-01-2000");
-    	entity.DivorceDate = dateformat.parse("04-01-1998");
-    	child.BirthDate = dateformat.parse("01-01-1999");
-    	
-    	FamilyEntityValidator.birthBeforeMarriageParents(entity, results);
-        assertTrue(results.isEmpty());
-        }
-    
-    @Test //Craig - US09 Birth before death of parents
-    public void testUS09() throws Exception {
-
-    	FamilyEntity entity = new FamilyEntity();
-    	entity.Wife = new PersonEntity();
-    	entity.Husband = new PersonEntity();
-    	PersonEntity child = new PersonEntity();
-    	List<ValidationResult> results = new ArrayList<>();
-    	
-    	SimpleDateFormat dateformat = new SimpleDateFormat("MM-dd-yyyy");
-    	entity.Wife.DeathDate = dateformat.parse("01-01-2000");
-    	entity.Husband.DeathDate = dateformat.parse("04-01-1998");
-    	child.BirthDate = dateformat.parse("01-01-1999");
-    	
-    	FamilyEntityValidator.birthBeforeDeathParents(entity, results);
-        assertTrue(results.isEmpty());
-        }
 
 }
