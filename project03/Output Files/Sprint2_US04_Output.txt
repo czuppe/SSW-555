@@ -1,0 +1,24 @@
+Loading 'US04.ged' file...
+
+Individuals:
+
+ID, Name, Gender, Birthday, Age, Alive, Death, Child, Spouse
+I1, Bula /Macentyre/, F, 1959-03-30, 59, true, NA, NA, NA
+I2, Ilya /Sakashvili/, M, 1960-02-01, 59, true, NA, {I1}, {I3, I5}
+I3, Lilla /Aire/, F, 1965-12-23, 53, true, NA, {I1}, {I2, I4}
+I4, Rajeev /Ram/, M, 1975-08-01, 43, true, NA, NA, {I3}
+I5, Ketevan /Gogidze/, F, 1965-01-01, 54, true, NA, NA, {I2}
+
+
+Families:
+
+ID, Married, Divorced, Husband ID, Husband Name, Wife ID, Wife Name, Children
+F6, NA, NA, NA, NA, NA, NA, {I5}
+F1, NA, NA, NA, NA, I1, Bula /Macentyre/, NA
+F2, 2000-01-03, NA, I2, Ilya /Sakashvili/, I3, Lilla /Aire/, {I1}
+F3, NA, NA, NA, NA, NA, NA, {I2}
+F4, 2004-01-03, 1998-01-02, I4, Rajeev /Ram/, I3, Lilla /Aire/, NA
+F5, NA, NA, I2, Ilya /Sakashvili/, I5, Ketevan /Gogidze/, NA
+
+
+ERROR: FAMILY: US04: ID: F4: Marriage date 2004-01-03 must be before Divorce date 1998-01-02 .

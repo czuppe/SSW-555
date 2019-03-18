@@ -1,0 +1,52 @@
+Loading 'Raj.ged' file...
+
+Individuals:
+
+ID, Name, Gender, Birthday, Age, Alive, Death, Child, Spouse
+I20, Shreeya20 /Nagarajan/, F, 2006-11-21, 12, true, NA, NA, NA
+I1, Raj /Nagalingam/, M, 1970-05-30, 48, true, NA, {I12, I13, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I9}, {I11, I10}
+I22, Shreeya22 /Nagarajan/, F, 2006-11-02, 12, true, NA, NA, NA
+I2, Nagalingam /Muthaiah/, M, 1948-01-10, 71, false, 2005-01-07, {I1, I6, I7, I8}, {I3}
+I21, Shreeya21 /Nagarajan/, F, 2006-11-01, 12, true, NA, NA, NA
+I3, Kalaiselvi /Nagalingam/, F, 1950-04-05, 68, true, NA, {I1, I6, I7, I8}, {I2}
+I24, Shreeya24 /Nagarajan/, F, 2006-11-03, 12, true, NA, NA, NA
+I4, Muniyandi /Perumal/, M, 1920-04-03, 98, false, 1985-01-06, {I3}, {I5}
+I23, Shreeya23 /Nagarajan/, F, 2006-11-03, 12, true, NA, NA, NA
+I5, Meena N /Muniyandi/, F, 1925-07-13, 93, false, 1995-01-10, {I3}, {I4}
+I26, Shreeya26 /Nagarajan/, F, 2006-11-05, 12, true, NA, NA, NA
+I6, Elangovan /Nagalingam/, M, 1972-04-04, 46, true, NA, {I14, I15}, NA
+I25, Shreeya25 /Nagarajan/, F, 2006-11-04, 12, true, NA, NA, NA
+I7, Sathishbabu /Nagalingam/, M, 1975-06-10, 43, true, NA, NA, NA
+I28, Shreeya28 /Nagarajan/, F, 2006-11-07, 12, true, NA, NA, NA
+I8, Thiyagarajan /Nagalingam/, M, 1980-09-08, 38, true, NA, NA, NA
+I27, Shreeya27 /Nagarajan/, F, 2006-11-06, 12, true, NA, NA, NA
+I9, Diya /Nagarajan/, F, 2015-12-01, 3, true, NA, NA, NA
+I29, Shreeya29 /Nagarajan/, F, 2006-11-08, 12, true, NA, NA, NA
+I11, Padmavathy /Thavaraj/, F, 1975-02-08, 44, true, NA, {I12, I13, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29}, {I1}
+I10, Gomathy /Subramaniam/, F, 1976-12-09, 42, true, NA, {I9}, {I1}
+I13, Shreeya /Nagarajan/, F, 2006-11-26, 12, true, NA, NA, NA
+I12, Nitya /Nagarajan/, F, 2003-01-27, 16, true, NA, NA, NA
+I15, Nandika /Elangovan/, F, 2007-08-06, 11, true, NA, NA, NA
+I14, Arjun /Elangovan/, M, 2003-04-09, 15, true, NA, NA, NA
+I17, Shreeya17 /Nagarajan/, F, 2006-11-28, 12, true, NA, NA, NA
+I16, Shreeya16 /Nagarajan/, F, 2006-11-27, 12, true, NA, NA, NA
+I19, Shreeya19 /Nagarajan/, F, 2006-11-20, 12, true, NA, NA, NA
+I18, Shreeya18 /Nagarajan/, F, 2006-11-29, 12, true, NA, NA, NA
+
+
+Families:
+
+ID, Married, Divorced, Husband ID, Husband Name, Wife ID, Wife Name, Children
+F1, 2000-01-04, 2012-01-06, I1, Raj /Nagalingam/, I11, Padmavathy /Thavaraj/, {I12, I13, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29}
+F2, 1968-01-06, NA, I2, Nagalingam /Muthaiah/, I3, Kalaiselvi /Nagalingam/, {I1, I6, I7, I8}
+F3, 1940-01-04, NA, I4, Muniyandi /Perumal/, I5, Meena N /Muniyandi/, {I3}
+F4, 2014-01-12, NA, I1, Raj /Nagalingam/, I10, Gomathy /Subramaniam/, {I9}
+F5, NA, NA, I6, Elangovan /Nagalingam/, NA, NA, {I14, I15}
+
+
+ERROR: INDIVIDUAL: US16: ID: I1: Male child `Raj /Nagalingam/` surname should have the same family `Muthaiah` last name.
+ERROR: INDIVIDUAL: US16: ID: I6: Male child `Elangovan /Nagalingam/` surname should have the same family `Muthaiah` last name.
+ERROR: INDIVIDUAL: US16: ID: I7: Male child `Sathishbabu /Nagalingam/` surname should have the same family `Muthaiah` last name.
+ERROR: INDIVIDUAL: US16: ID: I8: Male child `Thiyagarajan /Nagalingam/` surname should have the same family `Muthaiah` last name.
+ERROR: INDIVIDUAL: US16: ID: I14: Male child `Arjun /Elangovan/` surname should have the same family `Nagalingam` last name.
+ERROR: FAMILY: US15: ID: F1: There should be fewer than 15 siblings in a family.
