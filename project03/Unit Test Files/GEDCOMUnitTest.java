@@ -511,4 +511,33 @@ public class GEDCOMUnitTest {
 
     }
 
+@Test //(Craig US21) Correct gender roles
+    public void testGenderRoles() throws Exception {
+
+    	 FamilyEntity entity = new FamilyEntity();
+         List<ValidationResult> results = new ArrayList<ValidationResult>();
+         
+         entity.Husband = new PersonEntity();
+         entity.Wife = new PersonEntity();
+         entity.Husband.Gender = "F";
+         entity.Wife.Gender = "M";
+
+         
+         FamilyEntityValidator.genderCheck(entity, results);
+         
+         assertFalse(results.isEmpty());
+    }
+
+
+    @Test //(Craig US25) Unique first name and birth date in family
+    public void testUniqueNamesinFamily() throws Exception {
+
+        GEDCOMDataObj.getIndividuals().forEach((k, v) -> {
+            assertFalse(GEDCOMDataObj.getIndividuals().containsValue(v.FullName + v.BirthDate + v.ChildhoodFamilyIds.toString()));
+
+        });
+
+    }
+
+
 }

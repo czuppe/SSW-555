@@ -103,6 +103,7 @@ public class FamilyEntity implements IEntity {
 
 		FamilyEntityValidator.marriageAfterFourteen(this, results);
         FamilyEntityValidator.multipleBirthsLessThanOrEqualToFive(this, results);
+	FamilyEntityValidator.genderCheck(this, results);
 
     }
 
