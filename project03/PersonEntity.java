@@ -109,8 +109,9 @@ public class PersonEntity implements IEntity {
     public Date DeathDate;
     public int BirthYear;    
     public int Age;
-
+    
     public List<FamilyEntity> Families;
+    public FamilyEntity ChildOfFamily;
     
     @Override
     public String getId() {

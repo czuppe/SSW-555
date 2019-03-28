@@ -82,6 +82,8 @@ public class GEDCOMData {
         GEDCOMDataValidator.maleLastNameCheck(this, results);
         GEDCOMDataValidator.uniqueIDsCheck(this, results);
         GEDCOMDataValidator.uniqueNameAndBirthDateCheck(this, results);
+        GEDCOMDataValidator.noMarriagesToChildrenCheck(this, results);
+        GEDCOMDataValidator.siblingsShouldNotMarryCheck(this, results);
 
         //Individual validations
         Individuals.forEach((k, entity) -> {
@@ -103,6 +105,7 @@ public class GEDCOMData {
                 PersonEntity child = Individuals.get(childId);
                 if (child != null) {
                     family.Children.add(child);
+                    child.ChildOfFamily = family;
                 }
             }
         });
