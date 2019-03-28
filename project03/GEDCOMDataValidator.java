@@ -72,6 +72,46 @@ public class GEDCOMDataValidator {
         });
     }
 
+    //US17: No marriages to children
+    //Parents should not marry any of their children
+    public static void noMarriagesToChildrenCheck(GEDCOMData entity, List<ValidationResult> results) {
+        if (entity == null || results == null) {
+            return;
+        }
+
+        entity.getFamilies().forEach((k, v) -> {
+            if (v == null || v.Children == null || v.Children.size() == 0) {
+
+            } else {
+                v.Children.forEach((p) -> {
+                    if (p != null && p.getId() == v.HusbandId) {
+                        results.add(new ValidationResult("Parent `" + v.Husband.FullName + "` married to child.", v, "US17"));
+                    } else if (p != null && p.getId() == v.WifeId) {
+                        results.add(new ValidationResult("Parent `" + v.Wife.FullName + "` married to child.", v, "US17"));
+                    }
+                });
+            }
+        });
+    }
+
+    //US18: Siblings should not marry
+    //Siblings should not marry one another
+    public static void siblingsShouldNotMarryCheck(GEDCOMData entity, List<ValidationResult> results) {
+        if (entity == null || results == null) {
+            return;
+        }
+
+        entity.getFamilies().forEach((k, v) -> {
+            if (v != null && v.Husband != null && v.Wife != null) {
+                if (v.Husband.ChildOfFamily != null && v.Wife.ChildOfFamily != null) {
+                    if (v.Husband.ChildOfFamily.getId().equals(v.Wife.ChildOfFamily.getId())) {
+                        results.add(new ValidationResult("Sibligs `" + v.Husband.FullName + "` & `" + v.Wife.FullName + "` can not be married.", v, "US18"));
+                    }
+                }
+            }
+        });
+    }
+
     // US22: Unique IDs
     public static void uniqueIDsCheck(GEDCOMData entity, List<ValidationResult> results) {
         if (entity == null || results == null) {
