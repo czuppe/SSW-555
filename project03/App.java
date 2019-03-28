@@ -140,6 +140,14 @@ public class App {
             System.out.println(msg);
             writer.println(msg);
             System.out.println();
+            
+            msg = GEDCOMDataObj.listDeceased();
+            System.out.println("Deceased Individuals:");
+            System.out.println();
+            System.out.println(msg);
+            writer.println(msg);
+            System.out.println();
+            
 
             printValidationResults(writer, results);
         } finally {

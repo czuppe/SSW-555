@@ -223,6 +223,20 @@ public class GEDCOMData {
         return toPersonsText(Individuals.values());
     }
     
+    //US29 List Deceased 
+    public String listDeceased()
+    {
+    	 List<PersonEntity> listDeceased = new ArrayList<PersonEntity>();
+    	 
+	     Individuals.forEach((s, entity) -> {
+	    	 if (entity.DeathDate != null ) {
+	    		 listDeceased.add(entity);
+	    		 
+	    	 }	          
+    	 });
+    	 return toPersonsText(listDeceased);
+    }
+    
     //US30 (bella) List Living Married Individuals
     public String listLivingMarried()
     {
