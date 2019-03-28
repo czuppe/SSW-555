@@ -126,6 +126,20 @@ public class App {
             System.out.println(msg);
             writer.println(msg);
             System.out.println();
+            
+            msg = GEDCOMDataObj.listLivingMarried();
+            System.out.println("Living Married Individuals:");
+            System.out.println();
+            System.out.println(msg);
+            writer.println(msg);
+            System.out.println();
+            
+            msg = GEDCOMDataObj.listLivingSingle();
+            System.out.println("Living Single Individuals:");
+            System.out.println();
+            System.out.println(msg);
+            writer.println(msg);
+            System.out.println();
 
             printValidationResults(writer, results);
         } finally {

@@ -6,6 +6,7 @@
 package project03;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -164,14 +165,15 @@ public class GEDCOMData {
         });
         return msg.toString();
     }
-
-    public String toPersonsText() {
+    
+    public String toPersonsText(Collection<PersonEntity> persons)
+    {
         StringBuilder msg = new StringBuilder();
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         msg.append("ID, Name, Gender, Birthday, Age, Alive, Death, Child, Spouse\n");
 
-        Individuals.forEach((k, entity) -> {
+        persons.forEach(entity -> {
             StringBuilder childMsg = new StringBuilder();
             entity.Families.forEach(fe -> {
                 if (fe != null && fe.Children != null && !fe.Children.isEmpty()) {
@@ -211,6 +213,57 @@ public class GEDCOMData {
                     + (spouseMsg.length() == 0 ? "NA" : "{" + spouseMsg.toString() + "}") + "\n");
         });
 
-        return msg.toString();
+        return msg.toString();    	
+    }
+
+    public String toPersonsText() {
+        return toPersonsText(Individuals.values());
+    }
+    
+    //US30 (bella) List Living Married Individuals
+    public String listLivingMarried()
+    {
+    	 List<PersonEntity> livingMarriedPersons = new ArrayList<PersonEntity>();
+    	 
+    	 Families.forEach((s, entity) -> {
+	    	 LocalDate marriageDate = entity.MarriageDate != null ? Utility.ToLocalDate(entity.MarriageDate) : null; 
+	         LocalDate divorceDate = entity.DivorceDate != null ? Utility.ToLocalDate(entity.DivorceDate) : null; 
+	
+	         LocalDate husbandDeathdate = entity.Husband != null ? Utility.ToLocalDate(entity.Husband.DeathDate) : null;            
+	         LocalDate wifeDeathdate = entity.Wife != null ? Utility.ToLocalDate(entity.Wife.DeathDate) : null;
+	         
+	         //check if wife is alive and married
+	         if (wifeDeathdate == null & marriageDate != null & divorceDate == null) {
+	             livingMarriedPersons.add(entity.Wife);   
+	         }
+	         
+	         //check if husband is alive and married
+	         if (husbandDeathdate == null & marriageDate != null & divorceDate == null) {
+	        	 livingMarriedPersons.add(entity.Husband);
+	         }
+    	 });
+    	 return toPersonsText(livingMarriedPersons);
+    }	
+    
+    //US31 (bella) List Living Single Individuals
+    public String listLivingSingle()
+    {
+    	 List<PersonEntity> livingSinglePersons = new ArrayList<PersonEntity>();
+    	 
+	     Individuals.forEach((s, entity) -> {
+	    	 
+	    	 if (entity.DeathDate == null ) {
+	    		 boolean single[] = {true};
+	    		 entity.Families.forEach(fe -> {
+	    			 if (fe.DivorceDate == null)
+	    				 single[0] = false;
+	    		 });
+	    		 if (single[0]) {
+	    			 livingSinglePersons.add(entity);
+	    		 }
+	    	 }
+	         
+    	 });
+    	 return toPersonsText(livingSinglePersons);
     }
 }
