@@ -148,6 +148,4 @@ public class PersonEntity implements IEntity {
     public String getEntityName() {
         return "INDIVIDUAL";
     }
-}
-        
-
+}        
