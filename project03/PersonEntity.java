@@ -109,8 +109,9 @@ public class PersonEntity implements IEntity {
     public Date DeathDate;
     public int BirthYear;    
     public int Age;
-
+    
     public List<FamilyEntity> Families;
+    public FamilyEntity ChildOfFamily;
     
     @Override
     public String getId() {
@@ -119,6 +120,10 @@ public class PersonEntity implements IEntity {
     
     public void setId(String id){
         this.Id = id;
+    }
+    
+    public void setFamilies(List<FamilyEntity> families){
+        this.Families = families;
     }
 
     @Override
@@ -147,6 +152,4 @@ public class PersonEntity implements IEntity {
     public String getEntityName() {
         return "INDIVIDUAL";
     }
-}
-        
-
+}        
