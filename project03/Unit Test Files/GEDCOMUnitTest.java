@@ -16,9 +16,6 @@ public class GEDCOMUnitTest {
     GEDCOMData GEDCOMDataObj_Raj;
     GEDCOMData GEDCOMDataObj;
 
-    public GEDCOMUnitTest() {
-    }
-
     @BeforeClass
     public static void setUpClass() {
     }
@@ -43,6 +40,8 @@ public class GEDCOMUnitTest {
     
     @Test // (Raj US01) Dates before current date
     public void testDatesBeforeCurrentDate() throws Exception {
+        assertTrue(null != GEDCOMDataObj_Raj);
+
         List<ValidationResult> results = new ArrayList<>();
         GEDCOMDataValidator.datesBeforeCurrentDateCheck(GEDCOMDataObj_Raj, results);
         assertTrue(results.isEmpty());
@@ -50,6 +49,8 @@ public class GEDCOMUnitTest {
 
     @Test // (Raj US02) Birth before marriage
     public void testBirthBeforeMarriage() throws Exception {
+        assertTrue(null != GEDCOMDataObj_Raj);
+
         List<ValidationResult> results = new ArrayList<>();
         GEDCOMDataValidator.birthBeforeMarriageCheck(GEDCOMDataObj_Raj, results);
         assertTrue(results.isEmpty());
@@ -57,6 +58,8 @@ public class GEDCOMUnitTest {
 
     @Test //(Raj US15) There should be fewer than 15 siblings in a family
     public void testFewerThan15Siblings() throws Exception {
+        assertTrue(null != GEDCOMDataObj_Raj);
+
         List<ValidationResult> results = new ArrayList<>();
         GEDCOMDataValidator.fewerThan15SiblingsCheck(GEDCOMDataObj_Raj, results);
         assertTrue(results.isEmpty());
@@ -64,8 +67,28 @@ public class GEDCOMUnitTest {
 
     @Test //(Raj US16) All male members of a family should have the same last name
     public void testAllMaleMembersShouldHaveSameLastName() throws Exception {
+        assertTrue(null != GEDCOMDataObj_Raj);
+
         List<ValidationResult> results = new ArrayList<>();
         GEDCOMDataValidator.maleLastNameCheck(GEDCOMDataObj_Raj, results);
+        assertTrue(results.isEmpty());
+    }
+
+    @Test //(Raj US17) No marriages to children
+    public void testNoMarriagesToChildren() throws Exception {
+        assertTrue(null != GEDCOMDataObj_Raj);
+
+        List<ValidationResult> results = new ArrayList<>();
+        GEDCOMDataValidator.noMarriagesToChildrenCheck(GEDCOMDataObj_Raj, results);
+        assertTrue(results.isEmpty());
+    }
+
+    @Test //(Raj US18) Siblings should not marry
+    public void testSiblingsShouldNotMarry() throws Exception {
+        assertTrue(null != GEDCOMDataObj_Raj);
+
+        List<ValidationResult> results = new ArrayList<>();
+        GEDCOMDataValidator.siblingsShouldNotMarryCheck(GEDCOMDataObj_Raj, results);
         assertTrue(results.isEmpty());
     }
     
@@ -317,6 +340,52 @@ public class GEDCOMUnitTest {
         assertFalse(results.isEmpty());
     }           
     
+    @Test //Charles US28 Order Siblings by Age
+    public void testOrderSiblingsByAge() throws Exception {
+        GEDCOMData gcd = new GEDCOMData();
+
+        String[] familyElements = {"1 FAMS @F1@"};
+        String[] childElement5 = {"0 @I5@ INDI", "1 BIRT", "2 DATE 1 JAN 1985"};
+        String[] childElement4 = {"0 @I4@ INDI", "1 BIRT", "2 DATE 1 JAN 1984"};
+        String[] childElement2 = {"0 @I2@ INDI", "1 BIRT", "2 DATE 1 JAN 1982"};
+        String[] childElement3 = {"0 @I3@ INDI", "1 BIRT", "2 DATE 1 JAN 1983"};
+        String[] childElement1 = {"0 @I1@ INDI", "1 BIRT", "2 DATE 1 JAN 1981"};
+
+        String[] parentElements = {"0 @I6@ INDI",
+            "1 BIRT",
+            "2 DATE 1 JAN 1926"};
+
+        FamilyEntity family = FamilyEntity.create(familyElements);
+        
+        PersonEntity child1 = PersonEntity.create(childElement1);
+        PersonEntity child2 = PersonEntity.create(childElement2);
+        PersonEntity child3 = PersonEntity.create(childElement3);
+        PersonEntity child4 = PersonEntity.create(childElement4);
+        PersonEntity child5 = PersonEntity.create(childElement5);
+
+        gcd.addIndividual(child1);
+        gcd.addIndividual(child2);
+        gcd.addIndividual(child3);
+        gcd.addIndividual(child4);
+        gcd.addIndividual(child5);
+        
+        PersonEntity parent = PersonEntity.create(parentElements);
+
+        family.Husband = parent;
+        
+        family.ChildrenId.add(child1.getId());
+        family.ChildrenId.add(child2.getId());
+        family.ChildrenId.add(child3.getId());
+        family.ChildrenId.add(child4.getId());
+        family.ChildrenId.add(child5.getId());
+        
+        gcd.addFamily(family);
+        
+        String results = gcd.toFamiliesText();
+
+        assertTrue(results.contains("I1, I2, I3, I4, I5"));
+    }   
+    
     //End Charles' Unit Tests
     //-------------------------------------------------------
 
@@ -510,5 +579,34 @@ public class GEDCOMUnitTest {
         });
 
     }
+
+@Test //(Craig US21) Correct gender roles
+    public void testGenderRoles() throws Exception {
+
+    	 FamilyEntity entity = new FamilyEntity();
+         List<ValidationResult> results = new ArrayList<ValidationResult>();
+         
+         entity.Husband = new PersonEntity();
+         entity.Wife = new PersonEntity();
+         entity.Husband.Gender = "F";
+         entity.Wife.Gender = "M";
+
+         
+         FamilyEntityValidator.genderCheck(entity, results);
+         
+         assertFalse(results.isEmpty());
+    }
+
+
+    @Test //(Craig US25) Unique first name and birth date in family
+    public void testUniqueNamesinFamily() throws Exception {
+
+        GEDCOMDataObj.getIndividuals().forEach((k, v) -> {
+            assertFalse(GEDCOMDataObj.getIndividuals().containsValue(v.FullName + v.BirthDate + v.ChildhoodFamilyIds.toString()));
+
+        });
+
+    }
+
 
 }
