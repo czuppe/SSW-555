@@ -293,4 +293,17 @@ public class FamilyEntityValidator {
         }
     }
 
+// US21: Correct gender for role
+	public static void genderCheck(FamilyEntity entity, List<ValidationResult> results) {
+		if (entity == null || results == null) {
+			return;
+		}
+		if (entity.Husband.Gender != "M") {
+			results.add(new ValidationResult("US21: The gender of " + entity.Husband.FullName + " does not match"));
+		} 
+		else if (entity.Wife.Gender != "F") {
+			results.add(new ValidationResult("US21: The gender of " + entity.Wife.FirstName + " does not match"));
+		}
+}
+
 }

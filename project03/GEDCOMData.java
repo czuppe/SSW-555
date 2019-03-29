@@ -83,6 +83,7 @@ public class GEDCOMData {
         GEDCOMDataValidator.maleLastNameCheck(this, results);
         GEDCOMDataValidator.uniqueIDsCheck(this, results);
         GEDCOMDataValidator.uniqueNameAndBirthDateCheck(this, results);
+	      GEDCOMDataValidator.uniqueFirstNamesinFamily(this, results);
         GEDCOMDataValidator.noMarriagesToChildrenCheck(this, results);
         GEDCOMDataValidator.siblingsShouldNotMarryCheck(this, results);
 
