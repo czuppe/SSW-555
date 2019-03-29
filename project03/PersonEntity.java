@@ -121,6 +121,10 @@ public class PersonEntity implements IEntity {
     public void setId(String id){
         this.Id = id;
     }
+    
+    public void setFamilies(List<FamilyEntity> families){
+        this.Families = families;
+    }
 
     @Override
     public void validate(List<ValidationResult> results) {
