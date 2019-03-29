@@ -15,6 +15,7 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -78,6 +79,37 @@ public class Utility {
     
     public static LocalDate ToLocalDate(Date date){
         return date != null ? date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+    }
+    
+    //sort by oldest first
+    public static void SortChildrenByBirthdate(FamilyEntity entity){        
+        
+        if(entity.ChildrenId == null || entity.ChildrenId.size() == 1){
+            return;
+        }                   
+        
+        //childrenId list larger than 1
+        List<String> childrenIds = entity.ChildrenId;
+        
+        for(int i=1; i<childrenIds.size(); i++){//start at 1
+            //get person's birthdate
+            LocalDate temp;
+            int j = i-1;
+                        
+            LocalDate birthdate1 = Utility.ToLocalDate(entity.getGEDCOMData().getIndividuals().get(childrenIds.get(i)).BirthDate);          
+            LocalDate birthdate2 = Utility.ToLocalDate(entity.getGEDCOMData().getIndividuals().get(childrenIds.get(j)).BirthDate);
+            
+            while(j >= 0 && birthdate1.isBefore(birthdate2)){
+                temp = birthdate2;
+                birthdate2 = birthdate1;
+                birthdate1 = temp;
+                //swap i and i-1
+                String tempId = entity.ChildrenId.get(i);
+                entity.ChildrenId.set(i, entity.ChildrenId.get(j));
+                entity.ChildrenId.set(j, tempId);
+                j--;                
+            }
+        }
     }
 }
 

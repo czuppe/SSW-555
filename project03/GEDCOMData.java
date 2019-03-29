@@ -142,20 +142,19 @@ public class GEDCOMData {
     }
 
     public String toFamiliesText() {
+        
         StringBuilder msg = new StringBuilder();
-
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         msg.append("ID, Married, Divorced, Husband ID, Husband Name, Wife ID, Wife Name, Children\n");
+        
         Families.forEach((k, entity) -> {
+            
             StringBuilder childMsg = new StringBuilder();
-            if (entity.Children != null) {
-                for (PersonEntity ce : entity.Children) {
-                    if (childMsg.length() == 0) {
-                        childMsg.append(ce.getId());
-                    } else {
-                        childMsg.append(", ").append(ce.getId());
-                    }
-                }
+            
+            if (entity.ChildrenId != null) {
+                Utility.SortChildrenByBirthdate(entity);
+                childMsg.append(entity.ChildrenId);
+                
             }
             msg.append(entity.getId() + ", "
                     + (entity.MarriageDate != null ? format.format(entity.MarriageDate) : "NA") + ", "
@@ -164,7 +163,7 @@ public class GEDCOMData {
                     + (entity.Husband != null ? entity.Husband.FullName : "NA") + ", "
                     + (entity.WifeId != null ? entity.WifeId : "NA") + ", "
                     + (entity.Wife != null ? entity.Wife.FullName : "NA") + ", "
-                    + (childMsg.length() == 0 ? "NA" : "{" + childMsg.toString() + "}") + "\n"
+                    + (entity.ChildrenId.size() == 0 ? "NA" : childMsg.toString()) + "\n"
             );
         });
         return msg.toString();
