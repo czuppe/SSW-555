@@ -340,6 +340,52 @@ public class GEDCOMUnitTest {
         assertFalse(results.isEmpty());
     }           
     
+    @Test //Charles US28 Order Siblings by Age
+    public void testOrderSiblingsByAge() throws Exception {
+        GEDCOMData gcd = new GEDCOMData();
+
+        String[] familyElements = {"1 FAMS @F1@"};
+        String[] childElement5 = {"0 @I5@ INDI", "1 BIRT", "2 DATE 1 JAN 1985"};
+        String[] childElement4 = {"0 @I4@ INDI", "1 BIRT", "2 DATE 1 JAN 1984"};
+        String[] childElement2 = {"0 @I2@ INDI", "1 BIRT", "2 DATE 1 JAN 1982"};
+        String[] childElement3 = {"0 @I3@ INDI", "1 BIRT", "2 DATE 1 JAN 1983"};
+        String[] childElement1 = {"0 @I1@ INDI", "1 BIRT", "2 DATE 1 JAN 1981"};
+
+        String[] parentElements = {"0 @I6@ INDI",
+            "1 BIRT",
+            "2 DATE 1 JAN 1926"};
+
+        FamilyEntity family = FamilyEntity.create(familyElements);
+        
+        PersonEntity child1 = PersonEntity.create(childElement1);
+        PersonEntity child2 = PersonEntity.create(childElement2);
+        PersonEntity child3 = PersonEntity.create(childElement3);
+        PersonEntity child4 = PersonEntity.create(childElement4);
+        PersonEntity child5 = PersonEntity.create(childElement5);
+
+        gcd.addIndividual(child1);
+        gcd.addIndividual(child2);
+        gcd.addIndividual(child3);
+        gcd.addIndividual(child4);
+        gcd.addIndividual(child5);
+        
+        PersonEntity parent = PersonEntity.create(parentElements);
+
+        family.Husband = parent;
+        
+        family.ChildrenId.add(child1.getId());
+        family.ChildrenId.add(child2.getId());
+        family.ChildrenId.add(child3.getId());
+        family.ChildrenId.add(child4.getId());
+        family.ChildrenId.add(child5.getId());
+        
+        gcd.addFamily(family);
+        
+        String results = gcd.toFamiliesText();
+
+        assertTrue(results.contains("I1, I2, I3, I4, I5"));
+    }   
+    
     //End Charles' Unit Tests
     //-------------------------------------------------------
 
