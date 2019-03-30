@@ -672,5 +672,157 @@ public class GEDCOMUnitTest {
 
     }
 
+    /* COMMENTING OUT because I wasn't able to get this working
+    @Test //Bella US30 List living married
+    public void testListLivingMarried() throws Exception {
+    	 GEDCOMData gcd = new GEDCOMData();
+
+         String[] familyElements = {"1 FAMS @F1@"};
+         String[] childElement2 = {"0 @I2@ INDI", "1 BIRT", "2 DATE 1 JAN 1982", "1 FAMS @F1@"};
+         String[] childElement1 = {"0 @I1@ INDI", "1 BIRT", "2 DATE 1 JAN 1981", "1 FAMS @F1@"};
+         String[] familyElements2 = {"1 FAMS @F2@"};
+         String[] childElement6 = {"0 @I6@ INDI", "1 BIRT", "2 DATE 1 JAN 1985", "1 FAMS @F2@"};
+
+         String[] parentElements = {"0 @I9@ INDI", "1 NAME JOHN /Doe/", "1 SEX M", "1 BIRT", "2 DATE 1 JAN 1926"};
+         String[] parentElements2 = {"0 @I10@ INDI", "1 NAME MARY /Doe/", "1 SEX F", "1 BIRT", "2 DATE 1 JAN 1926"};
+        
+         
+         FamilyEntity family = new FamilyEntity();
+         family = FamilyEntity.create(familyElements);
+         List<FamilyEntity> families = new ArrayList<FamilyEntity>();
+         families.add(family);
+         
+         //FamilyEntity.Marriage = new FactEntity();
+         //FamilyEntity.Marriage.Date = new Date(99, 3, 30);
+         //FamilyEntity.Divorce = new FactEntity();
+         //FamilyEntity.Divorce.Date = new Date(96, 2, 4);
+         
+         PersonEntity child1 = PersonEntity.create(childElement1);
+         child1.DeathDate = new Date(99, 12, 1);
+         child1.setFamilies(families);
+         PersonEntity child2 = PersonEntity.create(childElement2);
+         child2.DeathDate = new Date(89, 12, 1);
+         child2.setFamilies(families);
+         PersonEntity child6 = PersonEntity.create(childElement6);
+         child6.setFamilies(families);
+
+         gcd.addIndividual(child1);
+         gcd.addIndividual(child2);
+         gcd.addIndividual(child6);
+
+         
+         PersonEntity parent = PersonEntity.create(parentElements);
+         gcd.addIndividual(parent);
+         parent.DeathDate = new Date(90, 12, 1);
+         parent.setFamilies(families);
+         
+         PersonEntity parent2 = PersonEntity.create(parentElements2);
+         gcd.addIndividual(parent2);
+         parent2.setFamilies(families);
+         
+         family.Husband = parent;
+         family.Wife = parent2;
+         
+         family.ChildrenId.add(child1.getId());
+         family.ChildrenId.add(child2.getId());
+         family.ChildrenId.add(child6.getId());
+
+         gcd.addFamily(family);
+         
+         String results = gcd.listLivingMarried();
+         
+         assertTrue(results.contains("MARY"));
+    }       
+
+    @Test //Bella US31 List living single
+    public void testListLivingSingle() throws Exception {
+        GEDCOMData gcd = new GEDCOMData();
+
+        String[] familyElements = {"1 FAMS @F1@"};
+        String[] childElement5 = {"0 @I5@ INDI", "1 BIRT", "2 DATE 1 JAN 1985", "1 FAMS @F1@"};
+        String[] childElement4 = {"0 @I4@ INDI", "1 BIRT", "2 DATE 1 JAN 1984", "1 FAMS @F1@"};
+        String[] childElement2 = {"0 @I2@ INDI", "1 BIRT", "2 DATE 1 JAN 1982", "1 FAMS @F1@"};
+        String[] childElement3 = {"0 @I3@ INDI", "1 BIRT", "2 DATE 1 JAN 1983", "1 FAMS @F1@"};
+        String[] childElement1 = {"0 @I1@ INDI", "1 BIRT", "2 DATE 1 JAN 1981", "1 FAMS @F1@"};
+        String[] familyElements2 = {"1 FAMS @F2@"};
+        String[] childElement6 = {"0 @I6@ INDI", "1 BIRT", "2 DATE 1 JAN 1985", "1 FAMS @F2@"};
+        String[] childElement7 = {"0 @I7@ INDI", "1 BIRT", "2 DATE 1 JAN 1984", "1 FAMS @F2@"};
+        String[] childElement8 = {"0 @I8@ INDI", "1 BIRT", "2 DATE 1 JAN 1982", "1 FAMS @F2@"};
+
+        String[] parentElements = {"0 @I9@ INDI", "1 NAME JOHN /Doe/", "1 SEX M", "1 BIRT", "2 DATE 1 JAN 1926"};
+        String[] parentElements2 = {"0 @I10@ INDI", "1 NAME MARY /Doe/", "1 SEX F", "1 BIRT", "2 DATE 1 JAN 1926"};
+        
+        FamilyEntity family = new FamilyEntity();
+        family = FamilyEntity.create(familyElements);
+        List<FamilyEntity> families = new ArrayList<FamilyEntity>();
+        families.add(family);
+        
+        //FamilyEntity.Marriage = new FactEntity();
+        //FamilyEntity.Marriage.Date = new Date(99, 3, 30);
+        //FamilyEntity.Divorce = new FactEntity();
+        //FamilyEntity.Divorce.Date = new Date(96, 2, 4);
+        
+        PersonEntity child1 = PersonEntity.create(childElement1);
+        child1.DeathDate = new Date(99, 12, 1);
+        child1.setFamilies(families);
+        PersonEntity child2 = PersonEntity.create(childElement2);
+        child2.DeathDate = new Date(89, 12, 1);
+        child2.setFamilies(families);
+        PersonEntity child3 = PersonEntity.create(childElement3);
+        child3.DeathDate = new Date(80, 12, 1);
+        child3.setFamilies(families);
+        PersonEntity child4 = PersonEntity.create(childElement4);
+        child4.setFamilies(families);
+        PersonEntity child5 = PersonEntity.create(childElement5);
+        child5.setFamilies(families);
+        PersonEntity child6 = PersonEntity.create(childElement6);
+        child6.setFamilies(families);
+        PersonEntity child7 = PersonEntity.create(childElement7);
+        child7.setFamilies(families);
+        PersonEntity child8 = PersonEntity.create(childElement8);
+        child8.DeathDate = new Date(90, 12, 1);
+        child8.setFamilies(families);
+
+        gcd.addIndividual(child1);
+        gcd.addIndividual(child2);
+        gcd.addIndividual(child3);
+        gcd.addIndividual(child4);
+        gcd.addIndividual(child5);
+        gcd.addIndividual(child6);
+        gcd.addIndividual(child7);
+        gcd.addIndividual(child8);
+        
+        PersonEntity parent = PersonEntity.create(parentElements);
+        gcd.addIndividual(parent);
+        parent.DeathDate = new Date(90, 12, 1);
+        parent.setFamilies(families);
+        
+        PersonEntity parent2 = PersonEntity.create(parentElements2);
+        gcd.addIndividual(parent2);
+        parent2.setFamilies(families);
+        
+        family.Husband = parent;
+        family.Wife = parent2;
+        
+        family.ChildrenId.add(child1.getId());
+        family.ChildrenId.add(child2.getId());
+        family.ChildrenId.add(child3.getId());
+        family.ChildrenId.add(child4.getId());
+        family.ChildrenId.add(child5.getId());
+        family.ChildrenId.add(child6.getId());
+        family.ChildrenId.add(child7.getId());
+        family.ChildrenId.add(child8.getId());
+        
+        gcd.addFamily(family);
+        
+        String results = gcd.listLivingSingle();
+        
+        assertTrue(results.contains("I4"));
+        assertTrue(results.contains("I5"));
+        assertTrue(results.contains("I6"));
+        assertTrue(results.contains("I7"));
+
+    }     
+    */
 
 }
