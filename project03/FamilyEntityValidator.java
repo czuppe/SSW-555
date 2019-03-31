@@ -298,11 +298,10 @@ public class FamilyEntityValidator {
 		if (entity == null || results == null) {
 			return;
 		}
-		if (entity.Husband.Gender != "M") {
+		if (!"M".equals(entity.Husband.Gender)){
 			results.add(new ValidationResult("US21: The gender of " + entity.Husband.FullName + " does not match"));
-		} 
-		else if (entity.Wife.Gender != "F") {
-			results.add(new ValidationResult("US21: The gender of " + entity.Wife.FirstName + " does not match"));
+		} else if (!"F".equals(entity.Wife.Gender)) {
+			results.add(new ValidationResult("US21: The gender of " + entity.Wife.FullName + " does not match"));
 		}
 }
 
