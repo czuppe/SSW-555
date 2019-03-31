@@ -160,8 +160,8 @@ public class GEDCOMDataValidator {
  			if (v.BirthDate != null) {
  				String key = v.FirstName + v.BirthDate + v.ChildhoodFamilyIds.toString();
  				if (set.contains(key)) {
- 					results.add(new ValidationResult("US25: This name" + v.FirstName + "and birthday" + v.BirthDate
- 							+ "already exists in this Family."));
+ 					results.add(new ValidationResult("US25: This name " + v.FirstName + " and birthday " + v.BirthDate
+ 							+ " already exists in this Family."));
  				} else {
  					set.add(key);
  				}
