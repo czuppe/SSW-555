@@ -298,6 +298,9 @@ public class FamilyEntityValidator {
 		if (entity == null || results == null) {
 			return;
 		}
+		if(entity.Marriage == null) {
+			return;
+		}
 		if (!"M".equals(entity.Husband.Gender)){
 			results.add(new ValidationResult("US21: The gender of " + entity.Husband.FullName + " does not match"));
 		} else if (!"F".equals(entity.Wife.Gender)) {
