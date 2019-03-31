@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
  */
 public class GEDCOMUnitTest {
 
-    GEDCOMData GEDCOMDataObj_Raj;
+    //GEDCOMData GEDCOMDataObj_Raj; **DELETE THIS UNNECCESARY**
     GEDCOMData GEDCOMDataObj;
 
     @BeforeClass
@@ -26,9 +26,9 @@ public class GEDCOMUnitTest {
 
     @Before
     public void setUp() throws Exception {
-        GEDCOMDataObj_Raj = App.parseGEDFromURI(getClass().getResource("./Input Files/Raj.ged").toURI());
-        //GEDCOMDataObj = App.parseGEDFile("/Users/Bella/eclipse-workspace/project03/src/project03/BellaManoim.ged");        
-        GEDCOMDataObj = App.parseGEDFromURI(getClass().getResource("./Input Files/test.ged").toURI());
+        //**METHOD NOT VALID** GEDCOMDataObj_Raj = App.parseGEDFromURI(getClass().getResource("./Input Files/Raj.ged").toURI());
+        GEDCOMDataObj = App.parseGEDFromFile("/Users/Bella/eclipse-workspace/project03/src/project03/BellaManoim.ged");        
+        //**METHOD NOT VALID** GEDCOMDataObj = App.parseGEDFromURI(getClass().getResource("./Input Files/test.ged").toURI());
     }
 
     @After
@@ -40,7 +40,7 @@ public class GEDCOMUnitTest {
     
     @Test // (Raj US01) Dates before current date
     public void testDatesBeforeCurrentDate() throws Exception {
-        assertTrue(null != GEDCOMDataObj_Raj);
+        assertTrue(null != GEDCOMDataObj);
 
         List<ValidationResult> results = new ArrayList<>();
         GEDCOMDataValidator.datesBeforeCurrentDateCheck(GEDCOMDataObj_Raj, results);
@@ -49,7 +49,7 @@ public class GEDCOMUnitTest {
 
     @Test // (Raj US02) Birth before marriage
     public void testBirthBeforeMarriage() throws Exception {
-        assertTrue(null != GEDCOMDataObj_Raj);
+        assertTrue(null != GEDCOMDataObj);
 
         List<ValidationResult> results = new ArrayList<>();
         GEDCOMDataValidator.birthBeforeMarriageCheck(GEDCOMDataObj_Raj, results);
@@ -58,43 +58,44 @@ public class GEDCOMUnitTest {
 
     @Test //(Raj US15) There should be fewer than 15 siblings in a family
     public void testFewerThan15Siblings() throws Exception {
-        assertTrue(null != GEDCOMDataObj_Raj);
+        assertTrue(null != GEDCOMDataObj);
 
         List<ValidationResult> results = new ArrayList<>();
-        GEDCOMDataValidator.fewerThan15SiblingsCheck(GEDCOMDataObj_Raj, results);
+        GEDCOMDataValidator.fewerThan15SiblingsCheck(GEDCOMDataObj, results);
         assertTrue(results.isEmpty());
     }
 
     @Test //(Raj US16) All male members of a family should have the same last name
     public void testAllMaleMembersShouldHaveSameLastName() throws Exception {
-        assertTrue(null != GEDCOMDataObj_Raj);
+        assertTrue(null != GEDCOMDataObj);
 
         List<ValidationResult> results = new ArrayList<>();
-        GEDCOMDataValidator.maleLastNameCheck(GEDCOMDataObj_Raj, results);
-        assertTrue(results.isEmpty());
+        GEDCOMDataValidator.maleLastNameCheck(GEDCOMDataObj, results);
+        assertFalse(results.isEmpty());
     }
 
     @Test //(Raj US17) No marriages to children
     public void testNoMarriagesToChildren() throws Exception {
-        assertTrue(null != GEDCOMDataObj_Raj);
+        assertTrue(null != GEDCOMDataObj);
 
         List<ValidationResult> results = new ArrayList<>();
-        GEDCOMDataValidator.noMarriagesToChildrenCheck(GEDCOMDataObj_Raj, results);
+        GEDCOMDataValidator.noMarriagesToChildrenCheck(GEDCOMDataObj, results);
         assertTrue(results.isEmpty());
     }
 
     @Test //(Raj US18) Siblings should not marry
     public void testSiblingsShouldNotMarry() throws Exception {
-        assertTrue(null != GEDCOMDataObj_Raj);
+        assertTrue(null != GEDCOMDataObj);
 
         List<ValidationResult> results = new ArrayList<>();
-        GEDCOMDataValidator.siblingsShouldNotMarryCheck(GEDCOMDataObj_Raj, results);
+        GEDCOMDataValidator.siblingsShouldNotMarryCheck(GEDCOMDataObj, results);
         assertTrue(results.isEmpty());
     }
     
     //END: *** Raj Test Cases ***
     
     //-------------------------------------------------------
+
     //Begin Charles' Unit Test   
     
     @Test //(Charles US06) Divorce Before Death
@@ -451,7 +452,10 @@ public class GEDCOMUnitTest {
     }       
     
     //End Charles' Unit Tests
+
     //-------------------------------------------------------
+
+    //Begin Bella Unit Test  
 
     @Test //(Bella US03) test valid birth date is before valid death date
     public void testValidDatesBeforeDeathDate() throws Exception {
@@ -607,6 +611,14 @@ public class GEDCOMUnitTest {
         assertTrue(results.get(0).Message.contains("Marriage"));
         //System.out.println(results); //should print empty list, just for additional testing
     }
+
+
+    //End Bella Unit Tests
+
+    //-------------------------------------------------------
+
+    //Begin Craig Unit Test  
+
 
     @Test //(Craig US22) Unique ID
     public void testIndividualsUnqiueID() throws Exception {
