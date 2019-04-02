@@ -683,6 +683,41 @@ public class GEDCOMUnitTest {
         });
 
     }
+    
+    @Test //(Craig US08) Birth before marriage of parents
+    public void testUS08() throws Exception {
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+    	FamilyEntity entity = new FamilyEntity();
+        PersonEntity child = new PersonEntity();
+        
+        child.BirthDate = dateformat.parse("1995-01-01");
+        entity.MarriageDate = dateformat.parse("2000-01-01");
+		
+		List<ValidationResult> results = new ArrayList<ValidationResult>();
+		FamilyEntityValidator.birthBeforeMarriageParents(entity, results);
+		assertTrue(results.isEmpty());
+
+    }
+    
+    @Test //(Craig US09) Birth before death of parents
+    public void testUS09() throws Exception {
+    	SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+    	FamilyEntity entity = new FamilyEntity();
+        entity.Wife = new PersonEntity();
+        entity.Wife.DeathDate = dateformat.parse("2000-01-01");
+        
+        entity.Husband = new PersonEntity();
+        entity.Husband.DeathDate = dateformat.parse("1999-01-01");
+        
+        PersonEntity child = new PersonEntity();
+        child.BirthDate = dateformat.parse("1995-01-01");
+        
+		
+		List<ValidationResult> results = new ArrayList<ValidationResult>();
+		FamilyEntityValidator.birthBeforeDeathParents(entity, results);
+		assertTrue(results.isEmpty());
+
+    }
 
     /* COMMENTING OUT because I wasn't able to get this working
     @Test //Bella US30 List living married
