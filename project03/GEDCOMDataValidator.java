@@ -80,13 +80,13 @@ public class GEDCOMDataValidator {
         }
 
         entity.getFamilies().forEach((k, v) -> {
-            if (v == null || v.Children == null || v.Children.size() == 0) {
+            if (v == null || v.Children == null || v.Children.isEmpty()) {
 
             } else {
                 v.Children.forEach((p) -> {
-                    if (p != null && p.getId() == v.HusbandId) {
+                    if (p != null && p.getId().equals(v.HusbandId)) {
                         results.add(new ValidationResult("Parent `" + v.Husband.FullName + "` married to child.", v, "US17"));
-                    } else if (p != null && p.getId() == v.WifeId) {
+                    } else if (p != null && p.getId().equals(v.WifeId)) {
                         results.add(new ValidationResult("Parent `" + v.Wife.FullName + "` married to child.", v, "US17"));
                     }
                 });
