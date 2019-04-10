@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 /**
  *
@@ -283,4 +284,42 @@ public class GEDCOMData {
     	 });
     	 return toPersonsText(livingSinglePersons);
     }
+    
+    //US35	(bella) List recent births	List all people in a GEDCOM file who were born in the last 30 days
+    public String listRecentBirths()
+    {
+   	 List<PersonEntity> listRecentBirths = new ArrayList<PersonEntity>();
+   	 Date todaysDate = Utility.getTodaysDate();
+   	 
+   	 Calendar cal = Calendar.getInstance();
+   	 cal.add(Calendar.DATE, -30);
+   	 Date dateBefore30Days = cal.getTime();
+   	
+	     Individuals.forEach((s, entity) -> {
+	    	 if (entity.BirthDate != null && entity.BirthDate.before(todaysDate)) {
+                 if (entity.BirthDate.after(dateBefore30Days)) {
+                	 listRecentBirths.add(entity);
+                 }          
+   	 }});
+   	 return toPersonsText(listRecentBirths);
+   }
+    
+    //US36	(bella) List recent deaths	List all people in a GEDCOM file who died in the last 30 days
+    public String listRecentDeaths()
+    {
+      	 List<PersonEntity> listRecentDeaths = new ArrayList<PersonEntity>();
+      	 Date todaysDate = Utility.getTodaysDate();
+      	 
+      	 Calendar cal = Calendar.getInstance();
+      	 cal.add(Calendar.DATE, -30);
+      	 Date dateBefore30Days = cal.getTime();
+      	 
+   	     Individuals.forEach((s, entity) -> {
+   	    	if (entity.DeathDate != null && entity.DeathDate.before(todaysDate)) {
+   	    		if (entity.DeathDate.after(dateBefore30Days)) {
+   	    			listRecentDeaths.add(entity);
+   	    		}          
+      	 }});
+      	 return toPersonsText(listRecentDeaths);
+      }
 }
