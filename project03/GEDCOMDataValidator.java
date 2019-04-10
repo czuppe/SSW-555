@@ -79,17 +79,23 @@ public class GEDCOMDataValidator {
             return;
         }
 
-        entity.getFamilies().forEach((k, v) -> {
-            if (v == null || v.Children == null || v.Children.size() == 0) {
+        entity.getIndividuals().forEach((k, person) -> {
+            if (person.ChildOfFamily == null) {
 
             } else {
-                v.Children.forEach((p) -> {
-                    if (p != null && p.getId() == v.HusbandId) {
-                        results.add(new ValidationResult("Parent `" + v.Husband.FullName + "` married to child.", v, "US17"));
-                    } else if (p != null && p.getId() == v.WifeId) {
-                        results.add(new ValidationResult("Parent `" + v.Wife.FullName + "` married to child.", v, "US17"));
+                entity.getFamilies().forEach((k1, family) -> {
+                    if (family.Husband != null && family.HusbandId.equals(person.getId())) {
+                        if (family.Wife != null && family.WifeId.equals(person.ChildOfFamily.WifeId)) {
+                            results.add(new ValidationResult("Parent `" + family.Wife.FullName + "`(" + family.WifeId + ") married to child '" + person.FullName + "' (" + person.getId() + ").", family, "US17"));
+                        }
+                    }
+                    if (family.Wife != null && family.WifeId.equals(person.getId())) {
+                        if (family.Husband != null && family.HusbandId.equals(person.ChildOfFamily.HusbandId)) {
+                            results.add(new ValidationResult("Parent `" + family.Husband.FullName + "`(" + family.HusbandId + ") married to child '" + person.FullName + "' (" + person.getId() + ").", family, "US17"));
+                        }
                     }
                 });
+
             }
         });
     }
