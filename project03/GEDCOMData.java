@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 /**
  *
@@ -21,7 +22,14 @@ public class GEDCOMData {
 
     private Map<String, PersonEntity> IndividualsDuplicates;
     private Map<String, FamilyEntity> FamiliesDuplicates;
+    
+    //family id is key, value is a map with Date as key and childId as value
+    private Map<String, Map<Date, ArrayList<String>>> BirthdatesMap;
 
+    public Map<String, Map<Date, ArrayList<String>>> getBirthdatesMap() {
+        return BirthdatesMap;
+    }
+    
     public Map<String, PersonEntity> getIndividualsDuplicates() {
         return IndividualsDuplicates;
     }
@@ -45,6 +53,8 @@ public class GEDCOMData {
     public GEDCOMData() {
         Individuals = new HashMap<String, PersonEntity>();
         Families = new HashMap<String, FamilyEntity>();
+        
+        BirthdatesMap = new HashMap<String, Map<Date, ArrayList<String>>>();
 
         IndividualsDuplicates = new HashMap<String, PersonEntity>();
         FamiliesDuplicates = new HashMap<String, FamilyEntity>();
@@ -282,5 +292,93 @@ public class GEDCOMData {
 	         
     	 });
     	 return toPersonsText(livingSinglePersons);
+    }
+    
+    //US35	(bella) List recent births	List all people in a GEDCOM file who were born in the last 30 days
+    public String listRecentBirths()
+    {
+   	 List<PersonEntity> listRecentBirths = new ArrayList<PersonEntity>();
+   	 Date todaysDate = Utility.getTodaysDate();
+   	 
+   	 Calendar cal = Calendar.getInstance();
+   	 cal.add(Calendar.DATE, -30);
+   	 Date dateBefore30Days = cal.getTime();
+   	
+	     Individuals.forEach((s, entity) -> {
+	    	 if (entity.BirthDate != null && entity.BirthDate.before(todaysDate)) {
+                 if (entity.BirthDate.after(dateBefore30Days)) {
+                	 listRecentBirths.add(entity);
+                 }          
+   	 }});
+   	 return toPersonsText(listRecentBirths);
+   }
+    
+    //US36	(bella) List recent deaths	List all people in a GEDCOM file who died in the last 30 days
+    public String listRecentDeaths()
+    {
+      	 List<PersonEntity> listRecentDeaths = new ArrayList<PersonEntity>();
+      	 Date todaysDate = Utility.getTodaysDate();
+      	 
+      	 Calendar cal = Calendar.getInstance();
+      	 cal.add(Calendar.DATE, -30);
+      	 Date dateBefore30Days = cal.getTime();
+      	 
+   	     Individuals.forEach((s, entity) -> {
+   	    	if (entity.DeathDate != null && entity.DeathDate.before(todaysDate)) {
+   	    		if (entity.DeathDate.after(dateBefore30Days)) {
+   	    			listRecentDeaths.add(entity);
+   	    		}          
+      	 }});
+      	 return toPersonsText(listRecentDeaths);
+      }
+    
+    // US32 (Charles) List multiple births 
+    // Returns a list with all multiple births in the GEDCOM file
+    public String listMultipleBirths(){
+        
+        StringBuilder msg = new StringBuilder();
+        
+        for(Map.Entry<String, Map<Date, ArrayList<String>>> entry : BirthdatesMap.entrySet()) {
+            String key = entry.getKey();
+            Map<Date, ArrayList<String>> value = entry.getValue();
+            
+            value.keySet().stream().filter((date) -> (value.get(date).size() > 1)).forEachOrdered((date) -> {
+                msg.append(key + value.get(date) + "\n");
+            });            
+        }
+        return msg.toString();
+    }
+    
+    // US34 (Charles) List large age differences
+    // Returns a String containing all couples who were married when the older spouse 
+    // was more than twice as old as the younger spouse
+    public String listLargeAgeDifferences(){
+        
+        StringBuilder msg = new StringBuilder();
+
+        Families.forEach((s, entity) -> {
+            LocalDate marriageDate = entity.MarriageDate != null ? Utility.ToLocalDate(entity.MarriageDate) : null;             
+            
+            if(marriageDate != null){
+                // calculate age of both spouses at time of marriage
+                LocalDate wifeBirthdate = entity.Wife.BirthDate != null ? Utility.ToLocalDate(entity.Wife.BirthDate) : null;
+                LocalDate husbandBirthdate = entity.Husband.BirthDate != null ? Utility.ToLocalDate(entity.Husband.BirthDate) : null;
+                
+                int wifeAgeAtMarriage, husbandAgeAtMarriage;                
+                
+                wifeAgeAtMarriage = Utility.YearsBetween(wifeBirthdate, marriageDate);
+                husbandAgeAtMarriage = Utility.YearsBetween(husbandBirthdate, marriageDate);
+                
+                if(wifeAgeAtMarriage > 0 && 
+                   husbandAgeAtMarriage > 0 &&
+                   (wifeAgeAtMarriage >= husbandAgeAtMarriage*2 || 
+                   husbandAgeAtMarriage >= wifeAgeAtMarriage*2)){
+                    msg.append(entity.getId() + ": Wife(" + entity.Wife.getId() + ") was " + wifeAgeAtMarriage + " years old and husband(" + 
+                            entity.Husband.getId() +  ") " + husbandAgeAtMarriage + " years old at time of marriage." + "\n");
+                }                                                
+            }
+    	 });
+                        
+        return msg.toString();
     }
 }

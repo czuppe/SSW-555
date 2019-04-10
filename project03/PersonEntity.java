@@ -73,7 +73,7 @@ public class PersonEntity implements IEntity {
                 }
             } else if (var.contains("1 DEAT")) {
                 if (index + 1 < elements.length) {
-                    DateFormat format = new SimpleDateFormat("DD MMM yyyy", Locale.ENGLISH);
+                    DateFormat format = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
                     entity.DeathDate = format.parse(elements[index + 1].replace("2 DATE", "").trim());
                 }
             }
