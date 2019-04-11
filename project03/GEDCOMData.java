@@ -334,7 +334,7 @@ public class GEDCOMData {
 
         Individuals.forEach((s, entity) -> {
             List<ValidationResult> results = new ArrayList();
-            PersonEntityValidator.orphanCheck(entity, results);
+            //PersonEntityValidator.orphanCheck(entity, results);
 
             if (!results.isEmpty()) {
                 orphans.add(entity);
@@ -354,7 +354,7 @@ public class GEDCOMData {
 
         Individuals.forEach((s, entity) -> {
             List<ValidationResult> results = new ArrayList();
-            PersonEntityValidator.recentSurvivorsCheck(entity, results);
+            //PersonEntityValidator.recentSurvivorsCheck(entity, results);
 
             if (!results.isEmpty()) {
                 results.forEach(result -> {
