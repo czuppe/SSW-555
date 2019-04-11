@@ -169,9 +169,8 @@ public class GEDCOMData {
         });
         return msg.toString();
     }
-    
-    public String toPersonsText(Collection<PersonEntity> persons)
-    {
+
+    public String toPersonsText(Collection<PersonEntity> persons) {
         StringBuilder msg = new StringBuilder();
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -179,45 +178,51 @@ public class GEDCOMData {
 
         persons.forEach(entity -> {
             StringBuilder childMsg = new StringBuilder();
-            entity.Families.forEach(fe -> {
-                if (fe != null && fe.Children != null && !fe.Children.isEmpty()) {
-                    fe.Children.forEach(c -> {
-                        if (childMsg.length() == 0) {
-                            childMsg.append(c.getId());
-                        } else {
-                            childMsg.append(", ").append(c.getId());
-                        }
-                    });
-                }
-            });
+
+            if (entity != null && entity.Families != null) {
+                entity.Families.forEach(fe -> {
+                    if (fe != null && fe.Children != null && !fe.Children.isEmpty()) {
+                        fe.Children.forEach(c -> {
+                            if (childMsg.length() == 0) {
+                                childMsg.append(c.getId());
+                            } else {
+                                childMsg.append(", ").append(c.getId());
+                            }
+                        });
+                    }
+                });
+            }
 
             StringBuilder spouseMsg = new StringBuilder();
-            entity.Families.forEach(fe -> {
-                if (fe != null) {
-                    if (fe.Husband != null && fe.Husband.getId().equals(entity.getId()) && fe.Wife != null) {
-                        if (spouseMsg.length() == 0) {
-                            spouseMsg.append(fe.Wife.getId());
-                        } else {
-                            spouseMsg.append(", ").append(fe.Wife.getId());
-                        }
-                    } else if (fe.Wife != null && fe.Wife.getId().equals(entity.getId()) && fe.Husband != null) {
-                        if (spouseMsg.length() == 0) {
-                            spouseMsg.append(fe.Husband.getId());
-                        } else {
-                            spouseMsg.append(", ").append(fe.Husband.getId());
+            if (entity != null && entity.Families != null) {
+                entity.Families.forEach(fe -> {
+                    if (fe != null) {
+                        if (fe.Husband != null && fe.Husband.getId().equals(entity.getId()) && fe.Wife != null) {
+                            if (spouseMsg.length() == 0) {
+                                spouseMsg.append(fe.Wife.getId());
+                            } else {
+                                spouseMsg.append(", ").append(fe.Wife.getId());
+                            }
+                        } else if (fe.Wife != null && fe.Wife.getId().equals(entity.getId()) && fe.Husband != null) {
+                            if (spouseMsg.length() == 0) {
+                                spouseMsg.append(fe.Husband.getId());
+                            } else {
+                                spouseMsg.append(", ").append(fe.Husband.getId());
+                            }
                         }
                     }
-                }
-            });
-
-            msg.append(entity.getId() + ", " + entity.FullName + ", " + entity.Gender + ", "
-                    + format.format(entity.BirthDate) + ", " + entity.Age + ", " + (entity.DeathDate == null ? true : false) + ", "
-                    + (entity.DeathDate != null ? format.format(entity.DeathDate) : "NA") + ", "
-                    + (childMsg.length() == 0 ? "NA" : "{" + childMsg.toString() + "}") + ", "
-                    + (spouseMsg.length() == 0 ? "NA" : "{" + spouseMsg.toString() + "}") + "\n");
+                });
+            }
+            if (entity != null) {
+                msg.append(entity.getId() + ", " + entity.FullName + ", " + entity.Gender + ", "
+                        + format.format(entity.BirthDate) + ", " + entity.Age + ", " + (entity.DeathDate == null ? true : false) + ", "
+                        + (entity.DeathDate != null ? format.format(entity.DeathDate) : "NA") + ", "
+                        + (childMsg.length() == 0 ? "NA" : "{" + childMsg.toString() + "}") + ", "
+                        + (spouseMsg.length() == 0 ? "NA" : "{" + spouseMsg.toString() + "}") + "\n");
+            }
         });
 
-        return msg.toString();    	
+        return msg.toString();
     }
 
     public String toPersonsText() {
@@ -322,4 +327,47 @@ public class GEDCOMData {
       	 }});
       	 return toPersonsText(listRecentDeaths);
       }
+
+    //US33 (Raj) List orphans
+    public String listOrphans() {
+        List<PersonEntity> orphans = new ArrayList<PersonEntity>();
+
+        Individuals.forEach((s, entity) -> {
+            List<ValidationResult> results = new ArrayList();
+            PersonEntityValidator.orphanCheck(entity, results);
+
+            if (!results.isEmpty()) {
+                orphans.add(entity);
+            }
+
+        });
+        if (orphans.isEmpty()) {
+            return null;
+        } else {
+            return toPersonsText(orphans);
+        }
+    }
+
+    //US37 (Raj) List Recent Survivors
+    public String listRecentSurvivors() {
+        List<PersonEntity> recentSurvivors = new ArrayList<PersonEntity>();
+
+        Individuals.forEach((s, entity) -> {
+            List<ValidationResult> results = new ArrayList();
+            PersonEntityValidator.recentSurvivorsCheck(entity, results);
+
+            if (!results.isEmpty()) {
+                results.forEach(result -> {
+                    recentSurvivors.add((PersonEntity) result.Entity);
+                });
+
+            }
+
+        });
+        if (recentSurvivors.isEmpty()) {
+            return null;
+        } else {
+            return toPersonsText(recentSurvivors);
+        }
+    }
 }

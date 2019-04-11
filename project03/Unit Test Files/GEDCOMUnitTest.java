@@ -91,6 +91,26 @@ public class GEDCOMUnitTest {
         GEDCOMDataValidator.siblingsShouldNotMarryCheck(GEDCOMDataObj, results);
         assertTrue(results.isEmpty());
     }
+	
+
+    @Test //(Raj US33) List orphans
+    public void testOrphans() throws Exception {
+        assertTrue(null != GEDCOMDataObj_Raj);
+
+        List<ValidationResult> results = new ArrayList<>();
+        GEDCOMDataValidator.orphanCheck(GEDCOMDataObj_Raj, results);
+        assertTrue(results.isEmpty());
+    }
+
+    @Test //(Raj US37) List recent survivors
+    public void testrecentSurvivors() throws Exception {
+        assertTrue(null != GEDCOMDataObj_Raj);
+
+        List<ValidationResult> results = new ArrayList<>();
+        GEDCOMDataValidator.recentSurvivorsCheck(GEDCOMDataObj_Raj, results);
+        assertTrue(results.isEmpty());
+    }
+	
     
     //END: *** Raj Test Cases ***
     

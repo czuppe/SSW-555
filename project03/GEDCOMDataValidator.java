@@ -118,6 +118,26 @@ public class GEDCOMDataValidator {
         });
     }
 
+    //US33: List orphans
+    public static void orphanCheck(GEDCOMData entity, List<ValidationResult> results) {
+        if (entity == null || results == null) {
+            return;
+        }
+        entity.getIndividuals().forEach((k, v) -> {
+            PersonEntityValidator.orphanCheck(v, results);
+        });
+    }
+
+    //US37: List recent survivors
+    public static void recentSurvivorsCheck(GEDCOMData entity, List<ValidationResult> results) {
+        if (entity == null || results == null) {
+            return;
+        }
+        entity.getIndividuals().forEach((k, v) -> {
+            PersonEntityValidator.recentSurvivorsCheck(v, results);
+        });
+    }
+
     // US22: Unique IDs
     public static void uniqueIDsCheck(GEDCOMData entity, List<ValidationResult> results) {
         if (entity == null || results == null) {
