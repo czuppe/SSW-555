@@ -43,7 +43,7 @@ public class GEDCOMUnitTest {
         assertTrue(null != GEDCOMDataObj);
 
         List<ValidationResult> results = new ArrayList<>();
-        GEDCOMDataValidator.datesBeforeCurrentDateCheck(GEDCOMDataObj_Raj, results);
+        GEDCOMDataValidator.datesBeforeCurrentDateCheck(GEDCOMDataObj, results);
         assertTrue(results.isEmpty());
     }
 
@@ -52,7 +52,7 @@ public class GEDCOMUnitTest {
         assertTrue(null != GEDCOMDataObj);
 
         List<ValidationResult> results = new ArrayList<>();
-        GEDCOMDataValidator.birthBeforeMarriageCheck(GEDCOMDataObj_Raj, results);
+        GEDCOMDataValidator.birthBeforeMarriageCheck(GEDCOMDataObj, results);
         assertTrue(results.isEmpty());
     }
 
@@ -95,19 +95,19 @@ public class GEDCOMUnitTest {
 
     @Test //(Raj US33) List orphans
     public void testOrphans() throws Exception {
-        assertTrue(null != GEDCOMDataObj_Raj);
+        assertTrue(null != GEDCOMDataObj);
 
         List<ValidationResult> results = new ArrayList<>();
-        GEDCOMDataValidator.orphanCheck(GEDCOMDataObj_Raj, results);
+        GEDCOMDataValidator.orphanCheck(GEDCOMDataObj, results);
         assertTrue(results.isEmpty());
     }
 
     @Test //(Raj US37) List recent survivors
     public void testrecentSurvivors() throws Exception {
-        assertTrue(null != GEDCOMDataObj_Raj);
+        assertTrue(null != GEDCOMDataObj);
 
         List<ValidationResult> results = new ArrayList<>();
-        GEDCOMDataValidator.recentSurvivorsCheck(GEDCOMDataObj_Raj, results);
+        GEDCOMDataValidator.recentSurvivorsCheck(GEDCOMDataObj, results);
         assertTrue(results.isEmpty());
     }
 	
