@@ -372,4 +372,23 @@ public class GEDCOMData {
             return toPersonsText(recentSurvivors.values());
         }
     }
+	//US38 (Craig) - List upcoming birthdays
+    public String listBirthdays() {
+    	
+    	List<PersonEntity> bdayList = new ArrayList<PersonEntity>();
+    	
+    	Calendar calendar = Calendar.getInstance();
+     	 Date sysdate = calendar.getTime();
+    	
+     	 
+    	Individuals.forEach((ind, entity) -> {
+    		int diffDays = entity.BirthDate.getDate() - sysdate.getDate();
+    		int diffMonth = entity.BirthDate.getMonth() - sysdate.getMonth();
+    		
+    		if(entity.BirthDate != null && diffDays <= 30 && diffMonth == 0) {
+    		bdayList.add(entity);
+    		}
+    	});
+    	return toPersonsText(bdayList);
+    }
 }
