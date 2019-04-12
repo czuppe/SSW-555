@@ -334,7 +334,7 @@ public class GEDCOMData {
 
         Individuals.forEach((s, entity) -> {
             List<ValidationResult> results = new ArrayList();
-            //PersonEntityValidator.orphanCheck(entity, results);
+            PersonEntityValidator.orphanCheck(entity, results);
 
             if (!results.isEmpty()) {
                 orphans.add(entity);
@@ -350,15 +350,17 @@ public class GEDCOMData {
 
     //US37 (Raj) List Recent Survivors
     public String listRecentSurvivors() {
-        List<PersonEntity> recentSurvivors = new ArrayList<PersonEntity>();
+        Map<String, PersonEntity> recentSurvivors = new HashMap<String, PersonEntity>();
 
         Individuals.forEach((s, entity) -> {
             List<ValidationResult> results = new ArrayList();
-            //PersonEntityValidator.recentSurvivorsCheck(entity, results);
+            PersonEntityValidator.recentSurvivorsCheck(entity, results);
 
             if (!results.isEmpty()) {
                 results.forEach(result -> {
-                    recentSurvivors.add((PersonEntity) result.Entity);
+                    if (!recentSurvivors.containsKey(result.Entity.getId())) {
+                        recentSurvivors.put(result.Entity.getId(), (PersonEntity)result.Entity);
+                    }
                 });
 
             }
@@ -367,7 +369,7 @@ public class GEDCOMData {
         if (recentSurvivors.isEmpty()) {
             return null;
         } else {
-            return toPersonsText(recentSurvivors);
+            return toPersonsText(recentSurvivors.values());
         }
     }
 }

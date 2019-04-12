@@ -124,7 +124,7 @@ public class GEDCOMDataValidator {
             return;
         }
         entity.getIndividuals().forEach((k, v) -> {
-            //PersonEntityValidator.orphanCheck(v, results);
+            PersonEntityValidator.orphanCheck(v, results);
         });
     }
 
@@ -134,7 +134,7 @@ public class GEDCOMDataValidator {
             return;
         }
         entity.getIndividuals().forEach((k, v) -> {
-            //PersonEntityValidator.recentSurvivorsCheck(v, results);
+            PersonEntityValidator.recentSurvivorsCheck(v, results);
         });
     }
 
