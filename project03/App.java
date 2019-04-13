@@ -162,6 +162,19 @@ public class App {
             writer.println(msg);
             System.out.println();
             
+            msg = GEDCOMDataObj.listMultipleBirths();
+            System.out.println("Multiple Births (US32): ");
+            System.out.println();
+            System.out.println(msg);
+            writer.println(msg);
+            System.out.println();    
+            
+            msg = GEDCOMDataObj.listLargeAgeDifferences();
+            System.out.println("Large Age Differences (US34): ");
+            System.out.println();
+            System.out.println(msg);
+            writer.println(msg);
+            System.out.println();              
 
             msg = GEDCOMDataObj.listOrphans();
             if (msg != null) {
@@ -189,6 +202,7 @@ public class App {
             writer.println(msg);
             System.out.println();
             }
+
 
             printValidationResults(writer, results);
         } finally {

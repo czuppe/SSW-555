@@ -212,8 +212,10 @@ public class FamilyEntityValidator {
                 ids.add(childId);
                 birthdatesMap.put(childBirthdate, ids);
             }
-        });
-
+        });        
+        
+        family.getGEDCOMData().getBirthdatesMap().put(family.getId(), birthdatesMap);
+        
         birthdatesMap.keySet().stream().filter((date) -> (birthdatesMap.get(date).size() > 5)).forEachOrdered((date) -> {
             results.add(new ValidationResult("There are more than five siblings born at the same time: " + String.join(",", birthdatesMap.get(date)), family, "US14"));
         });
