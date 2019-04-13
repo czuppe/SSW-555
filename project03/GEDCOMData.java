@@ -298,6 +298,7 @@ public class GEDCOMData {
     	 });
     	 return toPersonsText(livingSinglePersons);
     }
+
     
     //US35	(bella) List recent births	List all people in a GEDCOM file who were born in the last 30 days
     public String listRecentBirths()
@@ -452,5 +453,67 @@ public class GEDCOMData {
     	});
     	return toPersonsText(bdayList);
     }
+}
+	
+//US39 (Craig) - List upcoming anniversaries
+public String toMarriageText(Collection<FamilyEntity> family) {
+        
+        StringBuilder msg = new StringBuilder();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        msg.append("ID, Married, Divorced, Husband ID, Husband Name, Wife ID, Wife Name, Children\n");
+        
+        Families.forEach((k, entity) -> {
+            
+            StringBuilder childMsg = new StringBuilder();
+            
+            if (entity.ChildrenId != null) {
+                Utility.SortChildrenByBirthdate(entity);
+                childMsg.append(entity.ChildrenId);
+                
+            }
+            if(entity.Marriage != null && entity.Divorce == null) {
+            msg.append(entity.getId() + ", "
+                    + (entity.MarriageDate != null ? format.format(entity.MarriageDate) : "NA") + ", "
+                    + (entity.DivorceDate != null ? format.format(entity.DivorceDate) : "NA") + ", "
+                    + (entity.HusbandId != null ? entity.HusbandId : "NA") + ", "
+                    + (entity.Husband != null ? entity.Husband.FullName : "NA") + ", "
+                    + (entity.WifeId != null ? entity.WifeId : "NA") + ", "
+                    + (entity.Wife != null ? entity.Wife.FullName : "NA") + ", "
+                    + (entity.ChildrenId.size() == 0 ? "NA" : childMsg.toString()) + "\n"
+            );
+            }
+        });
+        return msg.toString();
+    }
+    
+public String toMarriageText() {
+    return toMarriageText(Families.values());
+}
+
+//List anniversaries
+    public String listAnniversaries() {
+    	
+    	Collection<FamilyEntity> annivList = new ArrayList<FamilyEntity>();
+    	
+    	Calendar calendar = Calendar.getInstance();
+     	 Date sysdate = calendar.getTime();
+     	 
+     	 
+     	Families.forEach((k, entity) -> {
+     		 
+     		 if(entity.Marriage == null || entity.Divorce != null) {
+     			 return;
+     		 }
+     		 
+    		int diffDays = entity.MarriageDate.getDate() - sysdate.getDate();
+    		int diffMonth = entity.MarriageDate.getMonth() - sysdate.getMonth();
+    		
+    		if(diffDays < 30 && diffMonth == 0) {
+    		annivList.add(entity);
+    			}
+    	});
+     	
+    	return toMarriageText(annivList);
+    }	
 }
 
