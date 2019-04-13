@@ -194,17 +194,26 @@ public class App {
                 System.out.println();
             }
             
-             msg = GEDCOMDataObj.listBirthdays();
+            msg = GEDCOMDataObj.listUpcomingBirthdays();
             if (msg != null) {
-            System.out.println("Individual with upcoming birthdays:");
-            System.out.println();
-            System.out.println(msg);
-            writer.println(msg);
-            System.out.println();
+                System.out.println("Individual with upcoming birthdays:");
+                System.out.println();
+                System.out.println(msg);
+                writer.println(msg);
+                System.out.println();            
             }
-
-
+            
+            msg = GEDCOMDataObj.listUpcomingAnniversaries();
+            if (msg != null) {
+                System.out.println("Couples with upcoming anniverseries:");
+                System.out.println();
+                System.out.println(msg);
+                writer.println(msg);
+                System.out.println();            
+            }
+            
             printValidationResults(writer, results);
+            
         } finally {
             //Close the input stream
             outfw.close();

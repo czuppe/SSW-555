@@ -29,7 +29,7 @@ public class FamilyEntity implements IEntity {
                 entity.ChildrenId.add(var.replace("1 CHIL ", "").replace("@", "").trim());
             } else if (var.contains("1 MARR")) {
                 if (index + 1 < elements.length) {
-                    DateFormat format = new SimpleDateFormat("DD MMM yyyy", Locale.ENGLISH);
+                    DateFormat format = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
                     FactEntity marriageFact = new FactEntity();
                     entity.MarriageDate = marriageFact.Date = format.parse(elements[index + 1].replace("2 DATE", "").trim());
                     marriageFact.Location = elements[index + 2].replace("2 PLAC", "").trim();
@@ -37,7 +37,7 @@ public class FamilyEntity implements IEntity {
                 }
             } else if (var.contains("1 DIV")) {
                 if (index + 1 < elements.length) {
-                    DateFormat format = new SimpleDateFormat("DD MMM yyyy", Locale.ENGLISH);
+                    DateFormat format = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
                     FactEntity divorceFact = new FactEntity();
                     entity.DivorceDate = divorceFact.Date = format.parse(elements[index + 1].replace("2 DATE", "").trim());
                     divorceFact.Location = elements[index + 2].replace("2 PLAC", "").trim();

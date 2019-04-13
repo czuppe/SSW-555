@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.ZoneId;
 
 /**
@@ -93,7 +94,7 @@ public class GEDCOMData {
         GEDCOMDataValidator.maleLastNameCheck(this, results);
         GEDCOMDataValidator.uniqueIDsCheck(this, results);
         GEDCOMDataValidator.uniqueNameAndBirthDateCheck(this, results);
-	      GEDCOMDataValidator.uniqueFirstNamesinFamily(this, results);
+	GEDCOMDataValidator.uniqueFirstNamesinFamily(this, results);
         GEDCOMDataValidator.noMarriagesToChildrenCheck(this, results);
         GEDCOMDataValidator.siblingsShouldNotMarryCheck(this, results);
 
@@ -298,7 +299,6 @@ public class GEDCOMData {
     	 });
     	 return toPersonsText(livingSinglePersons);
     }
-
     
     //US35	(bella) List recent births	List all people in a GEDCOM file who were born in the last 30 days
     public String listRecentBirths()
@@ -336,7 +336,7 @@ public class GEDCOMData {
    	    		}          
       	 }});
       	 return toPersonsText(listRecentDeaths);
-      }
+    }
 
     
     // US32 (Charles) List multiple births 
@@ -389,7 +389,6 @@ public class GEDCOMData {
         return msg.toString();
     }
 
-
     //US33 (Raj) List orphans
     public String listOrphans() {
         List<PersonEntity> orphans = new ArrayList<PersonEntity>();
@@ -434,8 +433,9 @@ public class GEDCOMData {
             return toPersonsText(recentSurvivors.values());
         }
     }
-	//US38 (Craig) - List upcoming birthdays
-    public String listBirthdays() {
+    
+    //US38 (Craig) - List upcoming birthdays
+    public String listUpcomingBirthdays() {
     	
     	List<PersonEntity> bdayList = new ArrayList<PersonEntity>();
     	
@@ -453,67 +453,31 @@ public class GEDCOMData {
     	});
     	return toPersonsText(bdayList);
     }
-}
-	
-//US39 (Craig) - List upcoming anniversaries
-public String toMarriageText(Collection<FamilyEntity> family) {
-        
+    
+    // US39 (Craig/Charles) List all living couples in a GEDCOM file whose marriage 
+    // anniversaries occur in the next 30 days
+    public String listUpcomingAnniversaries()
+    {
         StringBuilder msg = new StringBuilder();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        msg.append("ID, Married, Divorced, Husband ID, Husband Name, Wife ID, Wife Name, Children\n");
-        
-        Families.forEach((k, entity) -> {
+
+        Families.forEach((s, entity) -> {
             
-            StringBuilder childMsg = new StringBuilder();
-            
-            if (entity.ChildrenId != null) {
-                Utility.SortChildrenByBirthdate(entity);
-                childMsg.append(entity.ChildrenId);
+            LocalDate marriageDate = entity.MarriageDate != null ? Utility.ToLocalDate(entity.MarriageDate) : null;      
+            LocalDate todaysDateLocal = Utility.getTodaysDate() != null ? Utility.getTodaysDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null; 
+            LocalDate currentDatePlus30Days = todaysDateLocal.plusDays(30);                           
+            LocalDate anniversaryDate = null;
+                        
+            if(marriageDate != null){
                 
+                anniversaryDate = LocalDate.of(todaysDateLocal.getYear(), marriageDate.getMonth(), marriageDate.getDayOfMonth());                
+                
+                if(anniversaryDate.isAfter(todaysDateLocal) && anniversaryDate.isBefore(currentDatePlus30Days)){
+                    msg.append("Couple:{" + entity.HusbandId + "," + entity.WifeId + "}" + " (Anniversary Date " + anniversaryDate + ")\n");
+                }                                              
             }
-            if(entity.Marriage != null && entity.Divorce == null) {
-            msg.append(entity.getId() + ", "
-                    + (entity.MarriageDate != null ? format.format(entity.MarriageDate) : "NA") + ", "
-                    + (entity.DivorceDate != null ? format.format(entity.DivorceDate) : "NA") + ", "
-                    + (entity.HusbandId != null ? entity.HusbandId : "NA") + ", "
-                    + (entity.Husband != null ? entity.Husband.FullName : "NA") + ", "
-                    + (entity.WifeId != null ? entity.WifeId : "NA") + ", "
-                    + (entity.Wife != null ? entity.Wife.FullName : "NA") + ", "
-                    + (entity.ChildrenId.size() == 0 ? "NA" : childMsg.toString()) + "\n"
-            );
-            }
-        });
+    	 });
+                        
         return msg.toString();
     }
-    
-public String toMarriageText() {
-    return toMarriageText(Families.values());
-}
-
-//List anniversaries
-    public String listAnniversaries() {
-    	
-    	Collection<FamilyEntity> annivList = new ArrayList<FamilyEntity>();
-    	
-    	Calendar calendar = Calendar.getInstance();
-     	 Date sysdate = calendar.getTime();
-     	 
-     	 
-     	Families.forEach((k, entity) -> {
-     		 
-     		 if(entity.Marriage == null || entity.Divorce != null) {
-     			 return;
-     		 }
-     		 
-    		int diffDays = entity.MarriageDate.getDate() - sysdate.getDate();
-    		int diffMonth = entity.MarriageDate.getMonth() - sysdate.getMonth();
-    		
-    		if(diffDays < 30 && diffMonth == 0) {
-    		annivList.add(entity);
-    			}
-    	});
-     	
-    	return toMarriageText(annivList);
-    }	
 }
 
