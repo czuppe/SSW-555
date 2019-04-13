@@ -405,7 +405,7 @@ public class GEDCOMUnitTest {
         String results = gcd.toFamiliesText();
 
         assertTrue(results.contains("I1, I2, I3, I4, I5"));
-    }
+    }    
     
     @Test //Charles US29 List deceased
     public void testListDeceased() throws Exception {
@@ -470,6 +470,102 @@ public class GEDCOMUnitTest {
         assertFalse(results.contains("I4"));
         assertFalse(results.contains("I5"));
     }       
+    
+    @Test //Charles US32 List Multiple Births
+    public void listMultipleBirthsTest() throws Exception {
+        GEDCOMData gcd = new GEDCOMData();       
+        
+        String[] familyElements = {"1 FAMS @F1@"};
+        String[] childElement5 = {"0 @I5@ INDI", "1 BIRT", "2 DATE 1 JAN 1985", "1 FAMS @F1@"};
+        String[] childElement4 = {"0 @I4@ INDI", "1 BIRT", "2 DATE 1 JAN 1984", "1 FAMS @F1@"};
+        String[] childElement2 = {"0 @I2@ INDI", "1 BIRT", "2 DATE 1 JAN 1982", "1 FAMS @F1@"};
+        String[] childElement3 = {"0 @I3@ INDI", "1 BIRT", "2 DATE 1 JAN 1983", "1 FAMS @F1@"};
+        String[] childElement1 = {"0 @I1@ INDI", "1 BIRT", "2 DATE 1 JAN 1981", "1 FAMS @F1@"};
+
+        String[] parentElements = {"0 @I6@ INDI",
+            "1 BIRT",
+            "2 DATE 1 JAN 1926"};
+
+        FamilyEntity family = FamilyEntity.create(familyElements);
+        List<FamilyEntity> families = new ArrayList<FamilyEntity>();
+        families.add(family);
+        
+        PersonEntity child1 = PersonEntity.create(childElement1);
+        child1.BirthDate = new Date(2001, 1, 1);
+        child1.setFamilies(families);
+        PersonEntity child2 = PersonEntity.create(childElement2);
+        child2.BirthDate = new Date(2001, 1, 1);
+        child2.setFamilies(families);
+        PersonEntity child3 = PersonEntity.create(childElement3);
+        child3.BirthDate = new Date(2002, 2, 2);
+        child3.setFamilies(families);
+        PersonEntity child4 = PersonEntity.create(childElement4);
+        child4.BirthDate = new Date(2002, 2, 2);
+        child4.setFamilies(families);
+        PersonEntity child5 = PersonEntity.create(childElement5);
+        child5.BirthDate = new Date(2003, 3, 3);
+        child5.setFamilies(families);
+
+        gcd.addIndividual(child1);
+        gcd.addIndividual(child2);
+        gcd.addIndividual(child3);
+        gcd.addIndividual(child4);
+        gcd.addIndividual(child5);
+        
+        PersonEntity parent = PersonEntity.create(parentElements);
+        gcd.addIndividual(parent);
+        
+        parent.setFamilies(families);
+        
+        family.Husband = parent;
+        
+        family.ChildrenId.add(child1.getId());
+        family.ChildrenId.add(child2.getId());
+        family.ChildrenId.add(child3.getId());
+        family.ChildrenId.add(child4.getId());
+        family.ChildrenId.add(child5.getId());
+        
+        family.setGEDCOMData(gcd);
+        
+        List<ValidationResult> validationResults = new ArrayList<ValidationResult>(); 
+        FamilyEntityValidator.multipleBirthsLessThanOrEqualToFive(family, validationResults);
+        String results = gcd.listMultipleBirths();
+        
+        assertTrue(results.contains("I1"));
+        assertTrue(results.contains("I2"));
+        assertTrue(results.contains("I3"));
+        assertTrue(results.contains("I4"));        
+        assertFalse(results.contains("I5"));                
+    }
+    
+    @Test //Charles US34 List Large Age Differences
+    public void listLargeAgeDifferences() throws Exception {
+        GEDCOMData gcd = new GEDCOMData();                        
+        
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        
+        FamilyEntity family = new FamilyEntity();
+        
+        family.Husband = new PersonEntity();
+        family.Husband.setId("I8");
+        family.Husband.BirthDate = simpleDateFormat.parse("1950-01-01");
+        
+        family.Wife = new PersonEntity();
+        family.Wife.setId("I9");
+        family.Wife.BirthDate = simpleDateFormat.parse("2000-02-01");
+        
+        family.Marriage = new FactEntity();
+        family.MarriageDate = simpleDateFormat.parse("2020-01-02");
+        
+        gcd.addFamily(family);
+        
+        String results = gcd.listLargeAgeDifferences();
+        
+        System.out.println(results);
+        assertTrue(results.contains("I8"));
+        assertTrue(results.contains("I9"));
+    }
     
     //End Charles' Unit Tests
 
