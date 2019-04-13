@@ -176,6 +176,34 @@ public class App {
             writer.println(msg);
             System.out.println();              
 
+            msg = GEDCOMDataObj.listOrphans();
+            if (msg != null) {
+                System.out.println("Orphans:");
+                System.out.println();
+                System.out.println(msg);
+                writer.println(msg);
+                System.out.println();
+            }
+
+            msg = GEDCOMDataObj.listRecentSurvivors();
+            if (msg != null) {
+                System.out.println("Recent Survivors:");
+                System.out.println();
+                System.out.println(msg);
+                writer.println(msg);
+                System.out.println();
+            }
+            
+             msg = GEDCOMDataObj.listBirthdays();
+            if (msg != null) {
+            System.out.println("Individual with upcoming birthdays:");
+            System.out.println();
+            System.out.println(msg);
+            writer.println(msg);
+            System.out.println();
+            }
+
+
             printValidationResults(writer, results);
         } finally {
             //Close the input stream

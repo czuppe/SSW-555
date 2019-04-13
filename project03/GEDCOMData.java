@@ -178,9 +178,8 @@ public class GEDCOMData {
         });
         return msg.toString();
     }
-    
-    public String toPersonsText(Collection<PersonEntity> persons)
-    {
+
+    public String toPersonsText(Collection<PersonEntity> persons) {
         StringBuilder msg = new StringBuilder();
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -188,45 +187,51 @@ public class GEDCOMData {
 
         persons.forEach(entity -> {
             StringBuilder childMsg = new StringBuilder();
-            entity.Families.forEach(fe -> {
-                if (fe != null && fe.Children != null && !fe.Children.isEmpty()) {
-                    fe.Children.forEach(c -> {
-                        if (childMsg.length() == 0) {
-                            childMsg.append(c.getId());
-                        } else {
-                            childMsg.append(", ").append(c.getId());
-                        }
-                    });
-                }
-            });
+
+            if (entity != null && entity.Families != null) {
+                entity.Families.forEach(fe -> {
+                    if (fe != null && fe.Children != null && !fe.Children.isEmpty()) {
+                        fe.Children.forEach(c -> {
+                            if (childMsg.length() == 0) {
+                                childMsg.append(c.getId());
+                            } else {
+                                childMsg.append(", ").append(c.getId());
+                            }
+                        });
+                    }
+                });
+            }
 
             StringBuilder spouseMsg = new StringBuilder();
-            entity.Families.forEach(fe -> {
-                if (fe != null) {
-                    if (fe.Husband != null && fe.Husband.getId().equals(entity.getId()) && fe.Wife != null) {
-                        if (spouseMsg.length() == 0) {
-                            spouseMsg.append(fe.Wife.getId());
-                        } else {
-                            spouseMsg.append(", ").append(fe.Wife.getId());
-                        }
-                    } else if (fe.Wife != null && fe.Wife.getId().equals(entity.getId()) && fe.Husband != null) {
-                        if (spouseMsg.length() == 0) {
-                            spouseMsg.append(fe.Husband.getId());
-                        } else {
-                            spouseMsg.append(", ").append(fe.Husband.getId());
+            if (entity != null && entity.Families != null) {
+                entity.Families.forEach(fe -> {
+                    if (fe != null) {
+                        if (fe.Husband != null && fe.Husband.getId().equals(entity.getId()) && fe.Wife != null) {
+                            if (spouseMsg.length() == 0) {
+                                spouseMsg.append(fe.Wife.getId());
+                            } else {
+                                spouseMsg.append(", ").append(fe.Wife.getId());
+                            }
+                        } else if (fe.Wife != null && fe.Wife.getId().equals(entity.getId()) && fe.Husband != null) {
+                            if (spouseMsg.length() == 0) {
+                                spouseMsg.append(fe.Husband.getId());
+                            } else {
+                                spouseMsg.append(", ").append(fe.Husband.getId());
+                            }
                         }
                     }
-                }
-            });
-
-            msg.append(entity.getId() + ", " + entity.FullName + ", " + entity.Gender + ", "
-                    + format.format(entity.BirthDate) + ", " + entity.Age + ", " + (entity.DeathDate == null ? true : false) + ", "
-                    + (entity.DeathDate != null ? format.format(entity.DeathDate) : "NA") + ", "
-                    + (childMsg.length() == 0 ? "NA" : "{" + childMsg.toString() + "}") + ", "
-                    + (spouseMsg.length() == 0 ? "NA" : "{" + spouseMsg.toString() + "}") + "\n");
+                });
+            }
+            if (entity != null) {
+                msg.append(entity.getId() + ", " + entity.FullName + ", " + entity.Gender + ", "
+                        + format.format(entity.BirthDate) + ", " + entity.Age + ", " + (entity.DeathDate == null ? true : false) + ", "
+                        + (entity.DeathDate != null ? format.format(entity.DeathDate) : "NA") + ", "
+                        + (childMsg.length() == 0 ? "NA" : "{" + childMsg.toString() + "}") + ", "
+                        + (spouseMsg.length() == 0 ? "NA" : "{" + spouseMsg.toString() + "}") + "\n");
+            }
         });
 
-        return msg.toString();    	
+        return msg.toString();
     }
 
     public String toPersonsText() {
@@ -331,6 +336,7 @@ public class GEDCOMData {
       	 }});
       	 return toPersonsText(listRecentDeaths);
       }
+
     
     // US32 (Charles) List multiple births 
     // Returns a list with all multiple births in the GEDCOM file
@@ -382,3 +388,69 @@ public class GEDCOMData {
         return msg.toString();
     }
 }
+
+    //US33 (Raj) List orphans
+    public String listOrphans() {
+        List<PersonEntity> orphans = new ArrayList<PersonEntity>();
+
+        Individuals.forEach((s, entity) -> {
+            List<ValidationResult> results = new ArrayList();
+            PersonEntityValidator.orphanCheck(entity, results);
+
+            if (!results.isEmpty()) {
+                orphans.add(entity);
+            }
+
+        });
+        if (orphans.isEmpty()) {
+            return null;
+        } else {
+            return toPersonsText(orphans);
+        }
+    }
+
+    //US37 (Raj) List Recent Survivors
+    public String listRecentSurvivors() {
+        Map<String, PersonEntity> recentSurvivors = new HashMap<String, PersonEntity>();
+
+        Individuals.forEach((s, entity) -> {
+            List<ValidationResult> results = new ArrayList();
+            PersonEntityValidator.recentSurvivorsCheck(entity, results);
+
+            if (!results.isEmpty()) {
+                results.forEach(result -> {
+                    if (!recentSurvivors.containsKey(result.Entity.getId())) {
+                        recentSurvivors.put(result.Entity.getId(), (PersonEntity)result.Entity);
+                    }
+                });
+
+            }
+
+        });
+        if (recentSurvivors.isEmpty()) {
+            return null;
+        } else {
+            return toPersonsText(recentSurvivors.values());
+        }
+    }
+	//US38 (Craig) - List upcoming birthdays
+    public String listBirthdays() {
+    	
+    	List<PersonEntity> bdayList = new ArrayList<PersonEntity>();
+    	
+    	Calendar calendar = Calendar.getInstance();
+     	 Date sysdate = calendar.getTime();
+    	
+     	 
+    	Individuals.forEach((ind, entity) -> {
+    		int diffDays = entity.BirthDate.getDate() - sysdate.getDate();
+    		int diffMonth = entity.BirthDate.getMonth() - sysdate.getMonth();
+    		
+    		if(entity.BirthDate != null && diffDays <= 30 && diffMonth == 0) {
+    		bdayList.add(entity);
+    		}
+    	});
+    	return toPersonsText(bdayList);
+    }
+}
+
