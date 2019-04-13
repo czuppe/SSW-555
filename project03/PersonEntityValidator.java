@@ -5,6 +5,8 @@
  */
 package project03;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
@@ -87,4 +89,53 @@ public class PersonEntityValidator {
         }
      }
    
+    //US33: List orphans
+    public static void orphanCheck(PersonEntity entity, List<ValidationResult> results) {
+        if (entity == null || entity.ChildOfFamily == null || results == null) {
+            return;
+        }
+        FamilyEntity family = entity.ChildOfFamily;
+        if (family.Husband != null && family.Husband.DeathDate != null
+                && family.Wife != null && family.Wife.DeathDate != null
+                && entity.Age < 18) {
+            results.add(new ValidationResult("Child " + entity.FullName + " is orphan.", entity, "US33"));
+        }
+    }
+
+    //US37: List recent survivors
+    public static void recentSurvivorsCheck(PersonEntity entity, List<ValidationResult> results) {
+        if (entity == null || entity.DeathDate == null || entity.Families == null || results == null) {
+            return;
+        }
+
+        Instant now = Instant.now(); //current date
+        Instant before = now.minus(Duration.ofDays(30));
+        Date dateBefore = Date.from(before);
+        if (entity.DeathDate.after(dateBefore)) {
+            entity.Families.forEach(family -> {
+                boolean recentSurvivorFound = false;
+                if (family != null) {
+                    if (family.Husband != null && family.HusbandId.equals(entity.getId())) {
+                        if (family.Wife != null) {
+                            results.add(new ValidationResult("Wife " + family.Wife.FullName + " is recent survivor of " + family.getId() + " family.", entity, "US33"));
+                        }
+                        recentSurvivorFound = true;
+                    } else if (family.Wife != null && family.WifeId.equals(entity.getId())) {
+                        if (family.Husband != null) {
+                            results.add(new ValidationResult("Husband " + family.Husband.FullName + " is recent survivor of " + family.getId() + " family.", entity, "US33"));
+                        }
+                        recentSurvivorFound = true;
+                    }
+                }
+
+                if (recentSurvivorFound) {
+                    if (family.Children != null) {
+                        family.Children.forEach(child -> {
+                            results.add(new ValidationResult("Child " + child.FullName + " is recent survivor of " + family.getId() + " family.", entity, "US33"));
+                        });
+                    }
+                }
+            });
+        }
+    }
 }

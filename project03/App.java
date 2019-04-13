@@ -148,6 +148,61 @@ public class App {
             writer.println(msg);
             System.out.println();
             
+            msg = GEDCOMDataObj.listRecentBirths();
+            System.out.println("Individuals Recently Born (under 30 days):");
+            System.out.println();
+            System.out.println(msg);
+            writer.println(msg);
+            System.out.println();
+            
+            msg = GEDCOMDataObj.listRecentDeaths();
+            System.out.println("Individuals Recently Deceased (under 30 days):");
+            System.out.println();
+            System.out.println(msg);
+            writer.println(msg);
+            System.out.println();
+            
+            msg = GEDCOMDataObj.listMultipleBirths();
+            System.out.println("Multiple Births (US32): ");
+            System.out.println();
+            System.out.println(msg);
+            writer.println(msg);
+            System.out.println();    
+            
+            msg = GEDCOMDataObj.listLargeAgeDifferences();
+            System.out.println("Large Age Differences (US34): ");
+            System.out.println();
+            System.out.println(msg);
+            writer.println(msg);
+            System.out.println();              
+
+            msg = GEDCOMDataObj.listOrphans();
+            if (msg != null) {
+                System.out.println("Orphans:");
+                System.out.println();
+                System.out.println(msg);
+                writer.println(msg);
+                System.out.println();
+            }
+
+            msg = GEDCOMDataObj.listRecentSurvivors();
+            if (msg != null) {
+                System.out.println("Recent Survivors:");
+                System.out.println();
+                System.out.println(msg);
+                writer.println(msg);
+                System.out.println();
+            }
+            
+             msg = GEDCOMDataObj.listBirthdays();
+            if (msg != null) {
+            System.out.println("Individual with upcoming birthdays:");
+            System.out.println();
+            System.out.println(msg);
+            writer.println(msg);
+            System.out.println();
+            }
+
 
             printValidationResults(writer, results);
         } finally {
