@@ -561,8 +561,7 @@ public class GEDCOMUnitTest {
         gcd.addFamily(family);
         
         String results = gcd.listLargeAgeDifferences();
-        
-        System.out.println(results);
+                
         assertTrue(results.contains("I8"));
         assertTrue(results.contains("I9"));
     }
@@ -872,62 +871,39 @@ public class GEDCOMUnitTest {
     @Test // US36 list recent deaths
     public void testListRecentDeaths() throws Exception {
     	GEDCOMData gcd = new GEDCOMData();
+        
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);               
 
-        String[] familyElements = {"1 FAMS @F1@"};
-        String[] childElement5 = {"0 @I5@ INDI", "1 BIRT", "2 DATE 5 APR 2017", "1 FAMS @F1@"};
+        String[] childElement1 = {"0 @I1@ INDI", "1 BIRT", "2 DATE 1 JAN 1982", "1 FAMS @F1@"};                
+        String[] childElement2 = {"0 @I2@ INDI", "1 BIRT", "2 DATE 4 APR 2019", "1 FAMS @F1@"};
+        String[] childElement3 = {"0 @I3@ INDI", "1 BIRT", "2 DATE 2 APR 2019", "1 FAMS @F1@"};
         String[] childElement4 = {"0 @I4@ INDI", "1 BIRT", "2 DATE 1 JAN 1984", "1 FAMS @F1@"};
-        String[] childElement2 = {"0 @I2@ INDI", "1 BIRT", "2 DATE 4 APR 2017", "1 FAMS @F1@"};
-        String[] childElement3 = {"0 @I3@ INDI", "1 BIRT", "2 DATE 2 APR 2017", "1 FAMS @F1@"};
-        String[] childElement1 = {"0 @I1@ INDI", "1 BIRT", "2 DATE 1 JAN 1982", "1 FAMS @F1@"};
-
-        String[] parentElements = {"0 @I6@ INDI",
-            "1 BIRT",
-            "2 DATE 1 JAN 1926"};
-
-        FamilyEntity family = FamilyEntity.create(familyElements);
-        List<FamilyEntity> families = new ArrayList<FamilyEntity>();
-        families.add(family);
+        String[] childElement5 = {"0 @I5@ INDI", "1 BIRT", "2 DATE 5 APR 2019", "1 FAMS @F1@"};       
         
         PersonEntity child1 = PersonEntity.create(childElement1);
-        child1.setFamilies(families);
-        child1.DeathDate = new Date(2019, 4, 6);
+        child1.DeathDate = simpleDateFormat.parse("2019-04-10");
+        
         PersonEntity child2 = PersonEntity.create(childElement2);
-        child2.setFamilies(families);
-        child2.DeathDate = new Date(2019, 4, 7);
+        child2.DeathDate = simpleDateFormat.parse("2019-04-08");
+        
         PersonEntity child3 = PersonEntity.create(childElement3);
-        child3.setFamilies(families);
         PersonEntity child4 = PersonEntity.create(childElement4);
-        child4.setFamilies(families);
         PersonEntity child5 = PersonEntity.create(childElement5);
-        child5.setFamilies(families);
 
         gcd.addIndividual(child1);
         gcd.addIndividual(child2);
         gcd.addIndividual(child3);
         gcd.addIndividual(child4);
-        gcd.addIndividual(child5);
+        gcd.addIndividual(child5);        
         
-        PersonEntity parent = PersonEntity.create(parentElements);
-        gcd.addIndividual(parent);
-        parent.setFamilies(families);
+        String results = gcd.listRecentDeaths();                
         
-        family.Husband = parent;
-        
-        family.ChildrenId.add(child1.getId());
-        family.ChildrenId.add(child2.getId());
-        family.ChildrenId.add(child3.getId());
-        family.ChildrenId.add(child4.getId());
-        family.ChildrenId.add(child5.getId());
-        
-        gcd.addFamily(family);
-        
-        String results = gcd.listRecentDeaths();
-        
-        assertTrue(results.contains("I5"));
+        assertTrue(results.contains("I1"));
         assertTrue(results.contains("I2"));
-        assertTrue(results.contains("I3"));
-        assertFalse(results.contains("I1"));
+        assertFalse(results.contains("I3"));
         assertFalse(results.contains("I4"));
+        assertFalse(results.contains("I5"));
     }
 
     @Test // US35 list recent births
@@ -972,20 +948,20 @@ public class GEDCOMUnitTest {
         
         family.Husband = parent;
         
-        family.ChildrenId.add(child1.getId());
         family.ChildrenId.add(child2.getId());
         family.ChildrenId.add(child3.getId());
-        family.ChildrenId.add(child4.getId());
         family.ChildrenId.add(child5.getId());
+        family.ChildrenId.add(child1.getId());
+        family.ChildrenId.add(child4.getId());
         
         gcd.addFamily(family);
         
         String results = gcd.listRecentBirths();
-        
-        assertTrue(results.contains("I1"));
+                
         assertTrue(results.contains("I2"));
-        assertFalse(results.contains("I3"));
-        assertFalse(results.contains("I5"));
+        assertTrue(results.contains("I3"));
+        assertTrue(results.contains("I5"));
+        assertFalse(results.contains("I1"));
         assertFalse(results.contains("I4"));
     }     
     
