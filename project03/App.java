@@ -179,7 +179,16 @@ public class App {
                 System.out.println(msg);
                 writer.println(msg);
                 System.out.println();
-            }            
+            }
+            
+             msg = GEDCOMDataObj.listBirthdays();
+            if (msg != null) {
+            System.out.println("Individual with upcoming birthdays:");
+            System.out.println();
+            System.out.println(msg);
+            writer.println(msg);
+            System.out.println();
+            }
 
             printValidationResults(writer, results);
         } finally {
