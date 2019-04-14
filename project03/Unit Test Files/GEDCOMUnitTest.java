@@ -1072,5 +1072,73 @@ public class GEDCOMUnitTest {
 		assertTrue(results.isEmpty());
 
     }
+	
+@Test // US38 list upcoming birthday
+    public void testListBirthdays() throws Exception {
+    	GEDCOMData gcd = new GEDCOMData();
+        
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);               
+
+        String[] personElement1 = {"0 @I1@ INDI", "1 BIRT", "2 DATE 1 JAN 1982", "1 FAMS @F1@"};                
+        String[] personElement2 = {"0 @I2@ INDI", "1 BIRT", "2 DATE 4 APR 2019", "1 FAMS @F1@"};
+        String[] personElement3 = {"0 @I3@ INDI", "1 BIRT", "2 DATE 30 APR 2000", "1 FAMS @F1@"};
+        String[] personElement4 = {"0 @I4@ INDI", "1 BIRT", "2 DATE 1 JAN 1984", "1 FAMS @F1@"};
+        String[] personElement5 = {"0 @I5@ INDI", "1 BIRT", "2 DATE 15 APR 1989", "1 FAMS @F1@"};       
+        
+        PersonEntity person3 = PersonEntity.create(personElement3);
+        person3.BirthDate = simpleDateFormat.parse("2000-04-30");
+        
+        PersonEntity person5 = PersonEntity.create(personElement5);
+        person5.BirthDate = simpleDateFormat.parse("1989-04-15");
+        
+        PersonEntity person1 = PersonEntity.create(personElement1);
+        PersonEntity person2 = PersonEntity.create(personElement2);
+        PersonEntity person4 = PersonEntity.create(personElement4);
+
+        gcd.addIndividual(person1);
+        gcd.addIndividual(person2);
+        gcd.addIndividual(person3);
+        gcd.addIndividual(person4);
+        gcd.addIndividual(person5);        
+        
+        String results = gcd.listUpcomingBirthdays();                
+        
+        
+        assertTrue(results.contains("I3"));
+        assertTrue(results.contains("I5"));
+        assertFalse(results.contains("I1"));
+        assertFalse(results.contains("I4"));
+        assertTrue(results.contains("I2"));
+    
+    }
+    
+    @Test //US34 List upcoming anniversaries
+    public void testListAnniversaries() throws Exception {
+        GEDCOMData gcd = new GEDCOMData();                        
+        
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        
+        FamilyEntity family = new FamilyEntity();
+        
+        family.Husband = new PersonEntity();
+        family.Husband.setId("I8");
+        family.Husband.BirthDate = simpleDateFormat.parse("1950-01-01");
+        
+        family.Wife = new PersonEntity();
+        family.Wife.setId("I9");
+        family.Wife.BirthDate = simpleDateFormat.parse("2000-02-01");
+       
+        family.Marriage = new FactEntity();
+        family.MarriageDate = simpleDateFormat.parse("2000-04-30");
+        
+        gcd.addFamily(family);
+        
+        String results = gcd.listUpcomingAnniversaries();
+                
+        assertFalse(results.contains("I8"));
+        assertFalse(results.contains("I9"));
+    }
 
 }
