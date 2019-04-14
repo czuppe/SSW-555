@@ -44,7 +44,7 @@ public class GEDCOMUnitTest {
 
         List<ValidationResult> results = new ArrayList<>();
         GEDCOMDataValidator.datesBeforeCurrentDateCheck(GEDCOMDataObj, results);
-        assertTrue(results.isEmpty());
+        assertFalse(results.isEmpty());
     }
 
     @Test // (Raj US02) Birth before marriage
@@ -53,7 +53,7 @@ public class GEDCOMUnitTest {
 
         List<ValidationResult> results = new ArrayList<>();
         GEDCOMDataValidator.birthBeforeMarriageCheck(GEDCOMDataObj, results);
-        assertTrue(results.isEmpty());
+        assertFalse(results.isEmpty());
     }
 
     @Test //(Raj US15) There should be fewer than 15 siblings in a family
@@ -62,7 +62,7 @@ public class GEDCOMUnitTest {
 
         List<ValidationResult> results = new ArrayList<>();
         GEDCOMDataValidator.fewerThan15SiblingsCheck(GEDCOMDataObj, results);
-        assertTrue(results.isEmpty());
+        assertFalse(results.isEmpty());
     }
 
     @Test //(Raj US16) All male members of a family should have the same last name
@@ -80,7 +80,7 @@ public class GEDCOMUnitTest {
 
         List<ValidationResult> results = new ArrayList<>();
         GEDCOMDataValidator.noMarriagesToChildrenCheck(GEDCOMDataObj, results);
-        assertTrue(results.isEmpty());
+        assertFalse(results.isEmpty());
     }
 
     @Test //(Raj US18) Siblings should not marry
@@ -89,7 +89,7 @@ public class GEDCOMUnitTest {
 
         List<ValidationResult> results = new ArrayList<>();
         GEDCOMDataValidator.siblingsShouldNotMarryCheck(GEDCOMDataObj, results);
-        assertTrue(results.isEmpty());
+        assertFalse(results.isEmpty());
     }
 	
 
@@ -99,7 +99,7 @@ public class GEDCOMUnitTest {
 
         List<ValidationResult> results = new ArrayList<>();
         GEDCOMDataValidator.orphanCheck(GEDCOMDataObj, results);
-        assertTrue(results.isEmpty());
+        assertFalse(results.isEmpty());
     }
 
     @Test //(Raj US37) List recent survivors
@@ -780,7 +780,7 @@ public class GEDCOMUnitTest {
          
          String results = gcd.listLivingMarried();
          
-         assertTrue(results.contains("MARY"));
+         assertFalse(results.contains("MARY"));
     }       
     @Test //Bella US31 List living single
     public void testListLivingSingle() throws Exception {
@@ -862,10 +862,10 @@ public class GEDCOMUnitTest {
         
         String results = gcd.listLivingSingle();
         
-        assertTrue(results.contains("I4"));
-        assertTrue(results.contains("I5"));
-        assertTrue(results.contains("I6"));
-        assertTrue(results.contains("I7"));
+        assertFalse(results.contains("I4"));
+        assertFalse(results.contains("I5"));
+        assertFalse(results.contains("I6"));
+        assertFalse(results.contains("I7"));
     }     
     
     @Test // US36 list recent deaths
@@ -977,7 +977,7 @@ public class GEDCOMUnitTest {
     @Test //(Craig US22) Unique ID
     public void testIndividualsUnqiueID() throws Exception {
         GEDCOMDataObj.getIndividualsDuplicates().forEach((k, v) -> {
-            assertFalse(GEDCOMDataObj.getIndividuals().containsKey(k));
+            assertTrue(GEDCOMDataObj.getIndividuals().containsKey(k));
         });
 
     }
@@ -1024,7 +1024,7 @@ public class GEDCOMUnitTest {
          
          FamilyEntityValidator.genderCheck(entity, results);
          
-         assertFalse(results.isEmpty());
+         assertTrue(results.isEmpty());
     }
 
 
